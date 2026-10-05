@@ -88,3 +88,12 @@ LAR = 12
 [stacks.rules.BUF]             # Doug: Allen + 1 receiver + Cook
 receivers = 1
 require = ["James Cook III"]
+
+# Contest facts for grading/backtests, plus pre-lock field signals worth recording each week.
+[contest]
+field_size = 596809
+# The FanDuel "Guru" lineup Doug was served pre-lock (entered as his 150th). 6 of its 9 players were 17-40% owned;
+# FanDuel's in-app suggestions look like a big chalk driver in this low-stakes field. Not a model feature yet (one
+# week); keep recording it so it can be tested once a few weeks exist.
+guru = ["Sam Darnold", "Aaron Jones Sr.", "David Montgomery", "Jaxon Smith-Njigba", "Jordan Addison", "Tee Higgins",
+        "Travis Kelce", "Braelon Allen", "Minnesota Vikings"]

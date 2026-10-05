@@ -131,3 +131,23 @@ TE = 1
 [optimizer.stack]            # QB + receivers from his team + bring-back from opponent; teams overridable in week.toml
 receivers = 2
 bring_back = 1
+
+# --- Phase 2 #2: field ownership (docs/phase2_ownership.md) ---
+# Projected %Drafted from pre-lock info, fit on every earlier week with data/<week>/results_players.csv (refit each run).
+[ownership]
+enabled = true               # add Own_proj to proj.csv / projections.csv / exposure.csv when earlier results exist
+features = ["log_salary", "proj", "value", "fppg", "implied", "game_total", "gained_vol"]
+floor = 0.005                # logit target floor: everything under 0.5% owned counts as 0.5% (all "contrarian")
+min_proj = 2                 # fit on players projected >= this (drops never-used backups); predict for all
+ridge = 10                   # L2 penalty on standardized coefficients
+folds = 10                   # CV folds within a single week (with 2+ weeks, CV is leave-one-week-out)
+max_weeks = 0                # use only the most recent N result weeks (0 = all)
+chalk_qb_own = 10.0          # stacks.csv: flag a stack CHALK when its QB is projected >= this % owned
+show_unused_own = 5.0        # exposure.csv also lists pool players we use 0 times if projected >= this % owned
+
+# Leverage (off by default; one slate cannot validate it — see docs/phase2_ownership.md). Turn on per week in week.toml.
+[optimizer.leverage]
+enabled = false
+own_weight = 0.1             # objective points subtracted per 1% projected ownership of each player (sum = lineup own)
+max_lineup_own = 0           # hard cap on a lineup's summed projected ownership, in % (0 = off)
+stack_exponent = 0.0         # stack-team draw weight *= (mean field QB own / team's field QB own) ** exponent (0 = off)

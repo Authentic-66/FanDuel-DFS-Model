@@ -19,9 +19,12 @@ and thinks in those terms: fundamentals model + market/public overlay, calibrati
 - `config/defaults.toml` — rules that hold week to week: `[scoring]`, `[roster]`, `[teams]`, `[model.*]` (sim count/seed,
   league priors, noise, correlation, DST, injury handling, `[model.prior_blend]`), `[optimizer]` (Doug's standing rules:
   exposure cap, objective weight, overlap, starters depth, yellow/green formulas, default stack shape).
+- `[ownership]` (model settings) and `[optimizer.leverage]` (off by default: `own_weight` points per 1% owned,
+  `max_lineup_own`, `stack_exponent`) also live in defaults.toml; turn leverage on per week in week.toml.
 - `config/<week>/week.toml` — deep-merged over defaults (any default can be overridden for one week): `[status]` OUT/Q,
   `[overrides]` Doug's reads, `[prefs]` red/red_teams/yellow/green/player_cap/starters_only, `[stacks.weights]` QB-team
   draw weights, `[stacks.rules.<TEAM>]` per-team stack shape (e.g. BUF: `receivers = 1`, `require = ["James Cook III"]`).
+  `[contest]` field_size (for grading) and `guru` = the FanDuel Guru lineup Doug is served pre-lock (record weekly).
   New week: copy last week's `week.toml` and edit.
 
 ## Pipeline (`src/` scripts are thin CLIs over the `src/dfs/` package; all take `--week`, default `$DFS_WEEK`)
@@ -39,9 +42,14 @@ and thinks in those terms: fundamentals model + market/public overlay, calibrati
 - `dfs/overrides.py` (`override.py`) — rescale a player's sims to Doug's mean; errors on unknown names; idempotent.
 - `dfs/optimize.py` (`optimize.py`) — sequential MILP (PuLP/CBC), one lineup per sim draw; objective 0.4*mean + 0.6*draw.
   Upload written with the csv module (exact duplicate header).
-- `dfs/analyze.py` (`analyze_results.py`) — post-slate grading. `dfs/backtest.py` (`backtest.py`) — Phase 2 tuning.
+- `dfs/ownership.py` — projected field ownership (`Own_proj`, % of lineups): ridge on logit(%Drafted), refit every run
+  from all earlier weeks' results (training rows cached in `weeks/<w>/ownership_train.csv`), shifted per position so
+  QB/DST sum to 100%. Added in model.py, override.py (post-override) and optimize.py; also exposure.csv
+  (`Own_proj_%`, `Exp_minus_Own`, plus 0-lineup players projected >= 5%) and stacks.csv. `fit_ownership.py` = CV report.
+- `dfs/analyze.py` (`analyze_results.py`) — post-slate grading. `dfs/backtest.py` (`backtest.py`) — Phase 2 tuning;
+  `backtest_leverage.py` — leverage settings on an archived slate.
 - `fetch_stats.py` — nflverse stats for the week's season and the prior one.
-- Tests: `python -m unittest discover -s tests` (stdlib unittest; scoring, usage/blend, week-4 regression checks).
+- Tests: `python -m unittest discover -s tests` (stdlib unittest; scoring, usage/blend, ownership, week-4 regression checks).
 
 ## Doug's standing rules (current; confirm each week)
 - **Starters only**: QB1 (week's starter), RB1, top-3 WR, TE1 per team by projection. Green-listed players always eligible.
@@ -66,8 +74,10 @@ hot starts inflate. DST projections ~uninformative (r = 0.24). Jaguars "contrari
 1. **Prior-season blend** — DONE Oct 5 (docs/phase2_prior_blend.md): usage 2 pseudo-games, efficiency 4 games of 2025.
    Week-4 RMSE 8.30 -> 8.08, 20+ tier gap +7.1 -> +4.2; also better on 2025 wks 4-18 (with 2024 prior). Residual
    structural bias (~+0.7 overall, ~+2 at 20+) remains — candidate: heavier TD-rate shrinkage, tuned with the same backtest.
-2. **Ownership model**: fit %Drafted (results_players.csv) on salary, projection, value, implied total, position, injuries-
-   created-value; use it to compute leverage and penalize chalk stacks in the optimizer.
+2. **Ownership model** — DONE Oct 5 (docs/phase2_ownership.md). Week-4 CV MAE 3.2 pts (null 4.2), log-r 0.73. Misses
+   mid-priced chalk (P. Washington 4.6% vs 30%, A. Jones 6% vs 40%) and QB ownership; would NOT have flagged the JAC
+   stack. The FanDuel Guru lineup held 6 players owned 17-40% — candidate feature once 3+ weeks are recorded.
+   Leverage OFF by default; week-4 backtest is noise-dominated (0.2 harmless, 1.0 costs ~10 pts of projection).
 3. **Vegas-weighted stacks**: stack-team weights from implied totals instead of hand-set `[stacks.weights]` in week.toml.
 4. Pass/rush defensive split adjustment (opponent yds allowed vs league avg, heavily shrunk). Doug supplied week-4 tables.
 5. Better DST model; better starter detection (depth charts) instead of projection rank.

@@ -46,7 +46,9 @@ def build(week, cfg, agg=None, st=None):
             pts = pts * (rng.random(n) > m['injury']['questionable_inactive_prob'])
         sims.append(pts)
         rows.append(dict(Id=r.Id, Name=r.Nickname, Pos=pos, Team=t, Opp=opp, Salary=r.Salary, Inj=r.Inj,
-                         ImpliedTeamTotal=round(implied, 1), FD_FPPG=round(r.FPPG, 1), Key=k, **summarize(pts, r.Salary)))
+                         ImpliedTeamTotal=round(implied, 1), GameTotal=round(implied + lines.implied[opp], 1),
+                         FD_FPPG=round(r.FPPG, 1), GainedVol=round(xt.get(k, 0) + xc.get(k, 0), 2), Key=k,
+                         **summarize(pts, r.Salary)))
     proj = pd.DataFrame(rows)
     proj['StartingQB'] = (proj.Pos == 'QB') & proj.Key.isin(usage.starting_qbs(st))
     order = proj.Proj.sort_values(ascending=False, kind='stable').index

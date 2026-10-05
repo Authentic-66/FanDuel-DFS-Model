@@ -7,6 +7,7 @@ season_backtest: per-week projections from earlier weeks of a season (+ prior-se
 Both grade the same model-independent player set: players averaging >= min_fppg FanDuel points before the week.
 """
 import itertools
+import os
 
 import numpy as np
 import pandas as pd
@@ -94,3 +95,51 @@ def season_backtest(path, prior_path, cfg, settings, weeks, min_fppg=5.0, n_sims
             weekly.append({'week': w, **pb, **metrics(df)})
     summary = pd.DataFrame([{**pb, **metrics(pd.concat(pooled[i]))} for i, pb in enumerate(settings)])
     return summary, pd.DataFrame(weekly)
+
+
+# --- Phase 2 #2: leverage on an archived slate --------------------------------------------------------------------
+
+def est_rank(points, top, quantiles, field_size):
+    """Contest rank for a score: exact from the top-N results, else interpolated from field quantiles."""
+    if points >= top.Points.min():
+        return int((top.Points > points).sum() + 1)
+    q = np.interp(points, np.r_[0, quantiles.points], np.r_[0, quantiles['quantile']])   # below median: rough
+    return int(round((1 - q) * field_size)) + 1
+
+
+def leverage_backtest(week, cfg, settings, field_size, sources=('cv',)):
+    """Rebuild the week (current model + that week's overrides), attach ownership, and run the optimizer once per
+    leverage setting; grade every lineup against actual FanDuel points.
+    sources: 'cv' = out-of-fold predicted ownership for this week (what a pre-lock model could know, roughly);
+    'actual' = the field's real %Drafted (oracle: the most leverage could do with perfect ownership)."""
+    from . import optimize, ownership, overrides
+    proj, sims = project.build(week, cfg)
+    proj, sims = overrides.apply(proj, sims, cfg['overrides'])
+    oc = cfg['ownership']
+    train = ownership.training_frame(week, cfg)
+    own = {'cv': pd.Series(ownership.cross_validate(train, oc) * 100, index=train.Id),
+           'actual': pd.Series(train.own.values * 100, index=train.Id)}
+    act = analyze.load_actuals(week.results_players).set_index('Id')
+    top = pd.read_csv(os.path.join(week.data, 'results_top2000.csv'))
+    qs = pd.read_csv(os.path.join(week.data, 'results_field_quantiles.csv'))
+    rows = []
+    for src in sources:
+        p = proj.assign(Own_proj=proj.Id.map(own[src]).fillna(0).round(2))
+        for s in settings:
+            if src == 'actual' and not s.get('enabled'):
+                continue   # leverage off ignores ownership: same as the 'cv' baseline
+            c = deep_merge(cfg, {'optimizer': {'leverage': s}})
+            df = optimize.eligible_pool(p, c['prefs'], c['optimizer'])
+            lineups, _ = optimize.build_lineups(df, sims, c)
+            pts = np.array([act.FPTS.reindex(df.Id[lp]).fillna(0).sum() for lp in lineups])
+            ranks = np.array([est_rank(x, top, qs, field_size) for x in pts])
+            rows.append(dict(own_source=src, **s, mean=pts.mean(), sd=pts.std(), best=pts.max(), best_rank=ranks.min(),
+                             top_1pct=int((ranks <= 0.01 * field_size).sum()),
+                             top_10pct=int((ranks <= 0.10 * field_size).sum()),
+                             proj=np.mean([df.Proj[lp].sum() for lp in lineups]),
+                             own_proj=np.mean([df.Own_proj[lp].sum() for lp in lineups]),
+                             own_actual=np.mean([act.own_pct.reindex(df.Id[lp]).fillna(0).sum() for lp in lineups]),
+                             stacks=pd.Series([df.Team[[i for i in lp if df.Pos[i] == 'QB'][0]] for lp in lineups])
+                             .value_counts().to_dict()))
+            print(rows[-1])
+    return pd.DataFrame(rows)

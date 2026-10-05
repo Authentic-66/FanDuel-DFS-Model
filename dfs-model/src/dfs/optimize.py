@@ -1,7 +1,8 @@
 """Sequential MILP lineup builder (PuLP/CBC): one lineup per sim draw, stacked, under Doug's exposure rules.
 
 Rules come from config: [roster], [optimizer] (caps, objective, overlap), [prefs] (red/yellow/green review lists),
-[stacks] (QB team weights and per-team stack rules, e.g. BUF = QB + 1 receiver + James Cook III).
+[stacks] (QB team weights and per-team stack rules, e.g. BUF = QB + 1 receiver + James Cook III),
+[optimizer.leverage] (off by default: ownership penalty, lineup ownership cap, chalk-stack down-weighting; needs Own_proj).
 """
 import csv
 import random
@@ -109,9 +110,20 @@ def solve_lineup(df, obj, team, rule, cap, use, forced, prior_lineups, roster, o
         P += x[i] == 1
     for lp in prior_lineups:
         P += pulp.lpSum(x[i] for i in lp) <= opt['max_overlap']
+    lev = opt['leverage']
+    if lev['enabled'] and lev['max_lineup_own']:
+        P += pulp.lpSum(df.Own_proj[i] * x[i] for i in idx) <= lev['max_lineup_own']
     if P.solve(pulp.PULP_CBC_CMD(msg=0)) != 1:
         return None
     return [i for i in idx if x[i].value() > 0.5]
+
+
+def leverage_weights(df, weights, lev):
+    """Stack draw weights scaled by (mean field QB own / team's field QB own) ** stack_exponent."""
+    qb = df[(df.Pos == 'QB') & df.StartingQB].groupby('Team').Own_proj.max()
+    own = pd.Series({t: qb.get(t, np.nan) for t in weights}).clip(lower=0.5)
+    own = own.fillna(own.mean())
+    return {t: w * (own.mean() / own[t]) ** lev['stack_exponent'] for t, w in weights.items()}
 
 
 def build_lineups(df, sims, cfg):
@@ -124,6 +136,16 @@ def build_lineups(df, sims, cfg):
     pool = [t for t, w in stacks['weights'].items() for _ in range(w)]
     if not pool:
         raise ValueError('no stack weights: set [stacks.weights] in week.toml')
+    lev = opt['leverage']
+    penalty = 0.0
+    if lev['enabled']:
+        if 'Own_proj' not in df:
+            raise ValueError('[optimizer.leverage] enabled but proj has no Own_proj (no earlier result weeks?)')
+        penalty = lev['own_weight'] * df.Own_proj.values
+        if lev['stack_exponent']:
+            lw = leverage_weights(df, stacks['weights'], lev)
+            teams, tw = list(lw), list(lw.values())
+            pool = None
     use = {i: 0 for i in df.index}
     lineups, draw, tries = [], 0, 0
     w = opt['mean_weight']
@@ -137,10 +159,12 @@ def build_lineups(df, sims, cfg):
         if tries > opt['drop_force_after']:
             force[slot], F = set(), []
         fq = [i for i in F if df.Pos[i] == 'QB']
-        team = df.Team[fq[0]] if fq else rnd.choice(pool)
-        obj = w * df.Proj.values + (1 - w) * sims[df.row.values, draw % sims.shape[1]]
+        team = df.Team[fq[0]] if fq else (rnd.choice(pool) if pool else rnd.choices(teams, tw)[0])
+        obj = w * df.Proj.values + (1 - w) * sims[df.row.values, draw % sims.shape[1]] - penalty
         lp = solve_lineup(df, obj, team, stack_rule(team, stacks, opt), cap, use, F, lineups, cfg['roster'], opt)
         if lp is None:
+            if tries > 20 * opt['drop_force_after']:   # e.g. a [optimizer.leverage] max_lineup_own nothing can meet
+                raise RuntimeError(f'no feasible lineup for slot {slot + 1} after {tries} tries')
             continue
         lineups.append(lp)
         tries = 0
@@ -194,11 +218,20 @@ def outputs(df, sims, lineups, use, cfg):
             d[s] = f'{df.Name[i]} ({df.Team[i]}, ${df.Salary[i]:,}, {df.Proj[i]})'
         d.update(Stack=df.Team[order[0]], Salary=int(df.Salary[lp].sum()), Proj=round(df.Proj[lp].sum(), 1),
                  Ceiling_p90=round(np.percentile(sim, 90), 1), P_200plus=round((sim >= 200).mean(), 4))
+        if 'Own_proj' in df:
+            d['Own_proj_sum'] = round(df.Own_proj[lp].sum(), 1)
         readable.append(d)
     c = pd.Series(use)
     c = c[c > 0]
     ex = pd.DataFrame({'Player': df.Name[c.index], 'Pos': df.Pos[c.index], 'Team': df.Team[c.index],
                        'Salary': df.Salary[c.index], 'Proj': df.Proj[c.index], 'Status': df.Inj[c.index].fillna(''),
                        'Lineups': c.values, 'Exposure_%': (c.values / n * 100).round(1)}).sort_values('Lineups', ascending=False)
+    if 'Own_proj' in df:   # field's projected ownership; Exp_minus_Own > 0 = we are overweight vs the field
+        fades = df[~df.index.isin(c.index) & (df.Own_proj >= cfg['ownership']['show_unused_own'])]
+        ex = pd.concat([ex, pd.DataFrame({'Player': fades.Name, 'Pos': fades.Pos, 'Team': fades.Team,
+                                          'Salary': fades.Salary, 'Proj': fades.Proj, 'Status': fades.Inj.fillna(''),
+                                          'Lineups': 0, 'Exposure_%': 0.0})])
+        ex['Own_proj_%'] = df.Own_proj[ex.index].values
+        ex['Exp_minus_Own'] = (ex['Exposure_%'] - ex['Own_proj_%']).round(1)
     ex['Review'] = ex.Player.map(lambda p: 'Green (more)' if p in prefs['green'] else ('Yellow (less)' if p in prefs['yellow'] else ''))
     return upload, pd.DataFrame(readable), ex

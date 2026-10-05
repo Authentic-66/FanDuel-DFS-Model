@@ -73,6 +73,7 @@ WEEK_DEFAULTS = {
     'overrides': {},
     'prefs': {'starters_only': True, 'red': [], 'red_teams': [], 'yellow': {}, 'green': {}, 'player_cap': {}},
     'stacks': {'weights': {}, 'rules': {}},
+    'contest': {'field_size': 0, 'guru': []},
 }
 
 
