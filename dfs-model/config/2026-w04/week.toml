@@ -1,0 +1,90 @@
+# Week 4 settings (2026-w04). Copy to the next week's folder and edit. Overrides any key in config/defaults.toml.
+
+# Friday Oct 2 official game statuses (ESPN). Skill positions only.
+[status]
+out = ["Justin Jefferson", "Adonai Mitchell", "Breece Hall", "Mason Taylor", "DeVonta Smith", "Dallas Goedert",
+       "Marquise Brown", "Zach Charbonnet", "Jadarian Price", "Caleb Douglas", "Caleb Williams", "Terrance Ferguson"]
+questionable = ["Zay Flowers", "Ray Davis", "Kenyon Sadiq", "Ladd McConkey", "Colby Parkinson", "Mike Evans", "Tyjae Spears"]
+
+# Doug's projection reads (Oct 3): new mean FanDuel points; the player's sim distribution is rescaled to it.
+[overrides]
+"Puka Nacua" = 20.5            # healthy; 2025 level (20.5 FD pts/g)
+"Christian McCaffrey" = 21.0   # between 2026 model (18.4) and 2025 (22.2)
+"David Montgomery" = 14.5      # Dallas allows 179.7 rush yds/g (2nd worst); ~+28% rushing, half-shrunk
+"Emanuel Wilson" = 11.5        # lead back w/ Charbonnet & Price out (~15 carries)
+"Jordan Addison" = 13.0        # MIN WR1 with Jefferson out
+"T.J. Hockenson" = 10.5        # Doug: picks up Jefferson targets too
+
+# Doug's review of week-4 exposure (color-coded xlsx). red = exclude; yellow = cap at half the listed lineups;
+# green = min max(2x listed, 12) lineups.
+[prefs]
+starters_only = true           # QB1, RB1, top-3 WR, TE1 per team (by projection); green players always eligible
+red_teams = ["TEN", "MIA"]     # nothing from these teams
+red = [
+  # review #1 (Oct 3)
+  "Phil Mafah", "Ryan Flournoy", "Brandin Cooks", "Kalif Raymond", "New York Jets", "Xavier Hutchinson", "Jawhar Jordan",
+  "Theo Wease Jr.", "Michael Mayer", "AJ Barner", "Matt Hibner", "Tory Horton", "Wan'Dale Robinson", "Tampa Bay Buccaneers",
+  "Tennessee Titans", "Ronnie Bell", "Shedrick Jackson", "Malik Washington", "New England Patriots", "Keaton Mitchell",
+  "Konata Mumpfield", "DeMario Douglas", "Chris Rodriguez Jr.", "Tre' Harris", "Miami Dolphins",
+  # questionable players pulled (Oct 3)
+  "Mike Evans", "Ladd McConkey", "Zay Flowers", "Kenyon Sadiq",
+  # review #2 (Oct 3 evening)
+  "Adam Trautman", "Arizona Cardinals", "Devin Singletary", "Emmett Johnson", "Erick All Jr.", "Foster Moreau", "George Holani",
+  "Isaiah Williams", "Jared Wayne", "Jaydon Blue", "Jaylin Noel", "Kayshon Boutte", "Kenny Gainwell", "Mike Washington Jr.",
+  "Mitch Tinsley", "Pat Bryant", "Samaje Perine", "Ty Johnson", "Tyler Allgeier", "Tyler Goodson", "Woody Marks",
+]
+
+[prefs.yellow]
+# review #1
+"Las Vegas Raiders" = 26
+"Joshua Palmer" = 19
+"Cincinnati Bengals" = 19
+"Dalton Kincaid" = 16
+"Braelon Allen" = 15
+"Xavier Worthy" = 13
+"Rhamondre Stevenson" = 12
+"Tre Tucker" = 10
+"Brenton Strange" = 10
+"Tyler Higbee" = 10
+"Luther Burden III" = 6
+# review #2
+"Brian Thomas Jr." = 15
+"Jakobi Meyers" = 19
+"Keon Coleman" = 10
+"Khalil Shakir" = 11
+"Los Angeles Chargers" = 21
+"Michael Wilson" = 25          # was green in review #1
+"Mike Gesicki" = 25
+
+[prefs.green]
+"Josh Allen" = 17
+"Dontayvion Wicks" = 7
+"Isaiah Likely" = 6
+"Christian McCaffrey" = 9
+"David Montgomery" = 3
+"Kyren Williams" = 3
+"Puka Nacua" = 2
+"Emanuel Wilson" = 1
+# review #2
+"Kirk Cousins" = 4
+"Makai Lemon" = 1
+"T.J. Hockenson" = 1
+
+[prefs.player_cap]             # hard per-player lineup caps (overrides exposure_cap)
+
+# Stack QB team draw weights (relative). Phase 2 #3 replaces these with Vegas-derived weights.
+[stacks.weights]
+JAC = 25
+CIN = 18
+BUF = 25
+KC = 20
+LV = 12
+DAL = 15
+HOU = 15
+SF = 15
+SEA = 10
+LAR = 12
+
+[stacks.rules.BUF]             # Doug: Allen + 1 receiver + Cook
+receivers = 1
+require = ["James Cook III"]

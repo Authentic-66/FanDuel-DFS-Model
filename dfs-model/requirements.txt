@@ -1,0 +1,5 @@
+# Python >= 3.11 (config uses stdlib tomllib)
+pandas
+numpy
+openpyxl
+pulp==2.9.0   # 2.9 bundles the CBC solver; pulp 4.x changed the API and ships no solver

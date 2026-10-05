@@ -1,0 +1,105 @@
+Player,Pos,Team,Salary,Proj,Status,Lineups,Exposure_%,Review
+Jaxon Smith-Njigba,WR,SEA,9500,29.9,,25,16.7,
+Kenneth Walker III,RB,KC,8500,27.6,,25,16.7,
+Derrick Henry,RB,BAL,9100,26.7,,25,16.7,
+James Cook III,RB,BUF,8200,22.4,,25,16.7,
+Brock Bowers,TE,LV,7200,22.4,,25,16.7,
+Ashton Jeanty,RB,LV,7800,19.4,,25,16.7,
+Davante Adams,WR,LAR,8300,21.1,,25,16.7,
+Garrett Wilson,WR,NYJ,7600,22.0,,25,16.7,
+Tee Higgins,WR,CIN,6900,14.3,,25,16.7,
+Dontayvion Wicks,WR,PHI,5900,13.4,,25,16.7,Green (more)
+Christian Watson,WR,GB,7200,18.6,,25,16.7,
+D'Andre Swift,RB,CHI,7300,19.2,,25,16.7,
+Nico Collins,WR,HOU,7400,18.0,,25,16.7,
+Christian McCaffrey,RB,SF,8800,21.0,,25,16.7,Green (more)
+Puka Nacua,WR,LAR,9000,20.5,,25,16.7,Green (more)
+Chicago Bears,D,CHI,3500,7.8,,25,16.7,
+Emanuel Wilson,RB,SEA,5600,11.5,,25,16.7,Green (more)
+T.J. Hockenson,TE,MIN,4900,10.5,,25,16.7,Green (more)
+George Kittle,TE,SF,6700,11.0,,25,16.7,
+Isaiah Likely,TE,NYG,5100,11.2,,25,16.7,Green (more)
+Minnesota Vikings,D,MIN,5000,11.7,,25,16.7,
+Travis Kelce,TE,KC,5500,12.1,,25,16.7,
+David Montgomery,RB,HOU,6500,14.5,,25,16.7,Green (more)
+Dalton Schultz,TE,HOU,5600,12.9,,25,16.7,
+Deebo Samuel Sr.,WR,SF,7000,8.4,,24,16.0,
+Brock Purdy,QB,SF,8300,23.2,,24,16.0,
+Josh Allen,QB,BUF,9100,30.3,,21,14.0,Green (more)
+Matthew Golden,WR,GB,6300,14.8,,20,13.3,
+Parker Washington,WR,JAC,7100,14.0,,20,13.3,
+Ja'Marr Chase,WR,CIN,9100,16.0,,18,12.0,
+Joe Burrow,QB,CIN,8200,20.5,,17,11.3,
+Chase Brown,RB,CIN,7600,17.0,,17,11.3,
+Kyren Williams,RB,LAR,7900,17.0,,16,10.7,Green (more)
+RJ Harvey,RB,DEN,5800,9.3,,16,10.7,
+Bhayshul Tuten,RB,JAC,6800,13.8,,16,10.7,
+Trevor Lawrence,QB,JAC,7900,18.1,,16,10.7,
+C.J. Stroud,QB,HOU,7000,18.4,,15,10.0,
+Aaron Jones Sr.,RB,MIN,6400,14.7,,14,9.3,
+Sam Darnold,QB,SEA,7500,23.1,,14,9.3,
+Javonte Williams,RB,DAL,7500,15.8,,14,9.3,
+Rashid Shaheed,WR,SEA,5100,6.0,,14,9.3,
+Makai Lemon,WR,PHI,5500,6.4,,14,9.3,Green (more)
+Trey McBride,TE,ARI,7400,17.7,,14,9.3,
+Cooper Kupp,WR,SEA,5400,6.1,,14,9.3,
+Jake Ferguson,TE,DAL,5400,6.8,,13,8.7,
+New York Giants,D,NYG,3600,5.3,,13,8.7,
+Jordan Addison,WR,MIN,6500,13.0,,13,8.7,
+Las Vegas Raiders,D,LV,3100,8.1,,13,8.7,Yellow (less)
+Jeremiyah Love,RB,ARI,6600,14.4,,13,8.7,
+CeeDee Lamb,WR,DAL,8500,17.5,,13,8.7,
+Mike Gesicki,TE,CIN,5100,10.1,,12,8.0,Yellow (less)
+Omarion Hampton,RB,LAC,7200,11.5,,12,8.0,
+Patrick Mahomes,QB,KC,8000,21.4,,12,8.0,
+Michael Wilson,WR,ARI,6200,13.8,,12,8.0,Yellow (less)
+Jalen Nailor,WR,LV,5000,4.7,,11,7.3,
+Kirk Cousins,QB,LV,7300,19.8,,11,7.3,Green (more)
+Jakobi Meyers,WR,JAC,5700,7.4,,10,6.7,Yellow (less)
+Rashee Rice,WR,KC,7500,10.0,,10,6.7,
+Los Angeles Chargers,D,LAC,3100,5.6,,10,6.7,Yellow (less)
+Matthew Stafford,QB,LAR,7800,20.6,,10,6.7,
+Dak Prescott,QB,DAL,8100,19.7,,10,6.7,
+Jacksonville Jaguars,D,JAC,3800,6.7,,10,6.7,
+Joshua Palmer,WR,BUF,4800,8.7,,10,6.7,Yellow (less)
+Cincinnati Bengals,D,CIN,3300,7.3,,10,6.7,Yellow (less)
+Mack Hollins,WR,NE,5700,7.5,,8,5.3,
+Brian Thomas Jr.,WR,JAC,5500,5.7,,8,5.3,Yellow (less)
+Braelon Allen,RB,NYJ,5700,14.9,,8,5.3,Yellow (less)
+Dalton Kincaid,TE,BUF,6100,12.4,,8,5.3,Yellow (less)
+Courtland Sutton,WR,DEN,6000,6.7,,7,4.7,
+Baltimore Ravens,D,BAL,4900,7.7,,7,4.7,
+Denver Broncos,D,DEN,4300,6.3,,7,4.7,
+Emeka Egbuka,WR,TB,5900,8.8,,6,4.0,
+Xavier Worthy,WR,KC,5700,7.2,,6,4.0,Yellow (less)
+Khalil Shakir,WR,BUF,5700,7.4,,6,4.0,Yellow (less)
+Seattle Seahawks,D,SEA,4700,7.8,,6,4.0,
+Rhamondre Stevenson,RB,NE,5700,10.1,,6,4.0,Yellow (less)
+Houston Texans,D,HOU,4000,5.5,,6,4.0,
+Cam Skattebo,RB,NYG,7100,13.2,,5,3.3,
+Los Angeles Rams,D,LAR,4100,5.8,,5,3.3,
+Zach Ertz,TE,PHI,4800,4.4,,5,3.3,
+DJ Moore,WR,BUF,6700,11.0,,5,3.3,
+Romeo Doubs,WR,NE,5500,5.4,,5,3.3,
+Brenton Strange,TE,JAC,5100,5.4,,5,3.3,Yellow (less)
+Buffalo Bills,D,BUF,4200,6.0,,5,3.3,
+Cade Otton,TE,TB,4900,6.8,,5,3.3,
+Tyler Higbee,TE,LAR,4600,11.1,,5,3.3,Yellow (less)
+Jaylen Waddle,WR,DEN,6600,9.2,,5,3.3,
+Tre Tucker,WR,LV,5800,8.9,,5,3.3,Yellow (less)
+Quentin Johnston,WR,LAC,5400,6.0,,4,2.7,
+George Pickens,WR,DAL,7900,10.8,,4,2.7,
+Dallas Cowboys,D,DAL,3400,3.5,,4,2.7,
+Malachi Fields,WR,NYG,5100,5.1,,3,2.0,
+Hunter Henry,TE,NE,5000,4.4,,3,2.0,
+Kansas City Chiefs,D,KC,4600,6.2,,3,2.0,
+MarShawn Lloyd,RB,GB,5400,6.9,,3,2.0,
+Luther Burden III,WR,CHI,5800,11.8,,3,2.0,Yellow (less)
+Skyy Moore,WR,GB,4800,4.4,,2,1.3,
+Malik Nabers,WR,NYG,6800,7.7,,2,1.3,
+Mark Andrews,TE,BAL,5200,9.4,,2,1.3,
+Rashod Bateman,WR,BAL,5800,8.0,,2,1.3,
+Ted Hurst III,WR,TB,5300,5.8,,2,1.3,
+Bucky Irving,RB,TB,7400,13.4,,1,0.7,
+Kendrick Bourne,WR,ARI,5100,6.7,,1,0.7,
+San Francisco 49ers,D,SF,4500,5.7,,1,0.7,

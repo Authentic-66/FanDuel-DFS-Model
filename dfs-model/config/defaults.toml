@@ -1,0 +1,133 @@
+# Rules that hold week to week. config/<week>/week.toml is deep-merged on top, so any key here can be overridden
+# for a single week (e.g. [optimizer] exposure_cap = 40).
+
+# --- FanDuel contest scoring (verified from Pooch Punt rules screenshot) ---
+[scoring]
+pass_yd = 0.04
+pass_td = 4
+interception = -1
+rush_yd = 0.1
+rush_td = 6
+rec_yd = 0.1
+rec_td = 6
+reception = 0.5          # half PPR
+return_td = 6
+fumble_lost = -2
+two_pt = 2
+bonus = 3                # each of: 100+ rush yds, 100+ rec yds, 300+ pass yds
+bonus_rush_yds = 100
+bonus_rec_yds = 100
+bonus_pass_yds = 300
+
+[scoring.dst]
+sack = 1
+interception = 2
+fumble_recovery = 2
+return_td = 6
+safety = 2
+blocked_kick = 2
+# points allowed (offensive TD/2pt/XP/FG only): pa < bound[i] scores points[i]; pa >= last bound scores pa_else
+pa_bounds = [1, 7, 14, 21, 28, 35]
+pa_points = [10, 7, 4, 1, 0, -1]
+pa_else = -4
+
+[roster]
+salary_cap = 60000
+max_per_team = 4                       # offensive players from one NFL team
+slots = ["QB", "RB", "RB", "WR", "WR", "WR", "TE", "FLEX", "DEF"]   # upload header, exactly
+flex = ["RB", "WR", "TE"]
+
+[teams]
+nflverse_to_fd = { JAX = "JAC", LA = "LAR" }
+
+# --- Projection model ---
+[model]
+n_sims = 10000
+seed = 42
+league_team_total = 22.5       # implied total that maps to a 1.0 scoring multiplier
+volume_elasticity = 0.5        # usage scales by 1 + e * (implied/league - 1)
+season_types = ["REG"]
+
+[model.correlation]            # team scoring multiplier = exp(N(0,team_sd) + N(0,game_sd) + shift), game draw shared by both teams
+team_sd = 0.22
+game_sd = 0.12
+shift = -0.03
+
+# league per-opportunity priors; k = pseudo-opportunities of shrinkage
+[model.priors]
+ypa = { mean = 6.8, k = 60 }
+pass_td = { mean = 0.045, k = 80 }
+int = { mean = 0.022, k = 80 }
+ypc = { mean = 4.3, k = 40 }
+rush_td = { mean = 0.03, k = 40 }
+catch_rate = { mean = 0.65, k = 20 }
+ypt = { mean = 7.8, k = 30 }
+rec_td = { mean = 0.045, k = 30 }
+
+[model.qb]
+min_attempts = 15          # drop QB game rows below this (cameos) from the stats entirely
+prior_attempts = 33        # one pseudo-game of attempts
+att_sd = 0.12
+yds_sd = 0.15
+yds_team_exp = 0.6         # passing yards scale with team factor ** exp
+
+[model.rush]
+att_sd = 0.2
+att_team_exp = 0.3
+yds_sd = 0.3
+
+[model.rec]
+tgt_sd = 0.25
+tgt_team_exp = 0.3
+yds_sd = 0.35
+catch_rate_max = 0.85
+catch_rate_floor = 0.3     # floor on catch rate when converting yds/target to yds/catch
+
+[model.dst]
+sacks = 2.6
+turnovers = 1.3
+turnover_total_exp = 0.5   # turnovers scale with (league / opp implied) ** exp
+return_td_prob = 0.08
+quality_shrink = 0.5       # quality = (1-s) + s * FPPG / league DST FPPG
+
+[model.fallback]           # players with no usable stats: FD FPPG with wide noise
+sd = 0.5
+total_exp = 0.5
+team_exp = 0.5
+
+[model.injury]
+redistribute_share = 0.8           # share of newly-OUT players' targets/carries given to active teammates, pro rata
+questionable_inactive_prob = 0.25
+
+# Phase 2 #1: shrink current-season usage/efficiency toward the prior season.
+# Prior season adds `usage_games` pseudo-games of its per-game targets/carries/attempts, and `efficiency_games` games'
+# worth of its per-opportunity outcomes (yds, TDs, catches) before the league-prior shrink. 0 = off.
+[model.prior_blend]
+usage_games = 2.0         # tuned Oct 5 2026: docs/phase2_prior_blend.md
+efficiency_games = 4.0
+team_change_weight = 1.0    # multiplier on both weights when the player's prior-season team differs
+min_prior_games = 4         # ignore prior seasons shorter than this (injury-shortened samples)
+
+# --- Optimizer (Doug's standing rules) ---
+[optimizer]
+n_lineups = 150
+seed = 11
+exposure_cap = 25            # every player and DST; raise to 40 only if infeasible
+mean_weight = 0.4            # objective = mean_weight * proj + (1 - mean_weight) * one sim draw
+max_overlap = 6              # max shared players between any two lineups
+min_proj = 4                 # drop non-DST players projected below this (unless green)
+questionable_cap_pct = 0.12
+yellow_factor = 0.5          # yellow = cap at this share of current exposure
+green_multiplier = 2         # green = min max(mult * current, floor)
+green_floor = 12
+relax_force_after = 3        # failed solves before dropping forced players one at a time
+drop_force_after = 12
+
+[optimizer.starters]         # depth kept per team when prefs.starters_only (QB = week's starter)
+RB = 1
+WR = 3
+TE = 1
+
+[optimizer.stack]            # QB + receivers from his team + bring-back from opponent; teams overridable in week.toml
+receivers = 2
+bring_back = 1

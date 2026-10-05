@@ -1,0 +1,13 @@
+away,home,fav,spread,total,note
+ARI,NYG,ARI,1.5,44.5,winprob-derived
+NE,BUF,BUF,8,48.5,winprob-derived
+NYJ,CHI,CHI,4,42.5,winprob-derived
+DAL,HOU,HOU,2.5,47.5,winprob-derived
+LAR,PHI,LAR,3,46.5,winprob-derived +2.5 Donald out (Doug)
+GB,TB,GB,4.5,39.5,winprob-derived
+TEN,BAL,BAL,14,43.5,winprob-derived
+JAC,CIN,CIN,2,51.5,winprob-derived
+MIA,MIN,MIN,7,38.5,ESTIMATE
+KC,LV,KC,1,47.5,ESTIMATE
+LAC,SEA,SEA,6,42.5,ESTIMATE
+DEN,SF,SF,2.5,47.5,FanDuel line
