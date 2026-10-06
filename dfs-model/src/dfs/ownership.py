@@ -166,6 +166,36 @@ def fit_report(train, pred_own):
     return pd.DataFrame(rows).round(3)
 
 
+# --- FanDuel Guru suggestions ([contest.guru] in week.toml) ---------------------------------------------------------
+
+GURU_SLOTS = ['QB', 'RB1', 'RB2', 'WR1', 'WR2', 'WR3', 'TE', 'FLEX', 'DEF']
+
+
+def guru_table(guru, slate_names=None):
+    """[contest.guru] -> one row per suggestion: slot, rank (1-3, Guru's order), Name, picked. Not a model feature yet
+    (needs a few weeks of full suggestion lists). Raises on unknown slots, a pick that isn't among the options, or
+    (if slate_names is given) names not on the slate."""
+    rows, errors = [], []
+    for slot, entry in guru.items():
+        if slot in ('adapts', 'fill_order'):
+            continue
+        if slot not in GURU_SLOTS:
+            errors.append(f'unknown slot {slot!r} (use {GURU_SLOTS})')
+            continue
+        opts, pick = entry.get('options', []), entry.get('picked', '')
+        if pick and pick not in opts:
+            errors.append(f'{slot}: picked {pick!r} is not among options {opts}')
+        rows += [dict(slot=slot, rank=k + 1, Name=n, picked=n == pick) for k, n in enumerate(opts) if n]
+    df = pd.DataFrame(rows, columns=['slot', 'rank', 'Name', 'picked'])
+    if slate_names is not None:
+        missing = sorted(set(df.Name) - set(slate_names))
+        if missing:
+            errors.append(f'not on the slate: {missing}')
+    if errors:
+        raise ValueError('[contest.guru]: ' + '; '.join(errors))
+    return df
+
+
 # --- pipeline hooks ---------------------------------------------------------------------------------------------
 
 def attach(week, cfg, proj, quiet=False):

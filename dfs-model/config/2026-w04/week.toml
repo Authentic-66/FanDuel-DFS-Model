@@ -17,6 +17,9 @@ questionable = ["Zay Flowers", "Ray Davis", "Kenyon Sadiq", "Ladd McConkey", "Co
 
 # Doug's review of week-4 exposure (color-coded xlsx). red = exclude; yellow = cap at half the listed lineups;
 # green = min max(2x listed, 12) lineups.
+[optimizer]
+exclude_questionable = false   # week 4 predates the rule: Q players were pulled one by one via [prefs] red
+
 [prefs]
 starters_only = true           # QB1, RB1, top-3 WR, TE1 per team (by projection); green players always eligible
 red_teams = ["TEN", "MIA"]     # nothing from these teams
@@ -92,8 +95,21 @@ require = ["James Cook III"]
 # Contest facts for grading/backtests, plus pre-lock field signals worth recording each week.
 [contest]
 field_size = 596809
-# The FanDuel "Guru" lineup Doug was served pre-lock (entered as his 150th). 6 of its 9 players were 17-40% owned;
-# FanDuel's in-app suggestions look like a big chalk driver in this low-stakes field. Not a model feature yet (one
-# week); keep recording it so it can be tested once a few weeks exist.
-guru = ["Sam Darnold", "Aaron Jones Sr.", "David Montgomery", "Jaxon Smith-Njigba", "Jordan Addison", "Tee Higgins",
-        "Travis Kelce", "Braelon Allen", "Minnesota Vikings"]
+# FanDuel Guru (paid): for each lineup slot it suggests 3 players and Doug picks one. Guru pushes every suggested
+# name to every paying user, so all ~27 suggestions are the ownership signal, not just the picks. Format: one entry per
+# slot, options = the 3 suggested (in Guru's order), picked = Doug's choice; fill_order = slots in the order Doug filled
+# them; adapts = whether suggestions changed as slots filled (e.g. to remaining salary): "yes" / "no" / "unknown".
+# Week 4 was recorded before this format: only the 9 picks are known (6 of them were 17-40% owned), the other two
+# options per slot were not saved.
+[contest.guru]
+adapts = "unknown"
+fill_order = []
+QB = { options = ["Sam Darnold"], picked = "Sam Darnold" }
+RB1 = { options = ["Aaron Jones Sr."], picked = "Aaron Jones Sr." }
+RB2 = { options = ["David Montgomery"], picked = "David Montgomery" }
+WR1 = { options = ["Jaxon Smith-Njigba"], picked = "Jaxon Smith-Njigba" }
+WR2 = { options = ["Jordan Addison"], picked = "Jordan Addison" }
+WR3 = { options = ["Tee Higgins"], picked = "Tee Higgins" }
+TE = { options = ["Travis Kelce"], picked = "Travis Kelce" }
+FLEX = { options = ["Braelon Allen"], picked = "Braelon Allen" }
+DEF = { options = ["Minnesota Vikings"], picked = "Minnesota Vikings" }

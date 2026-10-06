@@ -12,11 +12,15 @@ def norm_name(s):
 
 
 def load_slate(path, status):
-    """All FanDuel players with Injury Indicator rebuilt from config status (stale Q/D tags cleared; O/IR kept).
-    Adds Inj (status), Full name and join Key. Returns the full list; filter with active(...)."""
+    """All FanDuel players with Inj (status), Full name and join Key. Returns the full list; filter with active(...).
+    FanDuel's O/IR tags are always kept. Until [status] is filled in (both lists empty: before Friday's report),
+    FanDuel's Q and D tags count as Q; once it is, they are cleared and config status decides (they go stale)."""
     fd = pd.read_csv(path)
     fd['FPPG'] = fd.FPPG.fillna(0)    # never-played backups have no FPPG
-    fd['Inj'] = fd['Injury Indicator'].where(fd['Injury Indicator'].isin(['O', 'IR']), '')
+    tags = fd['Injury Indicator']
+    fd['Inj'] = tags.where(tags.isin(['O', 'IR']), '')
+    if not status['out'] and not status['questionable']:
+        fd.loc[tags.isin(['Q', 'D']), 'Inj'] = 'Q'
     fd['Full'] = fd['First Name'] + ' ' + fd['Last Name']
     fd['Key'] = fd.Nickname.map(norm_name)
     named = lambda names: fd.Full.isin(names) | fd.Nickname.isin(names)

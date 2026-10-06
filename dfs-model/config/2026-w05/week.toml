@@ -1,0 +1,72 @@
+# Week 5 settings (2026-w05). Made from 2026-w04's week.toml with the week-specific parts reset. Overrides any key in
+# config/defaults.toml. Standing rules come from defaults: starters only, 25-lineup cap, leverage off.
+
+# Friday's official game statuses go here (skill positions). While both lists are empty, FanDuel's own tags apply:
+# O/IR = out, Q/D = questionable, and questionable players are excluded ([optimizer] exclude_questionable, default true).
+# Once anything is listed here, FanDuel's Q/D tags are ignored and these lists decide (O/IR tags still apply).
+[status]
+out = []
+questionable = []
+
+# Doug's projection reads: new mean FanDuel points (the player's sims are rescaled to it).
+[overrides]
+
+[prefs]
+starters_only = true           # QB1, RB1, top-3 WR, TE1 per team (by projection); green players always eligible
+red_teams = []
+red = []
+
+[prefs.yellow]
+
+[prefs.green]
+
+[prefs.player_cap]             # hard per-player lineup caps (overrides exposure_cap)
+
+# Stack QB-team draw weights (relative), for all 22 main-slate teams (11 games). Placeholder until Doug's review:
+# weight = round(2 * (implied total - 16)), min 1, from data/2026-w05/lines.csv (bet365 Oct 5).
+# Phase 2 #3 replaces this with Vegas-derived weights in code.
+[stacks.weights]
+DET = 26   # 29.0 vs ARI
+CIN = 18   # 25.0 @ MIA
+SEA = 18   # 25.0 vs SF
+NE = 17    # 24.5 vs LV
+ARI = 17   # 24.5 vs DET
+CHI = 16   # 23.75 @ GB
+WAS = 16   # 23.75 vs NYG
+PIT = 15   # 23.5 vs IND
+HOU = 14   # 23.25 @ TEN
+DEN = 14   # 23.0 @ LAC
+SF = 13    # 22.5 @ SEA
+MIN = 11   # 21.5 @ NO
+IND = 10   # 21.0 @ PIT
+NYJ = 10   # 21.0 vs CLE
+LV = 10    # 21.0 @ NE
+NYG = 10   # 20.75 @ WAS
+GB = 10    # 20.75 vs CHI
+NO = 8     # 20.0 vs MIN
+LAC = 7    # 19.5 vs DEN
+CLE = 7    # 19.5 @ NYJ
+MIA = 3    # 17.5 vs CIN
+TEN = 1    # 16.25 vs HOU
+
+# No per-team stack rules this week (BUF is not on the slate); every team uses [optimizer.stack]: QB + 2 receivers + 1 bring-back.
+[stacks.rules]
+
+[contest]
+field_size = 0                 # fill in after the slate (for grading)
+
+# FanDuel Guru suggestions, pre-lock (candidate ownership feature; see config/2026-w04/week.toml for the format notes).
+# Per slot: the 3 players Guru suggested, in its order, and the one Doug picked. Screenshots of each slot are fine:
+# Claude transcribes them here. Leave empty if Guru isn't used this week.
+[contest.guru]
+adapts = "unknown"             # did suggestions change as slots were filled? "yes" / "no" / "unknown"
+fill_order = []                # slots in the order Doug filled them, e.g. ["QB", "RB1", ...]
+# QB = { options = ["", "", ""], picked = "" }
+# RB1 = { options = ["", "", ""], picked = "" }
+# RB2 = { options = ["", "", ""], picked = "" }
+# WR1 = { options = ["", "", ""], picked = "" }
+# WR2 = { options = ["", "", ""], picked = "" }
+# WR3 = { options = ["", "", ""], picked = "" }
+# TE = { options = ["", "", ""], picked = "" }
+# FLEX = { options = ["", "", ""], picked = "" }
+# DEF = { options = ["", "", ""], picked = "" }

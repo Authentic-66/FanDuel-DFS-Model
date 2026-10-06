@@ -116,7 +116,8 @@ exposure_cap = 25            # every player and DST; raise to 40 only if infeasi
 mean_weight = 0.4            # objective = mean_weight * proj + (1 - mean_weight) * one sim draw
 max_overlap = 6              # max shared players between any two lineups
 min_proj = 4                 # drop non-DST players projected below this (unless green)
-questionable_cap_pct = 0.12
+exclude_questionable = true  # Doug's standing rule: pull Q players (incl. FanDuel Q/D tags before Friday's [status])
+questionable_cap_pct = 0.12  # cap on Q players when exclude_questionable = false
 yellow_factor = 0.5          # yellow = cap at this share of current exposure
 green_multiplier = 2         # green = min max(mult * current, floor)
 green_floor = 12

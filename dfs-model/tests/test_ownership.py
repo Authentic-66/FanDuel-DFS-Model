@@ -55,6 +55,20 @@ class OwnershipTest(unittest.TestCase):
         self.assertLess(lw['A'], lw['B'])
 
 
+    def test_guru_table(self):
+        g = {'adapts': 'no', 'fill_order': ['QB'], 'QB': {'options': ['A', 'B', 'C'], 'picked': 'B'},
+             'FLEX': {'options': ['D', 'E', 'F'], 'picked': 'F'}}
+        t = ownership.guru_table(g, slate_names=list('ABCDEF'))
+        self.assertEqual(len(t), 6)
+        self.assertEqual(list(t[t.picked].Name), ['B', 'F'])
+        with self.assertRaises(ValueError):
+            ownership.guru_table({'QB': {'options': ['A', 'B', 'C'], 'picked': 'Z'}})
+        with self.assertRaises(ValueError):
+            ownership.guru_table({'RB3': {'options': ['A'], 'picked': 'A'}})
+        with self.assertRaises(ValueError):
+            ownership.guru_table(g, slate_names=['A'])
+
+
 class Week4OwnershipTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -69,6 +83,10 @@ class Week4OwnershipTest(unittest.TestCase):
         rep = ownership.fit_report(self.train, oof).set_index('pos')
         self.assertLess(rep.mae['ALL'], rep.mae_null['ALL'])                 # beats position-average guess
         self.assertGreater(rep.r_log['ALL'], 0.6)
+
+    def test_week4_guru_picks_on_slate(self):
+        t = ownership.guru_table(self.cfg['contest']['guru'], slate_names=self.train.Name)
+        self.assertEqual(t.picked.sum(), 9)
 
     def test_no_prior_results_means_no_column(self):
         proj = self.train.drop(columns='own')

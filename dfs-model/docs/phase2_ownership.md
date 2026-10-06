@@ -45,8 +45,15 @@ projection-based model will be. QB ownership is the weakest part (Stroud 2.6% vs
 players owned 17–40%: Jones 40%, JSN 24%, Addison 23%, Kelce 21%, Higgins 20%, B. Allen 19%, plus MIN DST at 18%. In a
 $0.05 field, FanDuel's in-app suggestions look like a big source of chalk. Adding a Guru flag in CV improved RB/TE fit,
 but that coefficient comes from 9 players in one week, so it is **not** in the model. The week-4 list is saved as
-`[contest] guru` in `config/2026-w04/week.toml`. Recording it every week (and any FanDuel projection shown pre-lock)
+`[contest.guru]` in `config/2026-w04/week.toml`. Recording it every week (and any FanDuel projection shown pre-lock)
 is the cheapest way to fix the mid-price-chalk miss.
+
+How Guru works (Doug, Oct 5): it is paid, and for each slot it suggests 3 players; the user picks one. So the signal is
+**all ~27 suggested players**, since every paying user sees them. The 9 picks are only a third of it. `[contest.guru]` holds,
+per slot, `options` (Guru's 3, in order) and `picked`, plus `fill_order` and `adapts` (whether the suggestions change as
+slots fill, e.g. to remaining salary). Week 4 has only the picks. Caveat: because Guru is paid, only part of the field
+uses it, and its suggestions may just be popular for the same reasons the field liked those players. Test for a few
+weeks before trusting it. The model doesn't depend on it.
 
 **Stacks would not have been fixed.** With CV ownership, stacks.csv would have flagged only BUF as CHALK. It would have
 rated JAC as our most contrarian stack (Lawrence 2.7%) when it was actually chalk (10.6%, P. Washington 30%). HOU (Stroud
@@ -104,5 +111,6 @@ What this does and doesn't say:
 ## Next
 - Refit weekly. With 2+ weeks the CV is leave-one-week-out, the honest test of next-week prediction. Re-check the
   Parker-Washington-type misses as weeks accumulate.
-- Record `[contest] guru` (pre-lock) and `[contest] field_size` each week. Test a Guru feature once there are 3+ weeks.
+- Record `[contest.guru]` (all 3 options per slot + pick, pre-lock) and `[contest] field_size` each week. Test a Guru
+  feature (suggested / picked / times suggested) once there are 3+ weeks of full lists.
 - Re-run backtest_leverage on every new week. Consider turning leverage on only after the effect holds up on several slates.

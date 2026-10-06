@@ -24,14 +24,17 @@ and thinks in those terms: fundamentals model + market/public overlay, calibrati
 - `config/<week>/week.toml` — deep-merged over defaults (any default can be overridden for one week): `[status]` OUT/Q,
   `[overrides]` Doug's reads, `[prefs]` red/red_teams/yellow/green/player_cap/starters_only, `[stacks.weights]` QB-team
   draw weights, `[stacks.rules.<TEAM>]` per-team stack shape (e.g. BUF: `receivers = 1`, `require = ["James Cook III"]`).
-  `[contest]` field_size (for grading) and `guru` = the FanDuel Guru lineup Doug is served pre-lock (record weekly).
+  `[contest]` field_size (for grading); `[contest.guru]` = FanDuel Guru (paid) suggestions pre-lock: per slot (QB, RB1,
+  RB2, WR1-3, TE, FLEX, DEF) the 3 players Guru offered + Doug's pick, plus fill_order and adapts. All ~27 suggestions
+  are the signal (Guru shows them to every paying user), not just the picks. Doug may send screenshots: transcribe them.
+  Parsed/validated by `ownership.guru_table`.
   New week: copy last week's `week.toml` and edit.
 
 ## Pipeline (`src/` scripts are thin CLIs over the `src/dfs/` package; all take `--week`, default `$DFS_WEEK`)
 - `dfs/config.py` — `Week` paths (data/, weeks/, config/, stats cache by season) and config loading.
 - `dfs/scoring.py` — contest scoring from config; `stats_points` turns nflverse rows into FanDuel points (matches FanDuel
   FPPG exactly; tested) so any historical week can be graded.
-- `dfs/data.py` — slate (status applied, missing FPPG -> 0), Vegas lines -> implied totals, nflverse stats (FanDuel team
+- `dfs/data.py` — slate (status applied, or FanDuel Q/D tags until [status] is filled; missing FPPG -> 0), Vegas lines -> implied totals, nflverse stats (FanDuel team
   codes, all positions kept: Travis Hunter is listed as CB). `before_week` stops future weeks leaking into re-runs.
 - `dfs/usage.py` — per-player totals keyed by name (name collisions like DJ Turner WR/CB resolved by player_id, offensive
   volume wins), prior-season blend, 80% redistribution of newly-OUT players' targets/carries, starting QB = most attempts
@@ -55,7 +58,10 @@ and thinks in those terms: fundamentals model + market/public overlay, calibrati
 - **Starters only**: QB1 (week's starter), RB1, top-3 WR, TE1 per team by projection. Green-listed players always eligible.
 - **Exposure cap 25 lineups** for every player and DST (Doug's choice to limit bust risk; raise to 40 only if infeasible).
 - Stack per lineup: QB + >=2 of his WR/TE + >=1 bring-back from opponent. No DST facing your own offensive players.
-- Pull questionable players rather than rely on late swap (he enters via CSV and won't hand-edit 150 lineups).
+- Pull questionable players rather than rely on late swap (he enters via CSV and won't hand-edit 150 lineups):
+  `[optimizer] exclude_questionable = true` (default; week 4 sets false, it predates the rule). Before Friday's report
+  (`[status]` lists both empty) FanDuel's own tags apply: O/IR out, Q/D = Q (excluded). Once `[status]` has entries,
+  FanDuel's Q/D tags are ignored. Excluded Q players still hold their team's starter slots (backups not promoted).
 - If he has a free entry, upload 149 (drop lowest projected) and use the free entry separately.
 - Weekly review loop: he color-codes `exposure.csv` in Excel — **red = exclude, yellow = less (cap at ~half current),
   green = more (min = max(2x current, 12))**. Two shades of green both mean "more". Lists live in `config/<week>/week.toml`

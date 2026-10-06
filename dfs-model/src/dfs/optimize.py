@@ -28,10 +28,12 @@ def starters(proj, prefs, opt):
 
 def eligible_pool(proj, prefs, opt):
     """Players the optimizer may use: starters (see above), not red, projected >= min_proj (DST and green exempt),
-    QB must be the week's starter."""
+    QB must be the week's starter, no questionable players if opt.exclude_questionable (green players exempt).
+    Excluded Q players still count toward their team's starter depth (their backups are not promoted)."""
     green, red = set(prefs['green']), set(prefs['red'])
     pr = starters(proj, prefs, opt)
     keep = (~pr.Name.isin(red) & ~pr.Team.isin(prefs['red_teams'])
+            & ~(opt['exclude_questionable'] & (pr.Inj == 'Q') & ~pr.Name.isin(green))
             & ((pr.Pos == 'D') | (pr.Proj >= opt['min_proj']) | pr.Name.isin(green))
             & ((pr.Pos != 'QB') | pr.StartingQB))
     return pr[keep].reset_index(drop=True)
