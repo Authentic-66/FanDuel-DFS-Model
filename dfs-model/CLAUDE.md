@@ -61,7 +61,8 @@ and thinks in those terms: fundamentals model + market/public overlay, calibrati
 - Pull questionable players rather than rely on late swap (he enters via CSV and won't hand-edit 150 lineups):
   `[optimizer] exclude_questionable = true` (default; week 4 sets false, it predates the rule). Before Friday's report
   (`[status]` lists both empty) FanDuel's own tags apply: O/IR out, Q/D = Q (excluded). Once `[status]` has entries,
-  FanDuel's Q/D tags are ignored. Excluded Q players still hold their team's starter slots (backups not promoted).
+  FanDuel's Q/D tags are ignored. Excluded Q/OUT players don't hold starter depth: RB1/top-3 WR/TE1 are ranked among
+  eligible players, so backups move up (green exempt).
 - If he has a free entry, upload 149 (drop lowest projected) and use the free entry separately.
 - Weekly review loop: he color-codes `exposure.csv` in Excel — **red = exclude, yellow = less (cap at ~half current),
   green = more (min = max(2x current, 12))**. Two shades of green both mean "more". Lists live in `config/<week>/week.toml`

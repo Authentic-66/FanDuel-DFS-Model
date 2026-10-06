@@ -13,11 +13,13 @@ import pandas as pd
 
 def starters(proj, prefs, opt):
     """Projections (with `row` = sims row) cut to each team's starters if prefs.starters_only: the week's starting QB,
-    top-N RB/WR/TE by projection per [optimizer.starters], all DSTs, plus green players."""
+    top-N RB/WR/TE by projection per [optimizer.starters], all DSTs, plus green players. Depth is ranked among players
+    eligible this run: OUT, and Q when opt.exclude_questionable (green exempt), don't hold depth slots."""
     green = set(prefs['green'])
     pr = proj.assign(row=range(len(proj)))
     if prefs['starters_only']:
-        act = pr[(pr.Inj != 'O') & pr.Proj.notna()].copy()
+        held = (pr.Inj == 'O') | (opt['exclude_questionable'] & (pr.Inj == 'Q') & ~pr.Name.isin(green))
+        act = pr[~held & pr.Proj.notna()].copy()
         act['rk'] = act.groupby(['Team', 'Pos']).Proj.rank(ascending=False, method='first')
         depth = act.Pos.map(opt['starters']).fillna(0)
         ok = (((act.Pos == 'QB') & act.StartingQB) | (act.Pos == 'D')
@@ -29,7 +31,7 @@ def starters(proj, prefs, opt):
 def eligible_pool(proj, prefs, opt):
     """Players the optimizer may use: starters (see above), not red, projected >= min_proj (DST and green exempt),
     QB must be the week's starter, no questionable players if opt.exclude_questionable (green players exempt).
-    Excluded Q players still count toward their team's starter depth (their backups are not promoted)."""
+    Excluded Q players don't hold starter depth (see starters), so their backups move up."""
     green, red = set(prefs['green']), set(prefs['red'])
     pr = starters(proj, prefs, opt)
     keep = (~pr.Name.isin(red) & ~pr.Team.isin(prefs['red_teams'])

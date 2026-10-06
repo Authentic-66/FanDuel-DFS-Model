@@ -27,7 +27,7 @@ red = []
 # Phase 2 #3 replaces this with Vegas-derived weights in code.
 [stacks.weights]
 DET = 26   # 29.0 vs ARI
-CIN = 18   # 25.0 @ MIA
+CIN = 3    # 25.0 @ MIA; formula gives 18, cut to 3 until Chase/Higgins (both Q) statuses are known
 SEA = 18   # 25.0 vs SF
 NE = 17    # 24.5 vs LV
 ARI = 17   # 24.5 vs DET

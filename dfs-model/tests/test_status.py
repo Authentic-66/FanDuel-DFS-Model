@@ -39,5 +39,18 @@ class StatusTest(unittest.TestCase):
         self.assertEqual(len(optimize.eligible_pool(proj, prefs, opt)), 3)
 
 
+    def test_excluded_q_does_not_hold_depth(self):
+        proj = pd.DataFrame(dict(Id=list('1234'), Name=['wr1', 'wr2', 'wr3', 'wr4'], Pos='WR', Team='AAA',
+                                 Inj=['Q', '', '', ''], Proj=[15.0, 12.0, 10.0, 8.0], StartingQB=False))
+        prefs = dict(starters_only=True, red=[], red_teams=[], green={})
+        opt = dict(min_proj=4, exclude_questionable=True, starters={'RB': 1, 'WR': 3, 'TE': 1})
+        self.assertEqual(list(optimize.eligible_pool(proj, prefs, opt).Name), ['wr2', 'wr3', 'wr4'])
+        opt['exclude_questionable'] = False   # week-4 behaviour: the Q player holds a slot, wr4 is not a starter
+        self.assertEqual(list(optimize.eligible_pool(proj, prefs, opt).Name), ['wr1', 'wr2', 'wr3'])
+        prefs['green'] = {'wr1': 5}           # green Q player: eligible and holds his slot
+        opt['exclude_questionable'] = True
+        self.assertEqual(list(optimize.eligible_pool(proj, prefs, opt).Name), ['wr1', 'wr2', 'wr3'])
+
+
 if __name__ == '__main__':
     unittest.main()
