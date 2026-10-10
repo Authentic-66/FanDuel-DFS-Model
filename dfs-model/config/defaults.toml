@@ -123,6 +123,9 @@ green_multiplier = 2         # green = min max(mult * current, floor)
 green_floor = 12
 relax_force_after = 3        # failed solves before dropping forced players one at a time
 drop_force_after = 12
+stack_allocation = "random"  # "random": one weighted team draw per lineup; "proportional": stack counts fixed from the
+                             # weights (largest-remainder rounding), so counts match the weights
+reserve_required = false     # true: other stacks leave room on a player a green QB's stack rule requires (see week 5)
 
 [optimizer.starters]         # depth kept per team when prefs.starters_only (QB = week's starter)
 RB = 1

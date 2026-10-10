@@ -21,13 +21,23 @@ and thinks in those terms: fundamentals model + market/public overlay, calibrati
   exposure cap, objective weight, overlap, starters depth, yellow/green formulas, default stack shape).
 - `[ownership]` (model settings) and `[optimizer.leverage]` (off by default: `own_weight` points per 1% owned,
   `max_lineup_own`, `stack_exponent`) also live in defaults.toml; turn leverage on per week in week.toml.
-- `config/<week>/week.toml` — deep-merged over defaults (any default can be overridden for one week): `[status]` OUT/Q,
-  `[overrides]` Doug's reads, `[prefs]` red/red_teams/yellow/green/player_cap/starters_only, `[stacks.weights]` QB-team
+- `config/<week>/week.toml` — deep-merged over defaults (any default can be overridden for one week): `[status]` OUT/Q
+  (+ `[status.starting_qb]` TEAM = "Name": Doug's starting-QB call, overrides the last-game-attempts default),
+  `[overrides]` Doug's reads, `[prefs]` red/red_teams/yellow/green/player_cap/starters_only (+ `[prefs.green_floor]`
+  per-player green floor instead of 12; `[prefs] green_mode` = "floor" (default: forced minimum) or "boost" (nothing
+  forced; green players' objective value and green QBs' stack weights x (1 + `green_boost`, 0.15); `green_qb_weight`
+  sets the QB stack-weight multiplier separately); `[optimizer] stack_allocation` = "random" (default) or
+  "proportional" (stack counts fixed from the weights by largest remainder, tightest teams built first, a team that
+  can no longer be stacked hands its lineups to the rest by weight); `optimize.py
+  --subdir <name>` writes a run to `weeks/<week>/<name>/` for side-by-side comparisons; `[optimizer] reserve_required = true` holds a stack rule's required player
+  back for a green QB's forced stacks, off by default, on in week 5 for Burrow/Chase Brown), `[stacks.weights]` QB-team
   draw weights, `[stacks.rules.<TEAM>]` per-team stack shape (e.g. BUF: `receivers = 1`, `require = ["James Cook III"]`).
   `[contest]` field_size (for grading); `[contest.guru]` = FanDuel Guru (paid) suggestions pre-lock: per slot (QB, RB1,
   RB2, WR1-3, TE, FLEX, DEF) the 3 players Guru offered + Doug's pick, plus fill_order and adapts. All ~27 suggestions
   are the signal (Guru shows them to every paying user), not just the picks. Doug may send screenshots: transcribe them.
   Parsed/validated by `ownership.guru_table`.
+  `[shadow]` = Doug's colour review saved as a record only (never applied; week 5 ran model-only), to score his
+  reads against the model after the games.
   New week: copy last week's `week.toml` and edit.
 
 ## Pipeline (`src/` scripts are thin CLIs over the `src/dfs/` package; all take `--week`, default `$DFS_WEEK`)

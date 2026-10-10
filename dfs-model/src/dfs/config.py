@@ -69,9 +69,10 @@ def _read_toml(path):
 
 
 WEEK_DEFAULTS = {
-    'status': {'out': [], 'questionable': []},
+    'status': {'out': [], 'questionable': [], 'starting_qb': {}},
     'overrides': {},
-    'prefs': {'starters_only': True, 'red': [], 'red_teams': [], 'yellow': {}, 'green': {}, 'player_cap': {}},
+    'prefs': {'starters_only': True, 'red': [], 'red_teams': [], 'yellow': {}, 'green': {}, 'green_floor': {},
+              'player_cap': {}, 'green_mode': 'floor', 'green_boost': 0.15},
     'stacks': {'weights': {}, 'rules': {}},
     'contest': {'field_size': 0, 'guru': {}},
 }

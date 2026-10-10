@@ -2,6 +2,7 @@
 
 Rules come from config: [roster], [optimizer] (caps, objective, overlap), [prefs] (red/yellow/green review lists),
 [stacks] (QB team weights and per-team stack rules, e.g. BUF = QB + 1 receiver + James Cook III),
+[prefs] green_mode ("floor" = forced minimum lineups; "boost" = objective and stack-weight multiplier, nothing forced),
 [optimizer.leverage] (off by default: ownership penalty, lineup ownership cap, chalk-stack down-weighting; needs Own_proj).
 """
 import csv
@@ -41,9 +42,19 @@ def eligible_pool(proj, prefs, opt):
     return pr[keep].reset_index(drop=True)
 
 
+def green_boost(prefs):
+    """Multiplier for green players under [prefs] green_mode = "boost" (1 + green_boost); 1.0 in "floor" mode."""
+    mode = prefs.get('green_mode', 'floor')
+    if mode not in ('floor', 'boost'):
+        raise ValueError(f'[prefs] green_mode must be "floor" or "boost", not {mode!r}')
+    return 1 + prefs.get('green_boost', 0.15) if mode == 'boost' else 1.0
+
+
 def exposure_limits(df, prefs, opt):
     """Per-player (cap, need) in lineups. Yellow = cap at yellow_factor * listed; Q = questionable_cap_pct of N;
-    green = need max(green_multiplier * listed, green_floor), never above the cap; player_cap overrides."""
+    green = need max(green_multiplier * listed, green_floor), never above the cap (prefs.green_floor = per-player floor);
+    player_cap overrides. With green_mode = "boost" nothing is forced (need is empty): see build_lineups."""
+    forced = green_boost(prefs) == 1.0
     n, cap_all = opt['n_lineups'], opt['exposure_cap']
     yellow, green, pcap = prefs['yellow'], prefs['green'], prefs['player_cap']
     cap, need = {}, {}
@@ -54,8 +65,9 @@ def exposure_limits(df, prefs, opt):
             cap[i] = opt['questionable_cap_pct'] * n
         else:
             cap[i] = cap_all
-        if name in green:
-            need[i] = min(cap_all, max(opt['green_multiplier'] * green[name], opt['green_floor']))
+        if name in green and forced:
+            floor = prefs.get('green_floor', {}).get(name, opt['green_floor'])
+            need[i] = min(cap_all, max(opt['green_multiplier'] * green[name], floor))
         if name in pcap:
             cap[i] = pcap[name]
             if i in need:
@@ -130,6 +142,35 @@ def leverage_weights(df, weights, lev):
     return {t: w * (own.mean() / own[t]) ** lev['stack_exponent'] for t, w in weights.items()}
 
 
+def reserved_caps(df, cap, force, slot, team, stacks, opt, queue=None):
+    """Caps for a lineup stacked on `team`, holding back room on players that a stack still to come requires by rule:
+    one lineup per later forced (green) QB slot, and per stack still queued under stack_allocation = "proportional".
+    Without it other stacks use the required player up to his cap and that team's stacks fall short (week 4: Allen 21
+    of 25 behind Cook). [optimizer] reserve_required."""
+    out = dict(cap)
+    later = [df.Team[q] for s in range(slot + 1, len(force)) for q in force[s] if df.Pos[q] == 'QB']
+    for t in later + list(queue or []):
+        if t != team:
+            for name in stack_rule(t, stacks, opt)['require']:
+                for i in df.index[df.Name == name]:
+                    out[i] -= 1
+    return out
+
+
+def allocate_stacks(weights, n):
+    """Split n lineups over stack teams in proportion to their weights, largest-remainder rounding (ties go to the
+    team listed first). Returns {team: lineups}; the counts sum to n."""
+    total = sum(weights.values())
+    if total <= 0:
+        raise ValueError('stack weights sum to zero')
+    quota = {t: n * w / total for t, w in weights.items()}
+    counts = {t: int(q) for t, q in quota.items()}
+    left = n - sum(counts.values())
+    for t in sorted(quota, key=lambda t: counts[t] - quota[t])[:left]:
+        counts[t] += 1
+    return counts
+
+
 def build_lineups(df, sims, cfg):
     """Returns (lineups as lists of df index, exposure counts)."""
     opt, prefs, stacks = cfg['optimizer'], cfg['prefs'], cfg['stacks']
@@ -142,14 +183,38 @@ def build_lineups(df, sims, cfg):
         raise ValueError('no stack weights: set [stacks.weights] in week.toml')
     lev = opt['leverage']
     penalty = 0.0
+    lw = None
     if lev['enabled']:
         if 'Own_proj' not in df:
             raise ValueError('[optimizer.leverage] enabled but proj has no Own_proj (no earlier result weeks?)')
         penalty = lev['own_weight'] * df.Own_proj.values
         if lev['stack_exponent']:
             lw = leverage_weights(df, stacks['weights'], lev)
-            teams, tw = list(lw), list(lw.values())
-            pool = None
+    # green_mode = "boost": green players' objective value x (1 + green_boost); green QBs' stack weights x the same,
+    # or x [prefs] green_qb_weight if set
+    boost = green_boost(prefs)
+    mult = np.where(df.Name.isin(set(prefs['green'])), boost, 1.0)
+    green_qb_teams = set(df.Team[(df.Pos == 'QB') & (mult > 1)])
+    if green_qb_teams:
+        qb_mult = prefs.get('green_qb_weight') or boost
+        lw = {t: w * (qb_mult if t in green_qb_teams else 1) for t, w in (lw or stacks['weights']).items()}
+    if lw is not None:
+        teams, tw = list(lw), list(lw.values())
+        pool = None
+    # [optimizer] stack_allocation = "proportional": fixed stack counts from the weights instead of one draw per lineup
+    alloc = opt.get('stack_allocation', 'random')
+    if alloc not in ('random', 'proportional'):
+        raise ValueError(f'[optimizer] stack_allocation must be "random" or "proportional", not {alloc!r}')
+    queue = None
+    if alloc == 'proportional':
+        live = dict(lw or stacks['weights'])
+        counts = allocate_stacks(live, n)
+        # Tightest teams first (receiver lineups needed / receiver lineups available under the caps): built late, other
+        # stacks have used their receivers up to the cap and the team can no longer be stacked.
+        rec = df[df.Pos.isin(['WR', 'TE'])]
+        room = {t: sum(cap[i] for i in rec.index[rec.Team == t]) for t in counts}
+        tight = {t: counts[t] * stack_rule(t, stacks, opt)['receivers'] / max(room[t], 1) for t in counts}
+        queue = [t for t in sorted(counts, key=lambda t: -tight[t]) for _ in range(counts[t])]
     use = {i: 0 for i in df.index}
     lineups, draw, tries = [], 0, 0
     w = opt['mean_weight']
@@ -163,13 +228,27 @@ def build_lineups(df, sims, cfg):
         if tries > opt['drop_force_after']:
             force[slot], F = set(), []
         fq = [i for i in F if df.Pos[i] == 'QB']
-        team = df.Team[fq[0]] if fq else (rnd.choice(pool) if pool else rnd.choices(teams, tw)[0])
-        obj = w * df.Proj.values + (1 - w) * sims[df.row.values, draw % sims.shape[1]] - penalty
-        lp = solve_lineup(df, obj, team, stack_rule(team, stacks, opt), cap, use, F, lineups, cfg['roster'], opt)
+        if fq:
+            team = df.Team[fq[0]]
+        elif queue is not None:
+            team = queue[0]
+        else:
+            team = rnd.choice(pool) if pool else rnd.choices(teams, tw)[0]
+        obj = (w * df.Proj.values + (1 - w) * sims[df.row.values, draw % sims.shape[1]]) * mult - penalty
+        caps = reserved_caps(df, cap, force, slot, team, stacks, opt, queue) if opt.get('reserve_required') else cap
+        lp = solve_lineup(df, obj, team, stack_rule(team, stacks, opt), caps, use, F, lineups, cfg['roster'], opt)
         if lp is None:
             if tries > 20 * opt['drop_force_after']:   # e.g. a [optimizer.leverage] max_lineup_own nothing can meet
                 raise RuntimeError(f'no feasible lineup for slot {slot + 1} after {tries} tries')
+            if queue is not None and not F:   # nothing forced, so this team can't be stacked any more (caps/overlap):
+                short = queue.count(team)     # hand its remaining lineups to the other teams, again by weight
+                live.pop(team)
+                queue = [t for t in queue if t != team] + [t for t, k in allocate_stacks(live, short).items()
+                                                           for _ in range(k)]
+                print(f'stack allocation: {team} cannot be stacked again; {short} lineup(s) reallocated')
             continue
+        if queue is not None and team in queue:
+            queue.remove(team)
         lineups.append(lp)
         tries = 0
         for i in lp:
