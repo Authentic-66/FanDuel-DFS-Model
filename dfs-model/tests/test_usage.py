@@ -56,6 +56,17 @@ class UsageTest(unittest.TestCase):
                   dict(k='c', player_id='c', week=1, position='QB', team='MIA', attempts=40))
         self.assertEqual(usage.starting_qbs(st), {'a', 'b'})
 
+    def test_redistribution_skips_players_who_missed_the_last_game(self):
+        st = rows(dict(k='gone', player_id='g', week=1, targets=10), dict(k='hurt', player_id='h', week=2, targets=10),
+                  dict(k='mate', player_id='m', week=1, targets=5), dict(k='mate', player_id='m', week=2, targets=5))
+        agg = usage.aggregate(st)
+        fd = pd.DataFrame(dict(Key=['gone', 'hurt', 'mate'], Team='KC', Position='WR'))
+        out, active = fd[fd.Key != 'mate'], fd[fd.Key == 'mate']
+        self.assertTrue(usage.already_absent(st, 'gone', 'KC'))
+        self.assertFalse(usage.already_absent(st, 'hurt', 'KC'))
+        self.assertEqual(usage.redistribute_out(agg, out, active, 0.8, st)[0], {'mate': 8.0})    # only 'hurt'
+        self.assertEqual(usage.redistribute_out(agg, out, active, 0.8)[0], {'mate': 16.0})       # old behaviour
+
 
 if __name__ == '__main__':
     unittest.main()

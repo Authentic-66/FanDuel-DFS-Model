@@ -98,6 +98,8 @@ team_exp = 0.5
 [model.injury]
 redistribute_share = 0.8           # share of newly-OUT players' targets/carries given to active teammates, pro rata
 questionable_inactive_prob = 0.25
+skip_already_absent = true         # don't redistribute an OUT player who also missed his team's last game (already in
+                                   # teammates' usage); false = the behaviour before Oct 10 2026
 
 # Phase 2 #1: shrink current-season usage/efficiency toward the prior season.
 # Prior season adds `usage_games` pseudo-games of its per-game targets/carries/attempts, and `efficiency_games` games'

@@ -55,12 +55,21 @@ def per_game(agg, key, col):
     return agg.at[key, 'u_' + col] / agg.at[key, 'u_g']
 
 
-def redistribute_out(agg, out_players, active_fd, share):
+def already_absent(st, key, team):
+    """True if the player has no stat row in his team's most recent game in `st`: he was already missing, so his
+    teammates' recent usage reflects it."""
+    last = st[st.team == team].week.max()
+    return not ((st.k == key) & (st.week == last)).any()
+
+
+def redistribute_out(agg, out_players, active_fd, share, st=None):
     """Give `share` of each newly-OUT player's per-game targets/carries to active same-team RB/WR/TE, pro rata to
-    their own per-game volume. Returns ({key: extra targets/g}, {key: extra carries/g})."""
+    their own per-game volume. Returns ({key: extra targets/g}, {key: extra carries/g}).
+    With `st` (the stats frame), OUT players who also missed their team's most recent game are skipped: handing their
+    volume out again would count it twice ([model.injury] skip_already_absent)."""
     extra = {'tgt': {}, 'car': {}}
     for o in out_players.itertuples():
-        if o.Key not in agg.index:
+        if o.Key not in agg.index or (st is not None and already_absent(st, o.Key, o.Team)):
             continue
         mates = active_fd[(active_fd.Team == o.Team) & active_fd.Position.isin(['RB', 'WR', 'TE'])]
         mates = mates[mates.Key.isin(agg.index)].Key

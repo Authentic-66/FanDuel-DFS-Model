@@ -27,7 +27,8 @@ def build(week, cfg, agg=None, st=None):
     lines = data.load_lines(week.lines)
     if agg is None:
         agg, st = load_usage(week, cfg)
-    xt, xc = usage.redistribute_out(agg, data.newly_out(fd_all, cfg['status']), fd, m['injury']['redistribute_share'])
+    xt, xc = usage.redistribute_out(agg, data.newly_out(fd_all, cfg['status']), fd, m['injury']['redistribute_share'],
+                                    st if m['injury'].get('skip_already_absent', True) else None)
     tf = sim.team_factors(rng, lines, m['correlation'], n)
     league_dst = fd[fd.Position == 'D'].FPPG.mean()
 
