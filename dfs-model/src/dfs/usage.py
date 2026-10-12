@@ -5,6 +5,7 @@ The aggregate frame (indexed by name key) carries two views of the same player:
   efficiency: att, cmp, py, ptd, ints, car, ry, rtd, tgt, rec, rey, retd  -> per-opportunity rates, shrunk to league priors
 Without a prior-season blend the two views hold the same raw totals.
 """
+import numpy as np
 import pandas as pd
 
 STAT_COLS = dict(att='attempts', cmp='completions', py='passing_yards', ptd='passing_tds', ints='passing_interceptions',
@@ -74,13 +75,27 @@ def present_share(agg, st, out_key, mate_key, team):
 
 def routes(routing, pos, col, share, same):
     """How one OUT player's volume in `col` ('tgt' / 'car') is split: [(share of his volume, mask of the teammates
-    who divide it)]. routing = [model.injury.position_share], keyed by the OUT player's position, e.g.
-    WR = {tgt_same = 0.77, tgt_other = 0.16}: 77% of his targets to teammates at his position (`same`), 16% to the
-    rest. Without a rule for this position and column, `share` goes to every teammate (the pro-rata rule)."""
+    who divide it, depth-rank shares or None)]. routing = [model.injury.position_share], keyed by the OUT player's
+    position, e.g. WR = {tgt_same = 0.77, tgt_other = 0.16}: 77% of his targets to teammates at his position (`same`),
+    16% to the rest. tgt_rank = [0.2, 0.2, 0.6] (optional) splits the same-position part by depth rank instead of
+    pro rata (see rank_weights). Without a rule for this position and column, `share` goes to every teammate (the
+    pro-rata rule)."""
     rule = (routing or {}).get(pos, {})
     if col + '_same' not in rule:
-        return [(share, same | ~same)]
-    return [(rule[col + '_same'], same), (rule.get(col + '_other', 0.0), ~same)]
+        return [(share, same | ~same, None)]
+    return [(rule[col + '_same'], same, rule.get(col + '_rank')), (rule.get(col + '_other', 0.0), ~same, None)]
+
+
+def rank_weights(volume, ranks):
+    """Shares of a group's gain by depth rank. volume: each teammate's own per-game volume; ranks = [largest, second,
+    third and lower]: the teammate with the most volume gets ranks[0], the next ranks[1], and everyone below shares
+    ranks[2] equally. With fewer than three teammates the unused share goes to those present in proportion
+    (the weights are rescaled to sum to 1)."""
+    order = np.argsort(-np.asarray(volume, dtype=float), kind='stable')
+    w = np.zeros(len(order))
+    for place, i in enumerate(order):
+        w[i] = ranks[place] if place < 2 else ranks[2] / (len(order) - 2)
+    return w / w.sum() if w.sum() > 0 else w
 
 
 def redistribute_out(agg, out_players, active_fd, share, st=None, mode='skip', routing=None):
@@ -109,10 +124,16 @@ def redistribute_out(agg, out_players, active_fd, share, st=None, mode='skip', r
                 for k in mates}
         for col, gained in extra.items():
             wts = mates.map(lambda k: per_game(agg, k, col)).values
-            for part, group in routes(routing, getattr(o, 'Position', None), col, share, same):
-                if part and wts[group].sum() > 0:
-                    for k, w in zip(mates[group], wts[group]):
-                        gained[k] = gained.get(k, 0) + part * per_game(agg, o.Key, col) * w / wts[group].sum() * frac[k]
+            for part, group, ranks in routes(routing, getattr(o, 'Position', None), col, share, same):
+                if ranks is not None and group.any():        # by depth rank: also reaches teammates with no volume yet
+                    split = rank_weights(wts[group], ranks)
+                elif wts[group].sum() > 0:
+                    split = wts[group] / wts[group].sum()
+                else:
+                    continue
+                for k, w in zip(mates[group], split):
+                    if part * w:
+                        gained[k] = gained.get(k, 0) + part * per_game(agg, o.Key, col) * w * frac[k]
     return extra['tgt'], extra['car']
 
 

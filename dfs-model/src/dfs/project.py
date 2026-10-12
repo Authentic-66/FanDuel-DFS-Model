@@ -32,6 +32,13 @@ def build(week, cfg, agg=None, st=None):
     if inj.get('routing', 'pro_rata') not in ('pro_rata', 'position'):
         raise ValueError(f'[model.injury] routing must be "pro_rata" or "position", not {inj["routing"]!r}')
     routing = inj.get('position_share') if inj.get('routing') == 'position' else None
+    within = inj.get('within_position', 'pro_rata')
+    if within not in ('pro_rata', 'depth_rank'):
+        raise ValueError(f'[model.injury] within_position must be "pro_rata" or "depth_rank", not {within!r}')
+    if routing:     # keep the *_rank shares only where the depth split is on; elsewhere pro rata inside the position
+        ranked = inj.get('depth_rank_positions', list(routing)) if within == 'depth_rank' else []
+        routing = {pos: {k: v for k, v in rule.items() if pos in ranked or not k.endswith('_rank')}
+                   for pos, rule in routing.items()}
     xt, xc = usage.redistribute_out(agg, data.newly_out(fd_all, cfg['status']), fd, inj['redistribute_share'],
                                     st if absent_mode == 'present_share' or inj.get('skip_already_absent', True) else None,
                                     absent_mode, routing)

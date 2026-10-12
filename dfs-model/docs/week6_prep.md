@@ -1076,6 +1076,193 @@ Tests: `tests/test_opponent.py` (4 tests); 66 pass in total.
 - `history.within_position`; `weeks/history/within_position.csv` and `within_position_summary.csv` (A3).
 - `weeks/2026-w05/backtest_section10.csv` (10.3, with the section-9 runs re-run in the new format).
 
+## 11. Split by depth rank inside a position, and the week-6 freeze (Oct 12, sixth pass)
+
+Doug's decisions going in: routing by position and the tapered spread stay; the opponent adjustment stays off;
+WR/TE sensitivity to the implied total is a week-7 item.
+
+**The depth-rank split is built and tested, and is off in the frozen model** (`[model.injury] within_position =
+"pro_rata"`). Nothing was adopted automatically. My recommendation is in 11.5: turn it on for WRs only, which is
+two lines in the week-6 `week.toml`, and watch for one side effect.
+
+**One finding Doug should see first, because it bears on the routing decision he just made.** This pass ran, for
+the first time, a projection test on the 2021-2025 absence games. On it, routing by position is not more accurate
+than the rule it replaced. For teammates moved a point or more, RMSE is 6.59 with the old 80% rule and 6.74 with
+the routing. The routing is better when an RB is out and worse when a WR or TE is out. Section 11.2 has the table.
+
+### 11.1 What the split does
+
+With `within_position = "depth_rank"`, the part of a missing player's volume that goes to his own position is
+divided by rank instead of in proportion to volume. Teammates at his position are ranked by their own per-game
+volume. The shares, fit on 2021-2025 (`src/fit_depth.py`):
+
+| Player out | Volume | Largest role | Second | Third and lower | Range for the largest, leaving one season out |
+|---|---|---|---|---|---|
+| WR | Targets | 20% | 20% | 60% | 15% to 25% |
+| RB | Carries | 58% | 33% | 10% | 57% to 59% |
+| RB | Targets | 47% | 36% | 17% | 46% to 50% |
+| TE | Targets | 67% | 27% | 6% | 61% to 72% |
+
+- "Third and lower" share theirs equally.
+- With fewer than three teammates at the position, the shares of those present are scaled up to 100%, so nothing
+  is left unused. One teammate gets everything.
+- Unlike the pro-rata rule, this reaches a teammate who has no volume of his own yet.
+- The share going to other positions is unchanged (still pro rata among them).
+- The old team in a `[[status.trade]]` is split the same way.
+- `depth_rank_positions` limits it to some positions of the missing player, for example `["WR"]`.
+
+### 11.2 Accuracy on 2021-2025
+
+Every first-missed game of a starter (the same events as before). Each remaining RB, WR and TE who played is
+projected with Vegas totals and the current calibration, four ways, against what he scored. The depth shares used
+for a season are fit on the other four. 2,676 player-games.
+
+| Players | n | Actual | No redistribution | Old rule (80% pro rata) | Routing, pro rata | Routing, depth split |
+|---|---|---|---|---|---|---|
+| All teammates, RMSE | 2,676 | | 5.94 | 5.85 | 5.82 | 5.79 |
+| Routing moved him 1+ point, RMSE | 724 | | 7.08 | 6.59 | 6.74 | 6.66 |
+| ... their average projection | 724 | 7.9 | 5.8 | 7.9 | 9.4 | 9.0 |
+| RB out, routing moved him 1+, RMSE | 244 | | 7.95 | 6.70 | 6.65 | 6.72 |
+| WR out, routing moved him 1+, RMSE | 328 | | 6.52 | 6.52 | 6.77 | 6.53 |
+| TE out, routing moved him 1+, RMSE | 63 | | 4.71 | 4.75 | 5.15 | 5.16 |
+
+The comparison Doug asked for, players the depth split moves a point or more against pro rata:
+
+| Players | n | Actual | Projected, pro rata | Projected, depth | RMSE pro rata | RMSE depth |
+|---|---|---|---|---|---|---|
+| All moved 1+ | 441 | 7.3 | 8.0 | 8.1 | 6.90 | 6.72 |
+| Lowered by the depth split | 217 | 11.1 | 13.5 | 11.3 | 8.44 | 8.06 |
+| Raised by the depth split | 224 | 3.6 | 2.7 | 5.1 | 4.93 | 5.07 |
+| Moved, WRs | 310 | 6.6 | 7.8 | 7.8 | 6.75 | 6.51 |
+| Moved, RBs | 129 | 9.1 | 8.7 | 9.0 | 7.29 | 7.27 |
+
+By season, for the 441: the depth split is better in 2021, 2023 and 2024 (6.53, 6.77 and 6.59 against 6.92, 6.93
+and 7.24), level in 2022, and worse in 2025 (7.12 against 6.93).
+
+- **The depth split is more accurate overall for the players it moves** (6.90 to 6.72).
+- **All of that comes from lowering the established teammate.** Pro rata had those players at 13.5 and they
+  scored 11.1; the depth split has them at 11.3.
+- **It raises the depth players too far.** They scored 3.6; it projects 5.1, and that half is slightly less
+  accurate than before. Sharing 60% equally among the third-and-lower receivers gives real volume to players who
+  do not all play.
+- **It helps for WRs and does nothing for RBs.** With a WR out it brings the routing back level with the old rule
+  (6.77 to 6.53). With an RB out, pro rata was already right for the lead back: the top remaining RB scored 13.8,
+  pro rata projects 14.5 and the depth split 12.6.
+- **Routing against the old rule.** Routing sends the right amount to the right position, but pro rata inside the
+  position then over-credits the established receiver or tight end. Teammates it moved were projected 9.4 and
+  scored 7.9; the old rule had them at 7.9. This test did not exist when section 9 was written, and it weakens
+  what I said there about the five-season evidence: that evidence was about where the volume goes, not about
+  projection accuracy.
+
+### 11.3 Week 5, before and after
+
+"Before" is the current default (routing, pro rata inside the position).
+
+| Player | Before | Depth split, all positions | Depth split, WR only | Actual |
+|---|---|---|---|---|
+| Braelon Allen | 13.7 | 11.7 | 13.7 | 21.1 |
+| Jaylen Warren | 18.6 | 17.0 | 18.6 | 36.8 |
+| Michael Wilson | 17.0 | 15.3 | 15.3 | 5.3 |
+| Romeo Doubs | 12.3 | 10.7 | 10.7 | 2.1 |
+| Tre' Harris | 14.3 | 8.6 | 8.6 | 2.6 |
+| Emanuel Wilson | 12.5 | 12.4 | 12.5 | 12.2 |
+
+- **The four receivers move toward what they scored.**
+- **Allen and Warren move the wrong way with the full split.** As the top remaining back each drops from most of
+  the missing carries to 58% of them. This is the same lead-back result as in 11.2, and it gives back part of the
+  volume fix from section 2. WR-only leaves them alone.
+- **Side effect: a depth receiver with no real role can be projected into the pool.** Derius Davis (Chargers)
+  goes from 1.7 to 7.8, becomes a top-three Chargers WR by projection, and lands in 7 to 8
+  lineups. He scored 0. Others raised a point or more in week 5: Roschon Johnson 1.5 to 5.0 (scored 6.5), Isaiah
+  Davis 3.3 to 5.1 (2.2), Luke McCaffrey 2.6 to 4.1 (0).
+- Other players lowered: Justin Jefferson 14.6 to 11.8 (scored 15.8), Garrett Wilson 15.8 to 13.6 (22.9), D'Andre
+  Swift 21.8 to 19.8 (15.3), Terry McLaurin 14.1 to 12.5 (10.2).
+- Across both slates, skill RMSE improves slightly: 7.77 to 7.75 in week 5 and 7.49 to 7.42 in week 4.
+
+Arizona under the Harrison trade (simulated on week 5, his week-6 entry):
+
+| Player | Gained, pro rata | Gained, depth | Projection, pro rata | Depth |
+|---|---|---|---|---|
+| Michael Wilson (WR) | 2.13 | 0.66 | 17.0 | 15.3 |
+| Kendrick Bourne (WR) | 0.94 | 0.63 | 8.0 | 7.6 |
+| Trey McBride (TE) | 0.37 | 0.37 | 17.0 | 17.0 |
+| Jeremiyah Love (RB) | 0.11 | 0.11 | 12.9 | 12.9 |
+| Devin Duvernay (WR) | 0.02 | 0.65 | 0.0 | 1.3 |
+| Jalen Brooks (WR) | 0.15 | 0.65 | 1.3 | 1.9 |
+
+Wilson gives back most of what the routing added (15.7 before any routing, 17.0 with it, 15.3 with the depth
+split). The 60% for third-and-lower is spread over Arizona's other receivers and none of them reaches the pool.
+
+### 11.4 Lineup test
+
+Weeks 4 and 5, model-only, cap 25, draw weight 40%. Baseline is the current default.
+
+| Week | Run | Avg score | Top 10% | Top 1% | Best score |
+|---|---|---|---|---|---|
+| 5 | Current default (pro rata inside the position) | 112.9 | 6 | 0 | 180.9 |
+| 5 | Depth split, all positions | 114.6 | 7 | 2 | 202.0 |
+| 5 | Depth split, WR only | 112.8 | 4 | 0 | 177.1 |
+| 4 | Current default | 107.8 | 12 | 0 | 160.4 |
+| 4 | Depth split, all positions | 108.3 | 13 | 2 | 167.3 |
+| 4 | Depth split, WR only | 107.0 | 13 | 3 | 187.5 |
+
+The full split is better on all four measures in both weeks. WR-only is worse than the default in week 5 and
+mixed in week 4, where it has the best single lineup of any run today (187.5, rank 269). After 9.1 I do not read
+much into either: these are the swings a reshuffle produces.
+
+### 11.5 Recommendation
+
+**Turn the depth split on for WRs only, and check the exposure sheet for depth receivers.** In
+`config/2026-w06/week.toml`:
+
+```
+[model.injury]
+within_position = "depth_rank"
+depth_rank_positions = ["WR"]
+```
+
+- **Why WRs:** five seasons say the pro-rata split over-credits the established receiver, and the depth split
+  removes that error (6.77 to 6.53 with a WR out). Michael Wilson at 51% owned and 5.3 points is this case.
+- **Why not RBs:** pro rata is already right for the lead back, and the full split takes Allen and Warren back
+  down.
+- **The risk:** a receiver with no role, like Derius Davis, can be lifted into lineups. Doug's red list is
+  applied in week 6, so a name like that can be struck when he reviews the exposure sheet.
+- **How sure:** moderately. The history favours it; the two-slate lineup test favours the full split instead,
+  and I am discounting that test. Leaving it off is a reasonable choice too, and is what the frozen model does.
+
+A better version for week 7 would give the third-and-lower share only to the player who actually steps in, which
+needs depth-chart information the model does not have.
+
+### 11.6 Week-6 freeze
+
+The model is frozen at the commit tagged `week6-model-freeze`. From here only week-6 inputs change: statuses,
+Doug's reads, lines and stack weights, Guru, and the trade entry. Switching the depth split on, as in 11.5, is a
+`week.toml` setting and does not touch the frozen code.
+
+Frozen defaults:
+
+| Setting | Value |
+|---|---|
+| Exposure cap | 25 |
+| Draw weight | 40% (`mean_weight = 0.6`) |
+| Calibration | mean only, knee 16 slope 0.36, RB knee 8 slope 0.12 |
+| Spread | tapered: QB 1.50/1.00, RB 1.43/1.04, WR 1.23/1.00, TE 1.22 |
+| Out players | routed by position, pro rata inside it; faded for games already missed |
+| Depth-rank split | off |
+| Opponent adjustment | off |
+| Backup QBs | 0 |
+| DST | opponent implied total and salary |
+| Reads | red and yellow applied, green shadow-only |
+| Harrison | 15% of Houston's targets, first-week factor 0.7 |
+
+Tests: 68 pass (two added in `tests/test_routing.py`).
+
+### Files added in this pass
+
+- `src/fit_depth.py`; `weeks/history/depth_shares.csv`, `depth_rows.csv`, `depth_test.csv`,
+  `depth_test_by_season.csv`.
+- `weeks/2026-w05/backtest_section11.csv` (every lineup-test run from sections 9 to 11 in the new format).
+
 ## Files
 
 - `src/dfs/usage.py`, `src/dfs/project.py`, `config/defaults.toml`: the four changes.

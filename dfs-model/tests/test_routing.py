@@ -47,6 +47,25 @@ class RoutingTest(unittest.TestCase):
         self.assertAlmostEqual(xt[k('Wide One')], 6.0)
         self.assertAlmostEqual(xt[k('Tight')], 0.2 * 10 * 4 / 6)
 
+    def test_depth_rank_split_inside_the_position(self):
+        np.testing.assert_allclose(usage.rank_weights([2, 6, 0, 1], [0.2, 0.3, 0.5]), [0.3, 0.2, 0.25, 0.25])
+        np.testing.assert_allclose(usage.rank_weights([2, 6], [0.2, 0.3, 0.5]), [0.6, 0.4])     # unused share rescaled
+        np.testing.assert_allclose(usage.rank_weights([4], [0.2, 0.3, 0.5]), [1.0])
+        agg, out, active, k = setup('Out WR')
+        ranked = dict(ROUTING, WR=dict(ROUTING['WR'], tgt_rank=[0.25, 0.75, 0.0]))
+        xt, _ = usage.redistribute_out(agg, out, active, 0.8, routing=ranked)
+        self.assertAlmostEqual(xt[k('Wide One')], 0.8 * 10 * 0.25)         # the larger role gets the smaller share
+        self.assertAlmostEqual(xt[k('Wide Two')], 0.8 * 10 * 0.75)
+        self.assertAlmostEqual(xt[k('Tight')], 0.2 * 10 * 4 / 6)           # the other positions: still pro rata
+        moved = pd.DataFrame([dict(Key=k('Out WR'), Name='Out WR', Pos='WR', From='AAA', To='BBB', share=0.0, factor=1.0)])
+        self.assertAlmostEqual(usage.trade_volume(agg, moved, active, 0.8, ranked)[0][k('Wide Two')], 6.0)   # trades too
+
+    def test_a_back_with_no_carries_is_reached_by_the_depth_split(self):
+        agg, out, active, k = setup('Back One')
+        ranked = dict(ROUTING, RB=dict(ROUTING['RB'], tgt_rank=[0.6, 0.3, 0.1]))
+        xt, _ = usage.redistribute_out(agg, out, active, 0.8, routing=ranked)
+        self.assertAlmostEqual(xt[k('Back Two')], 0.5 * 2)                 # pro rata he got nothing (no targets of his own)
+
 
 class TaperTest(unittest.TestCase):
     TAPER = {'from': 12.0, 'to': 20.0}

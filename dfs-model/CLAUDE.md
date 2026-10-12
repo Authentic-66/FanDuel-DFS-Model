@@ -141,6 +141,16 @@ pro rata: with a WR out, the top remaining WR gets ~20% of the gain (pro rata 57
 not changed. `[model.opponent]` (dfs/opponent.py, `fit_opponent.py`): defence-vs-position tilt beyond the defence's overall
 level, built and OFF: RMSE 7.251 -> 7.247 on 2021-2025, adjustments ~0.2 pts typical, 2.2 max. By-product, untested: WR/TE
 projections over-react to the implied total (coefficient about -0.33).
+Sixth pass (section 11) and **week-6 model freeze, tag `week6-model-freeze`**: after it only week-6 inputs change
+(statuses, reads, lines, Guru, trade). Doug kept routing by position and the tapered spread; opponent adjustment off;
+WR/TE implied-total sensitivity is a week-7 item. Depth-rank split inside a position built and OFF
+(`[model.injury] within_position = "depth_rank"`, `depth_rank_positions`, `*_rank` shares in `position_share`;
+`usage.rank_weights`; `src/fit_depth.py`): WR out 20/20/60 to largest/second/third-and-lower, RB carries 58/33/10.
+History (2021-2025 absence games, players moved 1+): RMSE 6.90 pro rata -> 6.72 depth, all from lowering the
+established teammate; depth players are over-raised (5.1 projected, 3.6 actual; Derius Davis reached 7-8 week-5
+lineups and scored 0) and lead backs are under-projected (Allen, Warren go back down). Recommendation given to Doug:
+WR only, via week.toml. Same test: routing by position is NOT more accurate than the old 80% rule for moved players
+(6.74 vs 6.59; better with an RB out, worse with a WR or TE out).
 
 ## History refits (Oct 12) — see docs/phase2_history.md
 `fetch_stats.py --seasons 2020-2025 --history` puts player stats, team stats and schedules with Vegas lines in
