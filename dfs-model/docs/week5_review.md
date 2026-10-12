@@ -16,8 +16,9 @@ top 1%. Week 4 was the reverse (111.3 against 107.3). The model lineups scored a
 scored 24 points more this week because four cheap, heavily owned running backs carried it, and our 25-lineup cap
 held us well below the field on every one of them.
 
-Not in the exports: prize money. **Cash count and net $ are open** until Doug supplies the winnings for each
-contest. Entry fees were $7.45 (149 paid + 1 free) and $1.50 (6 entries).
+**Money: net -$4.74.** Pooch Punt won $3.11 on $7.45 of fees (149 paid + 1 free), net -$4.34. Hail Mary won $1.10
+on $1.50 of fees (6 entries), net -$0.40. Winnings are Doug's totals; the exports carry no prize data, so the number
+of lineups that cashed is not known.
 
 ## 1. Model lineups vs the field (Pooch Punt)
 
@@ -31,7 +32,8 @@ contest. Entry fees were $7.45 (149 paid + 1 free) and $1.50 (6 entries).
 | Lineups in top 1% | 0 | 4 |
 | Lineups above field median | 29 of 149 | n/a |
 | Winning score | 247.58 | 216.98 |
-| Net $ | open (fees $7.45) | +$2.35 |
+| Winnings / net $ | $3.11 / -$4.34 | +$2.35 net |
+| Lineups that cashed | not in the export | n/a |
 
 Other model-lineup counts: 3 in the top 10%, 8 in the top 20%, 15 in the top 30%. The median model lineup ranked
 at the 81st percentile from the top (worse than four fifths of the field). Projected lineup average was 123.2;
@@ -218,8 +220,8 @@ Six entries, not four. Field 207,707, median 137.3.
 The model's final top four by projection were #1, #3, #26 and #6. Lineup #3 was not entered. Entries 3/6 and 4/6
 are one identical lineup (Goff, Swift, Aaron Jones, Smith-Njigba, St. Brown, Wilson, LaPorta, Hockenson,
 Commanders DST) that is not in the final 150 or in any archived run, so it probably came from an earlier upload.
-Two model lineups beat the field median and three did not; the Guru lineup was the best of the six. Net $ is
-open (fees $1.50).
+Two model lineups beat the field median and three did not; the Guru lineup was the best of the six. Winnings $1.10
+on $1.50 of fees, net -$0.40.
 
 ## 9. Changes for week 6
 
