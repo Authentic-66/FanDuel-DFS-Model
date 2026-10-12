@@ -52,7 +52,7 @@ def build(week, cfg, agg=None, st=None):
     tf = sim.team_factors(rng, lines, m['correlation'], n)
     league_dst = fd[fd.Position == 'D'].FPPG.mean()
 
-    rows, sims = [], []
+    rows, sims, unrouted = [], [], {}
     for r in fd.itertuples():
         t, k, pos = r.Team, r.Key, r.Position
         opp, implied = lines.opp[t], lines.implied[t]
@@ -60,7 +60,12 @@ def build(week, cfg, agg=None, st=None):
         if pos == 'D':
             pts = sim.sim_dst(rng, r.FPPG, league_dst, lines.implied[opp], tf[opp], m, sc['dst'], n)
         elif k in agg.index:
+            before = rng.bit_generator.state
             pts = sim.sim_skill(rng, agg.loc[k], pos, scale, f, xt.get(k, 0), xc.get(k, 0), m, sc, n)
+            if xt.get(k, 0) or xc.get(k, 0):    # report only (RoutingBump): the same player without the redistributed
+                twin = np.random.default_rng()  # volume, on a copy of the generator so the main draws are untouched
+                twin.bit_generator.state = before
+                unrouted[len(sims)] = (pts.mean(), sim.sim_skill(twin, agg.loc[k], pos, scale, f, 0, 0, m, sc, n).mean())
         else:
             pts = sim.sim_fallback(rng, r.FPPG, scale, f, m, n)
         if r.Inj == 'Q':
@@ -77,6 +82,7 @@ def build(week, cfg, agg=None, st=None):
         if not (qbs & (proj.Name == name)).any():
             raise ValueError(f'[status.starting_qb] {team}: {name!r} is not an active {team} QB on the slate')
         proj.loc[qbs, 'StartingQB'] = proj.Name[qbs] == name
+    proj['RoutingBump'] = routing_bump(proj, unrouted, m)
     sims = adjust(proj, np.array(sims), lines, m)
     opp = m.get('opponent', {})
     if opp.get('enabled'):      # last: a multiplier on the finished draws, so the calibration and spread fits still hold
@@ -89,6 +95,20 @@ def build(week, cfg, agg=None, st=None):
     proj[stats.columns] = stats
     order = proj.Proj.sort_values(ascending=False, kind='stable').index
     return proj.loc[order].drop(columns='Key').reset_index(drop=True), sims[order]
+
+
+def routing_bump(proj, unrouted, m):
+    """Points each player's projection gained (or lost) from injury / trade redistribution: his calibrated mean with
+    the redistributed volume minus the same without it. unrouted: {row: (raw mean with, raw mean without)}.
+    For the exposure sheet, so depth players lifted into lineups can be spotted; it changes no projection."""
+    bump = np.zeros(len(proj))
+    cal = m.get('calibration', {})
+    for i, (with_, without) in unrouted.items():
+        pair, pos = np.array([with_, without]), np.repeat(proj.Pos[i], 2)
+        if cal.get('enabled') and not (proj.Pos[i] == 'QB' and m['qb'].get('zero_backups') and not proj.StartingQB[i]):
+            pair = calibrated(pair, pos, cal)
+        bump[i] = pair[0] - pair[1]
+    return np.round(bump, 1)
 
 
 def calibrated(mean, pos, cal):

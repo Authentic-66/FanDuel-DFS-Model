@@ -33,6 +33,13 @@ first_week_factor = 0.7        # first game in the offence: 0.15 x 0.7 = 10.5% o
 # Doug's projection reads: new mean FanDuel points (the player's sims are rescaled to it).
 [overrides]
 
+# Doug, Oct 12: when a WR is out (or traded away), his targets inside the WR group are split by depth rank
+# (20% largest remaining role, 20% second, 60% third and lower) instead of pro rata. RB and TE absences stay pro rata.
+# docs/week6_prep.md section 11. Check the exposure sheet's Routing_bump column for depth receivers lifted into lineups.
+[model.injury]
+within_position = "depth_rank"
+depth_rank_positions = ["WR"]
+
 [optimizer]
 stack_allocation = "proportional"   # stack counts follow the weights exactly instead of random draws
 

@@ -34,6 +34,12 @@ class Week4Test(unittest.TestCase):
         self.assertEqual(starters.Team.value_counts().max(), 1)
         self.assertGreaterEqual(len(starters), 23)    # TB's week-3 starter is not on the week-4 active list
 
+    def test_routing_bump_is_a_report_column(self):
+        p = self.proj.set_index('Name')
+        self.assertTrue((p.RoutingBump[p.GainedVol == 0] == 0).all())      # no redistributed volume, no bump
+        self.assertGreater(p.RoutingBump['Braelon Allen'], 3)             # Breece Hall out: most of Allen's projection
+        self.assertLess(p.RoutingBump['Braelon Allen'], p.Proj['Braelon Allen'])
+
     def test_deterministic(self):
         _, s2 = project.build(self.week, self.cfg)
         np.testing.assert_array_equal(self.sims, s2)

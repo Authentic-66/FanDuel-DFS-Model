@@ -151,6 +151,17 @@ established teammate; depth players are over-raised (5.1 projected, 3.6 actual; 
 lineups and scored 0) and lead backs are under-projected (Allen, Warren go back down). Recommendation given to Doug:
 WR only, via week.toml. Same test: routing by position is NOT more accurate than the old 80% rule for moved players
 (6.74 vs 6.59; better with an RB out, worse with a WR or TE out).
+Doug's call after section 11: week 6 runs the depth split for WRs only, set in `config/2026-w06/week.toml` (a config input;
+defaults.toml stays pro rata). `exposure.csv` has a `Routing_bump` column (proj.csv `RoutingBump`): points each player's
+projection gained from injury / trade redistribution, so depth players lifted into lineups can be spotted and red-listed.
+It is report-only: added after the freeze tag, draws verified identical before and after.
+
+## Week-7 backlog (from docs/week6_prep.md section 11 and 10.2)
+- **Per-position redistribution mode**: RB out = routing by position; WR out = depth split; TE out = old 80% rule or none.
+  Basis: the section 11.2 accuracy table (players moved 1+: RB out 6.65 routing vs 6.70 old; WR out 6.53 depth vs 6.77 pro
+  rata; TE out 4.71 none / 4.75 old vs 5.15 routing).
+- **Cap the boost to depth players**: the depth split projects the players it raises at 5.1 and they scored 3.6.
+- **WR/TE sensitivity to the implied total**: in-sample coefficient about -0.33; run an out-of-sample test first.
 
 ## History refits (Oct 12) — see docs/phase2_history.md
 `fetch_stats.py --seasons 2020-2025 --history` puts player stats, team stats and schedules with Vegas lines in

@@ -318,5 +318,7 @@ def outputs(df, sims, lineups, use, cfg):
                                           'Lineups': 0, 'Exposure_%': 0.0})])
         ex['Own_proj_%'] = df.Own_proj[ex.index].values
         ex['Exp_minus_Own'] = (ex['Exposure_%'] - ex['Own_proj_%']).round(1)
+    if 'RoutingBump' in df:   # points gained from injury / trade redistribution: spot depth players lifted into lineups
+        ex.insert(ex.columns.get_loc('Proj') + 1, 'Routing_bump', df.RoutingBump[ex.index].values)
     ex['Review'] = ex.Player.map(lambda p: 'Green (more)' if p in prefs['green'] else ('Yellow (less)' if p in prefs['yellow'] else ''))
     return upload, pd.DataFrame(readable), ex
