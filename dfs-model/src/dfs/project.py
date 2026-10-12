@@ -32,6 +32,13 @@ def build(week, cfg, agg=None, st=None):
     xt, xc = usage.redistribute_out(agg, data.newly_out(fd_all, cfg['status']), fd, inj['redistribute_share'],
                                     st if absent_mode == 'present_share' or inj.get('skip_already_absent', True) else None,
                                     absent_mode)
+    moved = data.trades(fd_all, cfg['status'])
+    for extra, gained in zip((xt, xc), usage.trade_volume(agg, moved, fd, inj['redistribute_share'])):
+        for k, v in gained.items():
+            extra[k] = extra.get(k, 0) + v
+    for name, fd_team, stat_team in usage.team_mismatches(agg, fd, moved):
+        print(f'WARNING: FanDuel lists {name} on {fd_team}, his stats are with {stat_team}: if he was traded, add a '
+              f'[[status.trade]] entry (as-is he keeps his {stat_team} volume and no teammate is adjusted)')
     tf = sim.team_factors(rng, lines, m['correlation'], n)
     league_dst = fd[fd.Position == 'D'].FPPG.mean()
 
@@ -86,21 +93,27 @@ def dst_target(proj, lines, m):
 
 def adjust(proj, sims, lines, m):
     """Post-simulation corrections, in order: non-starting QBs to zero ([model.qb] zero_backups), calibration shrink
-    of skill players ([model.calibration], sims rescaled so their shape is kept), DST flattening ([model.dst.flatten],
+    of skill players ([model.calibration]: sims shifted, or rescaled with mode = "scale"), DST flattening ([model.dst.flatten],
     sims shifted). Returns the adjusted sims; proj.Proj must hold the unadjusted means."""
     sims = sims.copy()
-    mean = sims.mean(axis=1)
     skill = (proj.Pos != 'D').values
     if m['qb'].get('zero_backups'):
         sims[((proj.Pos == 'QB') & ~proj.StartingQB).values] = 0
         no_qb = sorted(set(proj.Team) - set(proj.Team[proj.StartingQB]))
         if no_qb:
             print(f'WARNING: no starting QB flagged for {", ".join(no_qb)}: set [status.starting_qb] in week.toml')
+    mean = sims.mean(axis=1)
     cal = m.get('calibration', {})
     if cal.get('enabled'):
         new = calibrated(mean, proj.Pos.values, cal)
-        scale = np.where(skill & (mean > 0), new / np.where(mean > 0, mean, 1), 1.0)
-        sims *= scale[:, None]
+        mode = cal.get('mode', 'shift')
+        if mode not in ('shift', 'scale'):
+            raise ValueError(f'[model.calibration] mode must be "shift" or "scale", not {mode!r}')
+        hit = skill & (mean > 0)
+        if mode == 'shift':     # lower the mean, keep the simulated spread
+            sims += np.where(hit, new - mean, 0.0)[:, None]
+        else:                   # shrink every draw in proportion (ceilings come down with the mean)
+            sims *= np.where(hit, new / np.where(mean > 0, mean, 1), 1.0)[:, None]
     if m['dst'].get('flatten', {}).get('enabled'):
         target = dst_target(proj, lines, m)
         sims[target.index] += (target.values - mean[target.index])[:, None]

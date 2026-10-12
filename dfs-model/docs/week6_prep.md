@@ -8,7 +8,7 @@ Work done after the week-5 review, in the order Doug asked for it.
 |---|---|---|
 | Out players who already missed games still hand volume to teammates | `[model.injury] absent_mode = "present_share"` | `absent_mode = "skip"` |
 | Non-starting QBs project 0 | `[model.qb] zero_backups = true` | `false` |
-| Shrink above 16 points, and RBs above 8 | `[model.calibration] enabled = true` | `false` |
+| Shrink above 16 points, and RBs above 8 (mean only, spread kept: see 7.2) | `[model.calibration] enabled = true` | `false` |
 | DST from opponent total and salary only | `[model.dst.flatten] enabled = true` | `false` |
 
 The exposure cap is unchanged at 25. Section 5 has the numbers for Doug's decision.
@@ -121,8 +121,9 @@ everything over 20 to the same number. The shrink therefore starts at 16:
 - every skill player loses 28% of each projected point above 16 (leave-one-week-out range 20-32%);
 - RBs also lose 12% of each point above 8 (range 9-14%).
 
-So 20 becomes 18.9, 24 becomes 21.8, and an RB at 14 becomes 13.3. Simulations are rescaled, so ceilings shrink in
-proportion. The knees are `top_knee` and `rb_knee` in `[model.calibration]`.
+So 20 becomes 18.9, 24 becomes 21.8, and an RB at 14 becomes 13.3. The knees are `top_knee` and `rb_knee` in
+`[model.calibration]`. As first committed the simulations were rescaled in proportion; after the ceiling check in
+7.2 the default lowers the mean and leaves the spread alone.
 
 | Rows | Tier | n | Projected | Calibrated | Actual | RMSE before | RMSE after |
 |---|---|---|---|---|---|---|---|
@@ -283,7 +284,245 @@ TB has no starting QB flagged in week 4, so it gets no stacks there; MIA and TEN
 
 `config/2026-w06/week.toml` is set up the same way as week 5: model-only, with Doug's red/yellow/green recorded
 under `[shadow]` and not applied. `[status]`, `[stacks.weights]` and `[contest.guru]` are empty until the week-6
-inputs arrive.
+inputs arrive. It also carries the Harrison trade entry (7.6), which stops the run until his target share is set.
+
+## 7. Follow-up tests (Oct 12, second pass)
+
+Decisions carried in: the cap stays at 25 and the shrink starts at 16. One default changed in this pass (the
+calibration now lowers the mean and leaves the simulated spread alone, 7.2), and one feature was added
+(`[[status.trade]]`, 7.6).
+
+### 7.1 Chalk test
+
+**Players owned 15%+ against our final (entered) projection:**
+
+| | Players | Projected | Actual | Beat projection | New-code projection |
+|---|---|---|---|---|---|
+| Week 4 | 16 | 17.3 | 13.3 | 4 of 16 | 14.3 |
+| Week 5 | 14 | 19.4 | 17.9 | 6 of 14 | 17.7 |
+| Both | 30 | 18.3 | 15.4 | 10 of 30 | 15.9 |
+
+The chalk fell short of the entered projections by 2.9 points, but so did everyone else we projected for 10+:
+chalk scored 84% of its projection and the other 128 such players scored 81%. Chalk is not over-projected more
+than the rest. With the week-6 code the chalk projects 15.9 against 15.4 actual.
+
+**Does ownership predict points beyond our projection? Yes, and it is stable across the two weeks.** Regression
+of actual points on our projection and log(actual ownership), skill players projected 2+:
+
+| Projection used | Rows | n | Coefficient on log(ownership) | Std. error | Coefficient on projection | R-squared without / with ownership |
+|---|---|---|---|---|---|---|
+| Entered | Week 4 | 239 | 1.36 | 0.32 | 0.39 | 0.32 / 0.37 |
+| Entered | Week 5 | 220 | 1.25 | 0.33 | 0.53 | 0.35 / 0.40 |
+| Entered | Pooled | 459 | 1.32 | 0.23 | 0.45 | 0.33 / 0.38 |
+| Week-6 code | Week 4 | 248 | 1.07 | 0.32 | 0.58 | 0.37 / 0.40 |
+| Week-6 code | Week 5 | 215 | 0.48 | 0.39 | 0.90 | 0.42 / 0.42 |
+| Week-6 code | Pooled | 463 | 0.84 | 0.25 | 0.71 | 0.39 / 0.41 |
+
+- On the entered projections the coefficient is 1.32: at the same projection, a player owned twice as much scored
+  about 0.9 points more. Weeks 4 and 5 give 1.36 and 1.25, well inside one standard error of each other.
+- The week-6 fixes take away about a third of it (0.84 pooled), and week 5 alone is no longer distinguishable from
+  zero (0.48, standard error 0.39). Zeroing backup QBs and the volume fix capture part of what the field knew.
+- Restricted to players projected 8+ (entered), it is 1.55 pooled but 0.97 and 2.01 by week, so noisier.
+
+Two cautions. This uses actual ownership, known only after lock; the pre-lock version of this test needs the
+ownership model, which still misses the chalk. And ownership and projection are correlated 0.8, so part of the
+coefficient is ownership standing in for a noisy projection (the projection's own coefficient is well under 1).
+
+### 7.2 Ceiling check
+
+Share of players whose actual score beat the simulated 90th percentile (target 10%). "Scaled" is the calibration
+as committed this morning (every draw shrunk in proportion); "mean only" lowers each draw by the same amount.
+Slopes are leave-one-week-out.
+
+| Rows | Tier | n | Uncalibrated | Scaled | Mean only |
+|---|---|---|---|---|---|
+| 2025 wk 4-18 | Projected 16+ | 514 | 10.9% | 13.8% | 13.0% |
+| 2025 wk 4-18 | Projected 20+ | 163 | 6.1% | 12.3% | 11.0% |
+| 2026 wk 4-5 | Projected 16+ | 62 | 14.5% | 16.1% | 14.5% |
+| 2026 wk 4-5 | Projected 20+ | 23 | 8.7% | 13.0% | 8.7% |
+| All | Projected 16+ | 576 | 11.3% | 14.1% | 13.2% |
+| All | Projected 20+ | 186 | 6.5% | 12.4% | 10.8% |
+| All | Everyone graded | 2,621 | 12.2% | 12.9% | 12.7% |
+
+By position at 16+ (all rows): QB 10.9% / 12.5% / 11.6%, RB 13.4% / 20.1% / 18.9%, WR 9.3% / 9.3% / 9.3%.
+
+**The uncalibrated ceilings at 16+ were about right (10.9% in 2025), so by Doug's rule the calibration now shrinks
+only the mean** (`[model.calibration] mode = "shift"`; `"scale"` restores the first version). Mean-only is the
+better of the two on every row.
+
+It is not a clean fix, though. Lowering a mean without widening the spread still lowers the ceiling by the same
+number of points, so coverage at 16+ goes from 10.9% to 13.0%: the calibrated ceilings are a little low. They are
+worst for RBs (18.9% beat their ceiling). The model's RB means run high while its RB ceilings were already too
+low, and one adjustment cannot fix both. Inside the tier, 20+ ceilings were too high before (6.1%) and are right
+after (11.0%); 16-20 were already low at 13%.
+
+Projections do not change between the two modes, so section 4's RMSE tables stand. The cap-25 baseline was re-run
+on the mean-only version (7.3): week 5 is unchanged at 113.2 and week 4 moves from 105.1 to 104.9.
+
+### 7.3 Second RB, draw weight, no cap
+
+Model-only, same settings as the cap test in section 5, cap 25 except the no-cap run. The no-cap run keeps the
+overlap rule (at most 6 shared players) and is a diagnostic, not a candidate default.
+
+| Week | Run | Avg score | Best rank | Top 1% | Top 10% | RB / WR / TE flex | Our avg exposure on 15%+ players | Field |
+|---|---|---|---|---|---|---|---|---|
+| 5 | Cap 25 baseline | 113.2 | 5,291 | 1 | 8 | 24 / 33 / 43% | 14.6% | 29.5% |
+| 5 | Second RB if 8+ | 112.1 | 5,291 | 1 | 5 | 30 / 34 / 36% | 14.3% | 29.5% |
+| 5 | Draw weight 40% | 114.2 | 5,291 | 1 | 9 | 29 / 34 / 37% | 14.7% | 29.5% |
+| 5 | No cap | 121.1 | 5,291 | 2 | 13 | 29 / 28 / 43% | 20.6% | 29.5% |
+| 4 | Cap 25 baseline | 104.9 | about 4,400 | 3 | 20 | 13 / 41 / 46% | 12.8% | 23.3% |
+| 4 | Second RB if 8+ | 103.8 | about 4,400 | 2 | 25 | 19 / 39 / 42% | 12.7% | 23.3% |
+| 4 | Draw weight 40% | 106.7 | about 4,400 | 3 | 22 | 18 / 33 / 49% | 13.9% | 23.3% |
+| 4 | No cap | 102.4 | about 4,400 | 2 | 17 | 13 / 39 / 48% | 14.0% | 23.3% |
+
+Field averages were 131.2 (week 5) and 107.3 (week 4). The best lineup is the same one in every run of a week
+(191.3 and 169.2); week-4 ranks are interpolated, as in section 5.
+
+- **Second RB when he projects 8+.** Adds 7 RBs to the pool in week 5 and 6 in week 4. It moves flex toward RBs
+  (TE flex down 4-7 points) and costs about a point of average score in both weeks. No case for it.
+- **Draw weight 40%.** Better in both weeks (+1.0 and +1.8), with no loss at the top. It is the only change here
+  that helped twice, but the gain is small against lineup-to-lineup noise, and TE flex went down in week 5 and up
+  in week 4. Worth a wider test before changing the default (`[optimizer] mean_weight = 0.6`).
+- **No cap.** Same split as the cap test: +7.9 in week 5, -2.5 in week 4. Chalk exposure only rises to 20.6% and
+  14.0%, still well under the field, so the cap is not what holds it down.
+
+Ten most-used players with no cap (lineups out of 150, actual points):
+
+| Week 5 | Lineups | Exposure | Actual | | Week 4 | Lineups | Exposure | Actual |
+|---|---|---|---|---|---|---|---|---|
+| D'Andre Swift | 81 | 54% | 15.3 | | Jaxon Smith-Njigba | 55 | 37% | 10.1 |
+| Jaxon Smith-Njigba | 42 | 28% | 23.3 | | James Cook III | 38 | 25% | 15.3 |
+| Jahmyr Gibbs | 39 | 26% | 38.2 | | Derrick Henry | 33 | 22% | 14.9 |
+| Trey McBride | 39 | 26% | 17.1 | | Garrett Wilson | 33 | 22% | 4.2 |
+| Jaylen Warren | 38 | 25% | 36.8 | | Brock Bowers | 28 | 19% | 17.6 |
+| Michael Wilson | 37 | 25% | 5.3 | | D'Andre Swift | 27 | 18% | 6.4 |
+| Amon-Ra St. Brown | 36 | 24% | 9.9 | | Davante Adams | 26 | 17% | 5.2 |
+| Jonathan Taylor | 31 | 21% | 9.7 | | Trey McBride | 25 | 17% | 6.6 |
+| Tee Higgins | 30 | 20% | 3.2 | | Nico Collins | 25 | 17% | 30.3 |
+| Brock Bowers | 28 | 19% | 22.0 | | Kenneth Walker III | 24 | 16% | 33.4 |
+
+With no cap the model would have put Swift in 54% of week-5 lineups, on the strength of the Monangai volume it
+handed him; he scored 15.3. The only other player above 30% in either week is Smith-Njigba in week 4 (37%). The
+overlap rule and the spread of stacks already do most of the diversifying.
+
+Exposure on 15%+ players, by player, is in `weeks/2026-w05/backtest_runs_chalk.csv`.
+
+### 7.4 Week 4: entered 111.3 against 105.1 model-only
+
+The week-4 lineups Doug entered averaged 111.3. The new code run model-only averages 105.1 (104.9 with the
+mean-only calibration). That is not a like-for-like measure of the code, because the two runs differ in all of
+these:
+
+| | Entered week 4 | New code, model-only |
+|---|---|---|
+| Projection overrides | 6 (Nacua, McCaffrey, Montgomery, E. Wilson, Addison, Hockenson) | none |
+| Red | 50 players, plus all of TEN and MIA | none |
+| Yellow / green | 18 capped at half, 11 forced to a minimum | none |
+| Questionable players | allowed (capped at 12% each) | excluded |
+| Stack teams | 10 hand-picked (JAC 25, BUF 25, KC 20, CIN 18, DAL/HOU/SF 15, LV/LAR 12, SEA 10), random draws | 21 teams by implied total, fixed counts |
+| Stack rules | BUF: Allen + 1 receiver + Cook | QB + 2 receivers + 1 bring-back everywhere |
+| Projection code | Phase 1: no prior blend, none of the week-6 changes | prior blend + week-6 changes |
+| Lineups | 149 | 150 |
+
+So the 6-point difference mixes Doug's reads, the stack choices and three rounds of projection changes. The reads
+look like the larger part: a re-run this morning with the full week-4 config on the pre-week-6 code (prior blend
+on) averaged 115.7 with 7 top-1% lineups. That run includes Doug's week-4 greens, which hit at low ownership
+(Kyren Williams, Nacua, Emanuel Wilson, Hockenson). I did not finish the matching run with the week-4 config on
+the week-6 code (it is slow with forced players), so the split between reads and code is not measured.
+
+For contrast, in week 5 the comparison is clean (both model-only, same settings): 108.3 entered, 113.2 on the
+new code.
+
+### 7.5 What these tests say together
+
+- The model's problem on chalk is projection, not the cap or the flex: ownership carries information the entered
+  projections lacked (7.1), and no optimizer setting moves our chalk exposure much (7.3).
+- Doug's week-4 reads were worth more than any change tested here.
+- Nothing in 7.3 earns a default change yet. The draw weight is the one to test on more slates.
+
+### 7.6 Trades (`[[status.trade]]`)
+
+**How the code handled a traded player before this change** (and still does when there is no trade entry). A
+player whose FanDuel team differs from his team in the stats:
+
+- projects with his old-team per-game volume, scaled to the new team's implied total;
+- takes nothing from his new teammates, so the new team's targets add up to more than a full game;
+- hands nothing to his old teammates, because he is not listed out;
+- if he is listed out, his old-team volume is partly handed to his **new** teammates, which is wrong, and his old
+  teammates still get nothing.
+
+A run now prints a warning for any such player with real volume who has no trade entry.
+
+**What week 6 would do with Harrison as-is, and with the entry.** Week-6 inputs are not in, so this is a
+simulated trade on week-5 data: Harrison moved to HOU and active. `new_target_share = 0.15` is a placeholder to
+show the mechanics, not a recommendation. Shares are of each team's pre-trade targets per game.
+
+HOU (41.3 targets a game before the trade):
+
+| Player | Before trade | As-is | With entry (0.15) | With entry, first-week factor 0.6 |
+|---|---|---|---|---|
+| Marvin Harrison Jr. | - | 10.1% | 15.0% | 9.0% |
+| Nico Collins | 20.6% | 20.6% | 17.5% | 18.7% |
+| Dalton Schultz | 15.9% | 15.9% | 13.5% | 14.5% |
+| Xavier Hutchinson | 13.4% | 13.4% | 11.4% | 12.2% |
+| Jared Wayne | 9.7% | 9.7% | 8.2% | 8.8% |
+| Kayshon Boutte | 7.9% | 7.9% | 6.7% | 7.2% |
+| Jaylin Noel | 6.5% | 6.5% | 5.5% | 5.9% |
+| Other 7 (RBs, TEs) | 26.0% | 26.0% | 22.2% | 23.7% |
+| **Team total** | **100%** | **110.1%** | **100%** | **100%** |
+
+As-is, HOU is projected for 10% more targets than it throws. With the entry the total stays at 100% and every
+teammate gives up the same proportion.
+
+ARI (38.9 targets a game before the trade, Harrison 10.8% of them):
+
+| Player | Before trade | As-is | With entry |
+|---|---|---|---|
+| Marvin Harrison Jr. | 10.8% | - | - |
+| Trey McBride | 28.2% | 28.2% | 31.0% |
+| Michael Wilson | 25.2% | 25.2% | 27.6% |
+| Kendrick Bourne | 11.1% | 11.1% | 12.2% |
+| Jeremiyah Love | 8.4% | 8.4% | 9.2% |
+| Others | 16.3% | 16.3% | 17.8% |
+| **Team total** | **100%** | **89.2%** | **97.8%** |
+
+As-is, Harrison's 10.8% vanishes from ARI. With the entry, 80% of it (the standing redistribution share) goes to
+his old teammates pro rata: Wilson goes from 25.2% to 27.6% (9.8 to 10.75 targets a game), and the rest of the
+gap to 100% is the 20% the rule does not hand out.
+
+In projected points (week-5 slate): Harrison 6.3 as-is and 9.5 with the entry (5.6 with the 0.6 factor); Collins
+16.3 as-is and 13.9 with it; Wilson 14.2 as-is and 15.7 with it; McBride 16.7 and 18.0.
+
+**The entry:**
+
+```toml
+[[status.trade]]
+player = "Marvin Harrison Jr."
+from = "ARI"
+to = "HOU"
+new_target_share = 0.15      # required: his share of the new team's targets
+first_week_factor = 0.6      # optional, default 1.0
+```
+
+- Old team: treated as a player ruled out for the first time, in full, even if he had already missed games there.
+- New team: he gets `new_target_share` x `first_week_factor` of the team's targets per game, taken from teammates
+  in proportion to their own. His catch rate and yards per target stay his own; carries are not moved.
+- **An empty `new_target_share` stops the run. Confirmed:** `[[status.trade]] Marvin Harrison Jr. (ARI -> HOU): set
+  new_target_share, his share of the HOU targets (e.g. 0.15). The model will not guess the role of a traded player.`
+- If he is listed out, only the old-team half applies. If he is not on the slate at all, the old-team half still
+  applies and no share is needed.
+- FanDuel still listing him on his old team is handled: he is moved to the new one.
+
+`config/2026-w06/week.toml` has the Harrison entry with `new_target_share` commented out, so the first week-6
+run will stop until Doug sets it. The entry should come out once his HOU games carry his role, and stays Doug's
+call until then: left in, it keeps handing his ARI volume out in full.
+
+Tests: `tests/test_trade.py` (3 tests). 46 tests pass in total.
+
+### Files added in this pass
+
+- `weeks/2026-w05/calibration_ceiling.csv` (7.2), `backtest_runs.csv` and `backtest_runs_chalk.csv` (7.3).
+- `[optimizer.starters_min_proj]` (off by default) is the switch used for the second-RB run.
 
 ## Files
 

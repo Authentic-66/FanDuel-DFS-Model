@@ -26,7 +26,38 @@ def load_slate(path, status):
     named = lambda names: fd.Full.isin(names) | fd.Nickname.isin(names)
     fd.loc[named(status['out']), 'Inj'] = 'O'
     fd.loc[named(status['questionable']), 'Inj'] = 'Q'
+    for t in trades(fd, status).itertuples():   # a traded player plays for (and stacks with) his new team
+        fd.loc[fd.Key == t.Key, 'Team'] = t.To
     return fd
+
+
+def trades(fd, status):
+    """[[status.trade]] entries as rows (Key, Name, From, To, share, factor), validated against the slate.
+    player / from / to are required. new_target_share (his share of the new team's targets) has no default: if he is
+    on the slate the model stops rather than guess a traded player's role. first_week_factor (default 1.0) scales it."""
+    rows = []
+    for t in status.get('trade', []):
+        missing = [k for k in ('player', 'from', 'to') if not t.get(k)]
+        if missing:
+            raise ValueError(f'[[status.trade]] entry {t} is missing {", ".join(missing)}')
+        who = fd[(fd.Full == t['player']) | (fd.Nickname == t['player'])]
+        if len(who) > 1:
+            raise ValueError(f'[[status.trade]] {t["player"]!r}: {len(who)} players with that name on the slate')
+        if who.empty:   # not on the slate (new team not playing it): his old teammates still get his volume
+            rows.append(dict(Key=norm_name(t['player']), Name=t['player'], From=t['from'], To=t['to'], share=0.0, factor=1.0))
+            continue
+        team = who.Team.iloc[0]
+        if team not in (t['from'], t['to']):
+            raise ValueError(f'[[status.trade]] {t["player"]}: FanDuel lists him on {team}, not {t["from"]} or {t["to"]}')
+        share = t.get('new_target_share')
+        if share in (None, ''):
+            raise ValueError(f'[[status.trade]] {t["player"]} ({t["from"]} -> {t["to"]}): set new_target_share, his '
+                             f'share of the {t["to"]} targets (e.g. 0.15). The model will not guess the role of a traded player.')
+        if not 0 <= share < 1:
+            raise ValueError(f'[[status.trade]] {t["player"]}: new_target_share must be between 0 and 1, not {share}')
+        rows.append(dict(Key=who.Key.iloc[0], Name=who.Nickname.iloc[0], From=t['from'], To=t['to'], share=float(share),
+                         factor=float(t.get('first_week_factor', 1.0))))
+    return pd.DataFrame(rows, columns=['Key', 'Name', 'From', 'To', 'share', 'factor'])
 
 
 def active(fd):
@@ -34,9 +65,10 @@ def active(fd):
 
 
 def newly_out(fd, status):
-    """Skill players ruled OUT this week by config status (their usage gets redistributed)."""
+    """Skill players ruled OUT this week by config status (their usage gets redistributed). Traded players are left
+    to usage.trade_volume: their new teammates' usage never included them."""
     out = fd.Full.isin(status['out']) | fd.Nickname.isin(status['out'])
-    return fd[out & fd.Position.isin(['RB', 'WR', 'TE'])]
+    return fd[out & fd.Position.isin(['RB', 'WR', 'TE']) & ~fd.Key.isin(trades(fd, status).Key)]
 
 
 def load_lines(path):

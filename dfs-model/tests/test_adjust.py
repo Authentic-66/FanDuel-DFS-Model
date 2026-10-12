@@ -33,6 +33,25 @@ class AdjustTest(unittest.TestCase):
         np.testing.assert_allclose(out[4:], [7 + 1.5 - 0.5, 7 - 1.5 + 0.5])
         np.testing.assert_allclose(self.sims[1], [9, 18, 27])       # input untouched
 
+    def test_shift_keeps_the_spread_and_scale_shrinks_it(self):
+        m = dict(self.m, calibration=dict(self.m['calibration'], mode='shift'))
+        out = project.adjust(self.proj, self.sims, self.lines, m)
+        np.testing.assert_allclose(out[2], self.sims[2] - 4.3)       # RB 26 -> 21.7, every draw down 4.3
+        m['calibration']['mode'] = 'scale'
+        np.testing.assert_allclose(project.adjust(self.proj, self.sims, self.lines, m)[2], self.sims[2] * 21.7 / 26)
+        m['calibration']['mode'] = 'other'
+        with self.assertRaises(ValueError):
+            project.adjust(self.proj, self.sims, self.lines, m)
+
+    def test_second_rb_needs_the_minimum_projection(self):
+        from dfs import optimize
+        proj = pd.DataFrame(dict(Id=list('abcd'), Name=list('abcd'), Pos='RB', Team=['X', 'X', 'Y', 'Y'], Inj='',
+                                 Proj=[15.0, 9.0, 12.0, 7.0], StartingQB=False))
+        prefs = dict(starters_only=True, green={})
+        opt = dict(exclude_questionable=True, starters=dict(RB=2), starters_min_proj=dict(RB=8))
+        self.assertEqual(list(optimize.starters(proj, prefs, opt).Name), ['a', 'b', 'c'])
+        self.assertEqual(list(optimize.starters(proj, prefs, dict(opt, starters=dict(RB=1))).Name), ['a', 'c'])
+
     def test_everything_off_changes_nothing(self):
         m = dict(qb={}, calibration=dict(enabled=False), dst={})
         np.testing.assert_array_equal(project.adjust(self.proj, self.sims, self.lines, m), self.sims)

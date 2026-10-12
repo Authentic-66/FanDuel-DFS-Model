@@ -23,8 +23,10 @@ def starters(proj, prefs, opt):
         act = pr[~held & pr.Proj.notna()].copy()
         act['rk'] = act.groupby(['Team', 'Pos']).Proj.rank(ascending=False, method='first')
         depth = act.Pos.map(opt['starters']).fillna(0)
+        floor = act.Pos.map(opt.get('starters_min_proj', {})).fillna(0)   # applies below the top player only
         ok = (((act.Pos == 'QB') & act.StartingQB) | (act.Pos == 'D')
-              | (act.Pos.isin(list(opt['starters'])) & (act.rk <= depth)) | act.Name.isin(green))
+              | (act.Pos.isin(list(opt['starters'])) & (act.rk <= depth) & ((act.rk == 1) | (act.Proj >= floor)))
+              | act.Name.isin(green))
         pr = pr[pr.Id.isin(act.Id[ok])]
     return pr
 

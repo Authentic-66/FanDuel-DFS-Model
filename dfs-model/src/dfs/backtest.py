@@ -101,7 +101,7 @@ def season_backtest(path, prior_path, cfg, settings, weeks, min_fppg=5.0, n_sims
 
 def season_rows(path, prior_path, cfg, weeks, min_fppg=5.0, n_sims=2000, seed=7):
     """Uncalibrated per-player projections for each week of a season, as in season_backtest (neutral team totals,
-    usage from earlier weeks + prior blend). Columns: fold, Pos, Proj, FPTS."""
+    usage from earlier weeks + prior blend). Columns: fold, Pos, Proj, FPTS, Ceiling_p90 (uncalibrated)."""
     m, sc = cfg['model'], cfg['scoring']
     season = data.load_stats(path, cfg)
     season = season.assign(fd=stats_points(sc, season))
@@ -120,8 +120,8 @@ def season_rows(path, prior_path, cfg, weeks, min_fppg=5.0, n_sims=2000, seed=7)
         for r in now.itertuples():
             f = np.exp(rng.normal(0, team_sd, n_sims) + m['correlation']['shift'])
             pts = sim.sim_skill(rng, agg.loc[r.k], r.position, 1.0, f, 0, 0, m, sc, n_sims)
-            out.append((f'{year}-w{w:02d}', r.position, pts.mean(), r.fd))
-    return pd.DataFrame(out, columns=['fold', 'Pos', 'Proj', 'FPTS'])
+            out.append((f'{year}-w{w:02d}', r.position, pts.mean(), r.fd, np.percentile(pts, 90)))
+    return pd.DataFrame(out, columns=['fold', 'Pos', 'Proj', 'FPTS', 'Ceiling_p90'])
 
 
 def slate_rows(week, cfg, min_fppg=5.0):
@@ -132,7 +132,7 @@ def slate_rows(week, cfg, min_fppg=5.0):
     fd = data.load_slate(week.fd_players, c['status'])
     j = analyze.joined(proj, analyze.load_actuals(week.results_players))
     j = j[j.Id.isin(set(fd.Id[(fd.Position != 'D') & (fd.FPPG >= min_fppg)])) & ((j.Pos != 'QB') | j.StartingQB)]
-    return j.assign(fold=week.name)[['fold', 'Pos', 'Proj', 'FPTS', 'Name']]
+    return j.assign(fold=week.name)[['fold', 'Pos', 'Proj', 'FPTS', 'Ceiling_p90', 'Name']]
 
 
 MAX_SLOPE = 0.6   # a slope near 1 would flatten (and above 1 invert) the ranking of the top projections

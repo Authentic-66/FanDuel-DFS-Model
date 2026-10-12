@@ -16,6 +16,18 @@ questionable = []
 # Every other QB now projects 0 ([model.qb] zero_backups); a team with no starter flagged prints a warning.
 [status.starting_qb]
 
+# Traded players. Old team: handled like a player ruled out for the first time (his volume goes to his old teammates
+# in full). New team: he gets new_target_share of the team's targets per game, taken from his new teammates pro rata;
+# first_week_factor (optional, default 1.0) scales that share while he learns the offence. new_target_share has no
+# default: while it is missing and he is on the slate, the run stops instead of guessing. Remove the entry once his
+# new-team games carry his role (about three games).
+[[status.trade]]
+player = "Marvin Harrison Jr."
+from = "ARI"
+to = "HOU"
+# new_target_share = 0.15      # REQUIRED before the first run: Doug's call
+# first_week_factor = 0.6
+
 # Doug's projection reads: new mean FanDuel points (the player's sims are rescaled to it).
 [overrides]
 

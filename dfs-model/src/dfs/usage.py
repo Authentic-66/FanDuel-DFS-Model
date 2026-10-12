@@ -100,6 +100,47 @@ def redistribute_out(agg, out_players, active_fd, share, st=None, mode='skip'):
     return extra['tgt'], extra['car']
 
 
+def trade_volume(agg, trades, active_fd, share):
+    """Volume changes for [[status.trade]] players (rows from data.trades; active_fd already lists them on the new
+    team). Returns ({key: extra targets/g}, {key: extra carries/g}) to add to redistribute_out's.
+    Old team: handled like a player ruled out for the first time: `share` of his per-game targets and carries goes to
+    his old teammates, in full, however many games he has already missed.
+    New team (only if he is active): he gets share * factor of the team's targets per game, taken from his new
+    teammates in proportion to their own targets, so the team total is unchanged. His carries stay his own."""
+    xt, xc = {}, {}
+    for t in trades.itertuples():
+        if t.Key not in agg.index:
+            raise ValueError(f'[[status.trade]] {t.Name}: no stats this season or last, nothing to move')
+        old_t, old_c = redistribute_out(agg, pd.DataFrame([dict(Key=t.Key, Team=t.From)]), active_fd, share)
+        for extra, gained in ((xt, old_t), (xc, old_c)):
+            for k, v in gained.items():
+                extra[k] = extra.get(k, 0) + v
+        if t.Key not in set(active_fd.Key):
+            continue
+        mates = active_fd[(active_fd.Team == t.To) & active_fd.Position.isin(['RB', 'WR', 'TE'])]
+        mates = mates[mates.Key.isin(agg.index) & (mates.Key != t.Key)].Key
+        tgt = mates.map(lambda k: per_game(agg, k, 'tgt'))
+        if tgt.sum() <= 0:
+            raise ValueError(f'[[status.trade]] {t.Name}: no {t.To} targets to take a share of')
+        take = t.share * t.factor
+        for k, v in zip(mates, tgt):
+            xt[k] = xt.get(k, 0) - take * v
+        xt[t.Key] = xt.get(t.Key, 0) + take * tgt.sum() - per_game(agg, t.Key, 'tgt')
+    return xt, xc
+
+
+def team_mismatches(agg, active_fd, trades, min_volume=3.0):
+    """Active skill players FanDuel lists on a different team from their latest stats, not covered by a
+    [[status.trade]] entry, with at least min_volume attempts + carries + targets a game: [(name, FanDuel, stats)].
+    As-is they keep their old-team volume on the new team and nobody's volume is adjusted."""
+    out = []
+    for r in active_fd[active_fd.Position.isin(['QB', 'RB', 'WR', 'TE']) & active_fd.Key.isin(agg.index)].itertuples():
+        vol = sum(per_game(agg, r.Key, c) for c in VOLUME)
+        if agg.at[r.Key, 'team'] != r.Team and vol >= min_volume and r.Key not in set(trades.Key):
+            out.append((r.Nickname, r.Team, agg.at[r.Key, 'team']))
+    return out
+
+
 def starting_qbs(st):
     """Keys of each team's QB with the most attempts in that team's most recent game."""
     qb = st[st.position == 'QB']

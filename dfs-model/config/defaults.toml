@@ -114,6 +114,8 @@ skip_already_absent = true         # absent_mode "skip" only: don't redistribute
 # Shrink applied to finished projections (fit by src/fit_calibration.py; docs/week6_prep.md). enabled = false turns it off.
 [model.calibration]
 enabled = true
+mode = "shift"             # "shift" = lower the mean and keep the simulated spread (uncalibrated ceilings were about
+                           # right: 10.9% of 16+ projections beat their p90); "scale" = shrink every draw in proportion
 top_knee = 16.0            # every skill player: lose top_slope of each projected point above this
 top_slope = 0.28           # fit Oct 12 2026 on 2025 wks 4-18 + 2026 wks 4-5 (leave-one-week-out range 0.20-0.32)
 rb_knee = 8.0              # RBs: also lose rb_slope of each projected point above this
@@ -151,6 +153,9 @@ reserve_required = false     # true: other stacks leave room on a player a green
 RB = 1
 WR = 3
 TE = 1
+
+[optimizer.starters_min_proj]   # with depth > 1: a team's 2nd, 3rd... player at the position must project at least this
+                                # (e.g. starters RB = 2 with RB = 8 here: a second RB only when he projects 8+)
 
 [optimizer.stack]            # QB + receivers from his team + bring-back from opponent; teams overridable in week.toml
 receivers = 2

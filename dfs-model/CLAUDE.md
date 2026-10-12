@@ -109,6 +109,12 @@ mean from opponent implied total and salary only). All in `project.adjust`. Week
 103.1: split, default stays 25 pending Doug's decision. TE-in-flex (45%) comes from the 22-RB pool, TEs counting as
 stack receivers and the single-draw objective, not from the cap or inflated TE projections; unchanged.
 Week 6 is model-only again with `[shadow]` recording Doug's reads (`config/2026-w06/week.toml`, to be filled).
+Second pass (section 7): calibration `mode = "shift"` (mean only; uncalibrated 16+ ceilings were right at 10.9% beat-p90,
+13.0% after); log(actual ownership) adds ~1.3 pts per log unit beyond the entered projection (0.84 on week-6 code);
+second RB per team and no-cap runs earned nothing, draw weight 40% was +1.0 / +1.8 (not adopted).
+`[[status.trade]]` (player, from, to, new_target_share, first_week_factor): old team = first-time OUT in full, new team =
+his share of targets taken pro rata; missing share stops the run. Untraded team mismatches only print a warning.
+`[optimizer.starters_min_proj]` exists (off).
 
 ## Phase 2 roadmap (in priority order)
 1. **Prior-season blend** — DONE Oct 5 (docs/phase2_prior_blend.md): usage 2 pseudo-games, efficiency 4 games of 2025.
