@@ -99,6 +99,17 @@ Net -$4.74 (Pooch Punt $3.11 won on $7.45; Hail Mary $1.10 on $1.50).
 Results: `src/convert_results.py <export> --user gst1999 [--tag 025]` turns a FanDuel All Entries export (kept
 untracked in `data/<week>/raw/`) into `results_*.csv`.
 
+## Week 6 prep (Oct 12) — see docs/week6_prep.md
+Four default changes, each with an off switch in defaults.toml: `[model.injury] absent_mode = "present_share"` (an OUT
+player who already missed games is still handed out, for the share of each teammate's usage sample he played in),
+`[model.qb] zero_backups` (non-starting QBs project 0; warns when a team has no starter flagged), `[model.calibration]`
+(lose 28% of each point above 16, RBs also 12% above 8; refit with `src/fit_calibration.py`), `[model.dst.flatten]` (DST
+mean from opponent implied total and salary only). All in `project.adjust`. Week 4/5 skill RMSE 7.99 -> 7.61 and
+8.65 -> 7.94. Cap test (model-only, new code): week 5 avg 113.2 / 116.6 / 120.0 at 25 / 32 / 40, week 4 105.1 / 103.9 /
+103.1: split, default stays 25 pending Doug's decision. TE-in-flex (45%) comes from the 22-RB pool, TEs counting as
+stack receivers and the single-draw objective, not from the cap or inflated TE projections; unchanged.
+Week 6 is model-only again with `[shadow]` recording Doug's reads (`config/2026-w06/week.toml`, to be filled).
+
 ## Phase 2 roadmap (in priority order)
 1. **Prior-season blend** — DONE Oct 5 (docs/phase2_prior_blend.md): usage 2 pseudo-games, efficiency 4 games of 2025.
    Week-4 RMSE 8.30 -> 8.08, 20+ tier gap +7.1 -> +4.2; also better on 2025 wks 4-18 (with 2024 prior). Residual

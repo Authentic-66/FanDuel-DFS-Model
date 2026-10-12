@@ -27,8 +27,11 @@ def build(week, cfg, agg=None, st=None):
     lines = data.load_lines(week.lines)
     if agg is None:
         agg, st = load_usage(week, cfg)
-    xt, xc = usage.redistribute_out(agg, data.newly_out(fd_all, cfg['status']), fd, m['injury']['redistribute_share'],
-                                    st if m['injury'].get('skip_already_absent', True) else None)
+    inj = m['injury']
+    absent_mode = inj.get('absent_mode', 'skip')
+    xt, xc = usage.redistribute_out(agg, data.newly_out(fd_all, cfg['status']), fd, inj['redistribute_share'],
+                                    st if absent_mode == 'present_share' or inj.get('skip_already_absent', True) else None,
+                                    absent_mode)
     tf = sim.team_factors(rng, lines, m['correlation'], n)
     league_dst = fd[fd.Position == 'D'].FPPG.mean()
 
@@ -57,8 +60,51 @@ def build(week, cfg, agg=None, st=None):
         if not (qbs & (proj.Name == name)).any():
             raise ValueError(f'[status.starting_qb] {team}: {name!r} is not an active {team} QB on the slate')
         proj.loc[qbs, 'StartingQB'] = proj.Name[qbs] == name
+    sims = adjust(proj, np.array(sims), lines, m)
+    stats = pd.DataFrame([summarize(pts, sal) for pts, sal in zip(sims, proj.Salary)])
+    proj[stats.columns] = stats
     order = proj.Proj.sort_values(ascending=False, kind='stable').index
-    return proj.loc[order].drop(columns='Key').reset_index(drop=True), np.array(sims)[order]
+    return proj.loc[order].drop(columns='Key').reset_index(drop=True), sims[order]
+
+
+def calibrated(mean, pos, cal):
+    """[model.calibration]: projected mean with the over-confident ranges pulled down. Every skill player loses
+    top_slope of each point above top_knee; RBs also lose rb_slope of each point above rb_knee."""
+    out = mean - cal['top_slope'] * np.maximum(mean - cal['top_knee'], 0)
+    return out - np.where(pos == 'RB', cal['rb_slope'] * np.maximum(mean - cal['rb_knee'], 0), 0)
+
+
+def dst_target(proj, lines, m):
+    """[model.dst.flatten]: DST mean from opponent implied total and salary only, around the slate's simulated DST
+    average. Drops the FanDuel-FPPG quality term, which has not predicted DST scoring (docs/week6_prep.md)."""
+    fl = m['dst']['flatten']
+    d = proj[proj.Pos == 'D']
+    opp = d.Opp.map(lines.implied)
+    return (d.Proj.mean() + fl['opp_implied'] * (opp - opp.mean())
+            + fl['salary_per_1k'] * (d.Salary - d.Salary.mean()) / 1000)
+
+
+def adjust(proj, sims, lines, m):
+    """Post-simulation corrections, in order: non-starting QBs to zero ([model.qb] zero_backups), calibration shrink
+    of skill players ([model.calibration], sims rescaled so their shape is kept), DST flattening ([model.dst.flatten],
+    sims shifted). Returns the adjusted sims; proj.Proj must hold the unadjusted means."""
+    sims = sims.copy()
+    mean = sims.mean(axis=1)
+    skill = (proj.Pos != 'D').values
+    if m['qb'].get('zero_backups'):
+        sims[((proj.Pos == 'QB') & ~proj.StartingQB).values] = 0
+        no_qb = sorted(set(proj.Team) - set(proj.Team[proj.StartingQB]))
+        if no_qb:
+            print(f'WARNING: no starting QB flagged for {", ".join(no_qb)}: set [status.starting_qb] in week.toml')
+    cal = m.get('calibration', {})
+    if cal.get('enabled'):
+        new = calibrated(mean, proj.Pos.values, cal)
+        scale = np.where(skill & (mean > 0), new / np.where(mean > 0, mean, 1), 1.0)
+        sims *= scale[:, None]
+    if m['dst'].get('flatten', {}).get('enabled'):
+        target = dst_target(proj, lines, m)
+        sims[target.index] += (target.values - mean[target.index])[:, None]
+    return sims
 
 
 def summarize(pts, salary):

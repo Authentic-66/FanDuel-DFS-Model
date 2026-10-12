@@ -62,22 +62,41 @@ def already_absent(st, key, team):
     return not ((st.k == key) & (st.week == last)).any()
 
 
-def redistribute_out(agg, out_players, active_fd, share, st=None):
-    """Give `share` of each newly-OUT player's per-game targets/carries to active same-team RB/WR/TE, pro rata to
-    their own per-game volume. Returns ({key: extra targets/g}, {key: extra carries/g}).
-    With `st` (the stats frame), OUT players who also missed their team's most recent game are skipped: handing their
-    volume out again would count it twice ([model.injury] skip_already_absent)."""
+def present_share(agg, st, out_key, mate_key, team):
+    """Share of a teammate's usage sample in which the OUT player's role was still his: that part of the teammate's
+    per-game volume does not yet reflect the absence. Current season: the teammate's games for `team` in which the OUT
+    player also has a stat row. The teammate's prior-season pseudo-games (u_g - g) all count: they describe his role
+    on a full depth chart, not his role with this player missing."""
+    weeks = lambda k: set(st.week[(st.k == k) & (st.team == team)])
+    shared = len(weeks(out_key) & weeks(mate_key))
+    return min(1.0, (shared + agg.at[mate_key, 'u_g'] - agg.at[mate_key, 'g']) / agg.at[mate_key, 'u_g'])
+
+
+def redistribute_out(agg, out_players, active_fd, share, st=None, mode='skip'):
+    """Give `share` of each OUT player's per-game targets/carries to active same-team RB/WR/TE, pro rata to their own
+    per-game volume. Returns ({key: extra targets/g}, {key: extra carries/g}). `st` = the stats frame; without it
+    every OUT player is handed out in full. [model.injury] absent_mode:
+      "present_share": each teammate's gain is scaled by present_share (above). A player ruled out for the first time
+          is handed out in full; one who has already missed games is handed out for the part of the sample he played
+          in, so the gain fades as the games without him accumulate.
+      "skip": OUT players who missed their team's most recent game are skipped entirely (Oct 10 2026 behaviour; it
+          assumed teammates' usage already reflected the absence, but usage is a season average plus the prior blend:
+          week 5, Braelon Allen got nothing for Breece Hall and Jaylen Warren nothing for Rico Dowdle)."""
+    if mode not in ('present_share', 'skip'):
+        raise ValueError(f'[model.injury] absent_mode must be "present_share" or "skip", not {mode!r}')
     extra = {'tgt': {}, 'car': {}}
     for o in out_players.itertuples():
-        if o.Key not in agg.index or (st is not None and already_absent(st, o.Key, o.Team)):
+        if o.Key not in agg.index or (st is not None and mode == 'skip' and already_absent(st, o.Key, o.Team)):
             continue
         mates = active_fd[(active_fd.Team == o.Team) & active_fd.Position.isin(['RB', 'WR', 'TE'])]
         mates = mates[mates.Key.isin(agg.index)].Key
+        frac = {k: present_share(agg, st, o.Key, k, o.Team) if st is not None and mode == 'present_share' else 1.0
+                for k in mates}
         for col, gained in extra.items():
             wts = mates.map(lambda k: per_game(agg, k, col))
             if wts.sum() > 0:
                 for k, w in zip(mates, wts):
-                    gained[k] = gained.get(k, 0) + share * per_game(agg, o.Key, col) * w / wts.sum()
+                    gained[k] = gained.get(k, 0) + share * per_game(agg, o.Key, col) * w / wts.sum() * frac[k]
     return extra['tgt'], extra['car']
 
 

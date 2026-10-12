@@ -67,6 +67,22 @@ class UsageTest(unittest.TestCase):
         self.assertEqual(usage.redistribute_out(agg, out, active, 0.8, st)[0], {'mate': 8.0})    # only 'hurt'
         self.assertEqual(usage.redistribute_out(agg, out, active, 0.8)[0], {'mate': 16.0})       # old behaviour
 
+    def test_present_share_hands_out_the_games_the_out_player_was_there_for(self):
+        # 'gone' played week 1 of mate's two games, 'hurt' played week 2: each is handed out for half the sample
+        st = rows(dict(k='gone', player_id='g', week=1, targets=10), dict(k='hurt', player_id='h', week=2, targets=10),
+                  dict(k='mate', player_id='m', week=1, targets=5), dict(k='mate', player_id='m', week=2, targets=5))
+        agg = usage.aggregate(st)
+        fd = pd.DataFrame(dict(Key=['gone', 'hurt', 'mate'], Team='KC', Position='WR'))
+        out, active = fd[fd.Key != 'mate'], fd[fd.Key == 'mate']
+        self.assertEqual(usage.redistribute_out(agg, out, active, 0.8, st, 'present_share')[0], {'mate': 8.0})
+        self.assertEqual(usage.present_share(agg, st, 'gone', 'mate', 'KC'), 0.5)
+        # the teammate's prior pseudo-games count as a full depth chart: (1 shared + 2 prior) / (2 + 2)
+        prior = usage.aggregate(rows(*[dict(k='mate', player_id='m', week=w, targets=5) for w in range(1, 5)]))
+        pb = dict(usage_games=2, efficiency_games=0, team_change_weight=1.0, min_prior_games=4)
+        self.assertEqual(usage.present_share(usage.blend_prior(agg, prior, pb), st, 'gone', 'mate', 'KC'), 0.75)
+        with self.assertRaises(ValueError):
+            usage.redistribute_out(agg, out, active, 0.8, st, 'nope')
+
 
 if __name__ == '__main__':
     unittest.main()

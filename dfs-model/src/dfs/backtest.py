@@ -97,6 +97,74 @@ def season_backtest(path, prior_path, cfg, settings, weeks, min_fppg=5.0, n_sims
     return summary, pd.DataFrame(weekly)
 
 
+# --- calibration shrink ([model.calibration]) ----------------------------------------------------------------------
+
+def season_rows(path, prior_path, cfg, weeks, min_fppg=5.0, n_sims=2000, seed=7):
+    """Uncalibrated per-player projections for each week of a season, as in season_backtest (neutral team totals,
+    usage from earlier weeks + prior blend). Columns: fold, Pos, Proj, FPTS."""
+    m, sc = cfg['model'], cfg['scoring']
+    season = data.load_stats(path, cfg)
+    season = season.assign(fd=stats_points(sc, season))
+    year = int(season.season.iloc[0])
+    prior = usage.aggregate(data.load_stats(prior_path, cfg))
+    team_sd = np.hypot(m['correlation']['team_sd'], m['correlation']['game_sd'])
+    out = []
+    for w in weeks:
+        before = season[season.week < w]
+        cur = usage.aggregate(before)
+        fppg = before.groupby('k').fd.sum() / cur.g
+        now = season[(season.week == w) & season.position.isin(['QB', 'RB', 'WR', 'TE'])]
+        now = now[now.k.isin(fppg.index[fppg >= min_fppg])].drop_duplicates('k')
+        agg = usage.blend_prior(cur, prior, m['prior_blend'])
+        rng = np.random.default_rng(seed)
+        for r in now.itertuples():
+            f = np.exp(rng.normal(0, team_sd, n_sims) + m['correlation']['shift'])
+            pts = sim.sim_skill(rng, agg.loc[r.k], r.position, 1.0, f, 0, 0, m, sc, n_sims)
+            out.append((f'{year}-w{w:02d}', r.position, pts.mean(), r.fd))
+    return pd.DataFrame(out, columns=['fold', 'Pos', 'Proj', 'FPTS'])
+
+
+def slate_rows(week, cfg, min_fppg=5.0):
+    """Uncalibrated projections from the real pipeline on an archived slate vs FanDuel results: skill players with
+    FanDuel FPPG >= min_fppg, starting QBs only. Columns: fold, Pos, Proj, FPTS (+ Name)."""
+    c = deep_merge(cfg, {'model': {'calibration': {'enabled': False}}})
+    proj, _ = project.build(week, c)
+    fd = data.load_slate(week.fd_players, c['status'])
+    j = analyze.joined(proj, analyze.load_actuals(week.results_players))
+    j = j[j.Id.isin(set(fd.Id[(fd.Position != 'D') & (fd.FPPG >= min_fppg)])) & ((j.Pos != 'QB') | j.StartingQB)]
+    return j.assign(fold=week.name)[['fold', 'Pos', 'Proj', 'FPTS', 'Name']]
+
+
+MAX_SLOPE = 0.6   # a slope near 1 would flatten (and above 1 invert) the ranking of the top projections
+
+
+def fit_calibration(rows, top_knee, rb_knee):
+    """Least-squares (top_slope, rb_slope) for project.calibrated on rows (Pos, Proj, FPTS): regress the
+    over-projection Proj - FPTS on the two hinge terms, no intercept. Slopes are kept in [0, MAX_SLOPE]."""
+    h = np.c_[np.maximum(rows.Proj - top_knee, 0), (rows.Pos == 'RB') * np.maximum(rows.Proj - rb_knee, 0)]
+    y = (rows.Proj - rows.FPTS).values
+    top, rb = np.linalg.lstsq(h, y, rcond=None)[0]
+    if not 0 <= top <= MAX_SLOPE:     # pin it at the bound and refit the RB slope on what is left
+        top = float(np.clip(top, 0, MAX_SLOPE))
+        rb = (h[:, 1] @ (y - top * h[:, 0])) / (h[:, 1] @ h[:, 1])
+    if not 0 <= rb <= MAX_SLOPE:
+        rb = float(np.clip(rb, 0, MAX_SLOPE))
+        top = float(np.clip((h[:, 0] @ (y - rb * h[:, 1])) / (h[:, 0] @ h[:, 0]), 0, MAX_SLOPE))
+    return dict(top_knee=top_knee, top_slope=float(top), rb_knee=rb_knee, rb_slope=float(rb))
+
+
+def calibration_cv(rows, top_knee, rb_knee):
+    """Leave-one-week-out: each fold's rows are calibrated with slopes fit on every other fold. Returns rows with
+    Cal (out-of-fold calibrated projection) and the per-fold slopes."""
+    out, fits = [], []
+    for fold in sorted(rows.fold.unique()):
+        cal = fit_calibration(rows[rows.fold != fold], top_knee, rb_knee)
+        test = rows[rows.fold == fold]
+        out.append(test.assign(Cal=project.calibrated(test.Proj.values, test.Pos.values, cal)))
+        fits.append(dict(fold=fold, **cal))
+    return pd.concat(out), pd.DataFrame(fits)
+
+
 # --- Phase 2 #2: leverage on an archived slate --------------------------------------------------------------------
 
 def est_rank(points, top, quantiles, field_size):

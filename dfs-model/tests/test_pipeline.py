@@ -72,8 +72,8 @@ class Week4Test(unittest.TestCase):
 
     def test_blend_reduces_week4_error(self):
         """The tuned prior blend must beat no blend on the week-4 slate (docs/phase2_prior_blend.md)."""
-        res, _ = backtest.slate_backtest(self.week, config.load_config(self.week),
-                                         [dict(usage_games=0, efficiency_games=0), {}])
+        cfg = config.load_config(self.week, model={'calibration': {'enabled': False}})   # the blend on its own
+        res, _ = backtest.slate_backtest(self.week, cfg, [dict(usage_games=0, efficiency_games=0), {}])
         self.assertLess(res.rmse[1], res.rmse[0])
         self.assertLess(res['gap_20+'][1], res['gap_20+'][0])
 

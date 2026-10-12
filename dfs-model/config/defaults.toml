@@ -70,6 +70,7 @@ prior_attempts = 33        # one pseudo-game of attempts
 att_sd = 0.12
 yds_sd = 0.15
 yds_team_exp = 0.6         # passing yards scale with team factor ** exp
+zero_backups = true        # QBs who are not the week's starter project 0 (they used to carry a starter's projection)
 
 [model.rush]
 att_sd = 0.2
@@ -90,6 +91,11 @@ turnover_total_exp = 0.5   # turnovers scale with (league / opp implied) ** exp
 return_td_prob = 0.08
 quality_shrink = 0.5       # quality = (1-s) + s * FPPG / league DST FPPG
 
+[model.dst.flatten]        # Oct 12 2026 (docs/week6_prep.md): DST mean from opponent implied total and salary only
+enabled = true
+opp_implied = -0.35        # points per point of opponent implied total above the slate average
+salary_per_1k = 0.35       # points per $1,000 of salary above the slate average
+
 [model.fallback]           # players with no usable stats: FD FPPG with wide noise
 sd = 0.5
 total_exp = 0.5
@@ -98,8 +104,20 @@ team_exp = 0.5
 [model.injury]
 redistribute_share = 0.8           # share of newly-OUT players' targets/carries given to active teammates, pro rata
 questionable_inactive_prob = 0.25
-skip_already_absent = true         # don't redistribute an OUT player who also missed his team's last game (already in
-                                   # teammates' usage); false = the behaviour before Oct 10 2026
+absent_mode = "present_share"      # OUT players who already missed games (Oct 12 2026, docs/week6_prep.md):
+                                   # "present_share" = hand out their volume for the share of each teammate's usage
+                                   #   sample (current games + prior pseudo-games) they played in; fades as they stay out
+                                   # "skip" = the Oct 10 behaviour, governed by skip_already_absent below
+skip_already_absent = true         # absent_mode "skip" only: don't redistribute an OUT player who missed his team's last
+                                   # game at all; false = hand everyone out in full (the behaviour before Oct 10 2026)
+
+# Shrink applied to finished projections (fit by src/fit_calibration.py; docs/week6_prep.md). enabled = false turns it off.
+[model.calibration]
+enabled = true
+top_knee = 16.0            # every skill player: lose top_slope of each projected point above this
+top_slope = 0.28           # fit Oct 12 2026 on 2025 wks 4-18 + 2026 wks 4-5 (leave-one-week-out range 0.20-0.32)
+rb_knee = 8.0              # RBs: also lose rb_slope of each projected point above this
+rb_slope = 0.12            # (leave-one-week-out range 0.09-0.14)
 
 # Phase 2 #1: shrink current-season usage/efficiency toward the prior season.
 # Prior season adds `usage_games` pseudo-games of its per-game targets/carries/attempts, and `efficiency_games` games'
