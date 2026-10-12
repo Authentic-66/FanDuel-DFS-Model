@@ -99,10 +99,12 @@ def season_backtest(path, prior_path, cfg, settings, weeks, min_fppg=5.0, n_sims
 
 # --- calibration shrink ([model.calibration]) ----------------------------------------------------------------------
 
-def season_rows(path, prior_path, cfg, weeks, min_fppg=5.0, n_sims=2000, seed=7, keep_sims=False):
+def season_rows(path, prior_path, cfg, weeks, min_fppg=5.0, n_sims=2000, seed=7, keep_sims=False, implied=None):
     """Uncalibrated per-player projections for each week of a season, as in season_backtest (neutral team totals,
     usage from earlier weeks + prior blend). Columns: fold, Pos, Proj, FPTS, Ceiling_p90 (uncalibrated).
-    keep_sims: return (rows, sims) with one row of draws per row of the frame (for fit_spread)."""
+    keep_sims: return (rows, sims) with one row of draws per row of the frame (for fit_spread).
+    implied: {(week, team): Vegas implied total} to scale each player by his team's total as the weekly model does
+    (history.load_lines); teams missing from it, and every team when it is None, get the league-average total."""
     m, sc = cfg['model'], cfg['scoring']
     season = data.load_stats(path, cfg)
     season = season.assign(fd=stats_points(sc, season))
@@ -120,7 +122,8 @@ def season_rows(path, prior_path, cfg, weeks, min_fppg=5.0, n_sims=2000, seed=7,
         rng = np.random.default_rng(seed)
         for r in now.itertuples():
             f = np.exp(rng.normal(0, team_sd, n_sims) + m['correlation']['shift'])
-            pts = sim.sim_skill(rng, agg.loc[r.k], r.position, 1.0, f, 0, 0, m, sc, n_sims)
+            scale = implied.get((w, r.team), m['league_team_total']) / m['league_team_total'] if implied else 1.0
+            pts = sim.sim_skill(rng, agg.loc[r.k], r.position, scale, f, 0, 0, m, sc, n_sims)
             out.append((f'{year}-w{w:02d}', r.position, pts.mean(), r.fd, np.percentile(pts, 90)))
             if keep_sims:
                 sims.append(pts.astype(np.float32))
@@ -143,11 +146,15 @@ def slate_rows(week, cfg, min_fppg=5.0):
 MAX_SLOPE = 0.6   # a slope near 1 would flatten (and above 1 invert) the ranking of the top projections
 
 
-def fit_calibration(rows, top_knee, rb_knee):
+def fit_calibration(rows, top_knee, rb_knee, weights=None):
     """Least-squares (top_slope, rb_slope) for project.calibrated on rows (Pos, Proj, FPTS): regress the
-    over-projection Proj - FPTS on the two hinge terms, no intercept. Slopes are kept in [0, MAX_SLOPE]."""
+    over-projection Proj - FPTS on the two hinge terms, no intercept. Slopes are kept in [0, MAX_SLOPE].
+    weights: optional per-row weights (e.g. recent seasons count more)."""
     h = np.c_[np.maximum(rows.Proj - top_knee, 0), (rows.Pos == 'RB') * np.maximum(rows.Proj - rb_knee, 0)]
     y = (rows.Proj - rows.FPTS).values
+    if weights is not None:
+        root = np.sqrt(np.asarray(weights, dtype=float))
+        h, y = h * root[:, None], y * root
     top, rb = np.linalg.lstsq(h, y, rcond=None)[0]
     if not 0 <= top <= MAX_SLOPE:     # pin it at the bound and refit the RB slope on what is left
         top = float(np.clip(top, 0, MAX_SLOPE))
@@ -172,20 +179,21 @@ def calibration_cv(rows, top_knee, rb_knee):
 
 # --- simulation spread ([model.spread]) ---------------------------------------------------------------------------------
 
-def p90_coverage(sims, actual, k=1.0):
-    """Share of rows whose actual score beat the 90th percentile of their draws widened by k (target 0.10)."""
-    return float(np.mean(actual > np.percentile(project.widen(sims, k), 90, axis=1)))
+def p90_coverage(sims, actual, k=1.0, weights=None):
+    """Share of rows (weighted if `weights`) whose actual score beat the 90th percentile of their draws widened by k
+    (target 0.10)."""
+    return float(np.average(actual > np.percentile(project.widen(sims, k), 90, axis=1), weights=weights))
 
 
-def fit_spread(sims, actual, target=0.10, hi=3.0, steps=20):
+def fit_spread(sims, actual, target=0.10, hi=3.0, steps=20, weights=None):
     """Smallest spread factor k in [1, hi] (project.widen) at which no more than `target` of the rows beat their
     90th percentile: bisection, coverage falls as k grows. 1.0 if the draws are already wide enough."""
-    if p90_coverage(sims, actual) <= target:
+    if p90_coverage(sims, actual, weights=weights) <= target:
         return 1.0
     lo = 1.0
     for _ in range(steps):
         mid = (lo + hi) / 2
-        lo, hi = (lo, mid) if p90_coverage(sims, actual, mid) <= target else (mid, hi)
+        lo, hi = (lo, mid) if p90_coverage(sims, actual, mid, weights) <= target else (mid, hi)
     return round(hi, 3)
 
 

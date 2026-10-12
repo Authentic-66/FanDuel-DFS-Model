@@ -128,6 +128,15 @@ calibration, plus `[model.spread] RB = 1.376` (RB draws widened around an unchan
 107.5 -> overrides 107.8 -> red+yellow 110.8 -> green 112.1 (reads +4.6; entered 111.3). Harrison trade set at
 `new_target_share = 0.15`, `first_week_factor = 0.7`, copied under `[shadow.trade]`.
 
+## History refits (Oct 12) — see docs/phase2_history.md
+`fetch_stats.py --seasons 2020-2025 --history` puts player stats, team stats and schedules with Vegas lines in
+`data/cache` (untracked); `fit_history.py` refits DST, injury share, spread and calibration on 2021-2025, leave-one-season-out,
+recent seasons weighted 0.75 per year back. **No defaults changed; Doug and Claude decide before week 7.** Findings: DST
+-0.35 on opponent implied total holds (own DST average predicts nothing); injury volume goes to the missing player's own
+position (WR 93% total / 77% to WRs, RB carries 95%, RB targets 70%, TE 49%) while the model spreads 80% pro rata across
+positions; RB spread 1.376 holds (1.36), QB/WR/TE want 1.15/1.17/1.22 but a flat factor over-widens 16+ players;
+calibration slope above 16 fits 0.36 with Vegas totals (0.28 now), RB slope 0.12 holds, moving the knees gains nothing.
+
 ## Phase 2 roadmap (in priority order)
 1. **Prior-season blend** — DONE Oct 5 (docs/phase2_prior_blend.md): usage 2 pseudo-games, efficiency 4 games of 2025.
    Week-4 RMSE 8.30 -> 8.08, 20+ tier gap +7.1 -> +4.2; also better on 2025 wks 4-18 (with 2024 prior). Residual
