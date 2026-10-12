@@ -9,41 +9,35 @@
 # reserve are left to FanDuel's IR tag (as in week 4: listing them here would hand their old volume to teammates a
 # second time), except Pat Bryant, who went on IR Friday and whom FanDuel still tags D.
 [status]
+# FINAL (Sun Oct 11, ~30 min before lock), from Doug's read of the ESPN inactives: every FanDuel Q tag on a main-slate
+# team is cleared (questionable = []); the Friday outs stay; Sunday inactives added. Tank Dell is on IR (FanDuel tag);
+# Zach Charbonnet is not in FanDuel's player list.
 out = [
   "Marvin Harrison Jr.",                                   # ARI (FanDuel shows no tag)
-  "Kyle Monangai",                                         # CHI
+  "Caleb Williams", "Kyle Monangai",                       # CHI (Bagent starts)
   "Tylan Wallace", "Carsen Ryan",                          # CLE
   "Pat Bryant",                                            # DEN (IR Oct 9)
   "Chris Brooks",                                          # GB
-  "Ashton Dulin",                                          # IND
+  "Ashton Dulin", "Darius Slayton",                        # IND
   "Jalen Nailor",                                          # LV
-  "Quentin Johnston", "Brenen Thompson", "Trey Lance",     # LAC (Lance doubtful)
+  "Quentin Johnston", "Ladd McConkey", "Brenen Thompson", "Trey Lance",   # LAC
   "Caleb Douglas", "Justin Joly",                          # MIA
+  "Jordan Addison",                                        # MIN
   "Mack Hollins", "Reggie Gilliam",                        # NE
+  "Devin Singletary",                                      # NYG
   "Breece Hall", "Adonai Mitchell",                        # NYJ
-  "Michael Pittman Jr.",                                   # PIT
-  "Kyle Juszczyk",                                         # SF
-  "Marcus Mariota", "Stefon Diggs",                        # WAS
-]
-questionable = [
-  "Caleb Williams",                                        # CHI (hamstring, limited Fri; FanDuel still tags him O)
-  "Ja'Marr Chase", "Tee Higgins", "Colbie Young",          # CIN (Chase in concussion protocol)
-  "Keenan Allen", "Darius Slayton",                        # IND
-  "Ashton Jeanty",                                         # LV
-  "Ladd McConkey", "Charlie Kolar",                        # LAC
-  "Jaylen Wright",                                         # MIA
-  "Justin Jefferson", "Jordan Addison",                    # MIN
-  "Rhamondre Stevenson",                                   # NE
-  "Alvin Kamara", "Barion Brown",                          # NO
-  "Rico Dowdle",                                           # PIT
+  "Michael Pittman Jr.", "Rico Dowdle",                    # PIT
   "George Holani",                                         # SEA
-  "Carnell Tate", "David Martin-Robinson",                 # TEN
-  "Terry McLaurin",                                        # WAS (game-time decision)
+  "Kyle Juszczyk",                                         # SF
+  "Nick Singleton", "Michael Carter",                      # TEN
+  "Marcus Mariota", "Stefon Diggs", "Kaytron Allen",       # WAS
 ]
+questionable = []
 
 # Doug's starting-QB calls, team -> name. Default is the QB with the most attempts in the team's last game.
 [status.starting_qb]
 WAS = "Jayden Daniels"         # not on the injury report (cleared); Mariota out, Kaliakmanis started week 4
+CHI = "Tyson Bagent"           # Caleb Williams inactive (Doug, Oct 11)
 
 # Doug's projection reads: new mean FanDuel points (the player's sims are rescaled to it).
 [overrides]
@@ -122,7 +116,7 @@ red = [
 "Kayshon Boutte" = 5
 
 # Stack QB-team weights (relative), for all 22 main-slate teams (11 games), all from the implied-total formula:
-# weight = round(2 * (implied total - 16)), min 1, from data/2026-w05/lines.csv (bet365 Oct 5). Only CHI is manual.
+# weight = round(2 * (implied total - 16)), min 1, from data/2026-w05/lines.csv (bet365 Oct 5).
 # Phase 2 #3 replaces this with Vegas-derived weights in code.
 [stacks.weights]
 DET = 26   # 29.0 vs ARI
@@ -130,7 +124,7 @@ CIN = 18   # 25.0 @ MIA (Chase and Higgins are Q and excluded)
 SEA = 18   # 25.0 vs SF
 NE = 17    # 24.5 vs LV
 ARI = 17   # 24.5 vs DET
-CHI = 0    # 23.75 @ GB; formula gives 16. Doug Oct 10: no CHI stacks, QB unknown (Caleb Williams Q vs Bagent)
+CHI = 16   # 23.75 @ GB; back to the formula Oct 11 (Bagent starts)
 WAS = 16   # 23.75 vs NYG
 PIT = 15   # 23.5 vs IND
 HOU = 14   # 23.25 @ TEN
@@ -152,7 +146,7 @@ TEN = 1    # 16.25 vs HOU
 [stacks.rules]
 
 [contest]
-field_size = 0                 # fill in after the slate (for grading)
+field_size = 571483            # $35K Pooch Punt, Oct 11
 
 # FanDuel Guru suggestions, pre-lock (candidate ownership feature; see config/2026-w04/week.toml for the format notes).
 # Per slot: the 3 players Guru suggested, in its order, and the one Doug picked. Screenshots of each slot are fine:
