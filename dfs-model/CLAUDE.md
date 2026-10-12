@@ -77,6 +77,17 @@ Calibration: rank-order fine (r = 0.68) but **overconfident at the top** (proj 2
 hot starts inflate. DST projections ~uninformative (r = 0.24). Jaguars "contrarian" stack was actually chalk
 (P. Washington 30% owned) and was our worst stack — we had no ownership model.
 
+## Week 5 (2026-w05) result — see docs/week5_review.md
+Entered model-only (Doug's colours recorded under `[shadow]`, not applied). 149 model + 1 Guru in the Pooch Punt (571,483
+entries), 6 entries in the $0.25 Hail Mary. Model avg 108.5 vs field 131.2; best 184.9 (rank 10,705); 0 in top 1%;
+winner 247.6. Guru lineup 171.9 (top 6%), better than 147 of 149 model lineups. RB was 19 of the 22-point gap: chalk RBs
+(Gibbs, Warren, A. Jones) hit, the 25 cap held us to 17% on each, and 45% of lineups had a TE in the flex (field 16%).
+20+ tier still +4.9 (23.7 vs 18.8); DST r = 0.11; ownership fine overall (MAE 1.4) but missed the mid-priced chalk again
+(M. Wilson 11% vs 51%). Players with a teammate out got ~no gained volume (B. Allen, Warren). Non-starting QBs carry
+starter projections. Re-optimizing with Doug's reads: red+yellow +2.5/lineup, green -1.7, all three -1.0.
+Results: `src/convert_results.py <export> --user gst1999 [--tag 025]` turns a FanDuel All Entries export (kept
+untracked in `data/<week>/raw/`) into `results_*.csv`.
+
 ## Phase 2 roadmap (in priority order)
 1. **Prior-season blend** — DONE Oct 5 (docs/phase2_prior_blend.md): usage 2 pseudo-games, efficiency 4 games of 2025.
    Week-4 RMSE 8.30 -> 8.08, 20+ tier gap +7.1 -> +4.2; also better on 2025 wks 4-18 (with 2024 prior). Residual

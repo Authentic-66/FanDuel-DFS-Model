@@ -1,0 +1,171 @@
+# Week 5 settings (2026-w05). Made from 2026-w04's week.toml with the week-specific parts reset. Overrides any key in
+# config/defaults.toml. Standing rules come from defaults: starters only, 25-lineup cap, leverage off.
+
+# Friday's official game statuses go here (skill positions). While both lists are empty, FanDuel's own tags apply:
+# O/IR = out, Q/D = questionable, and questionable players are excluded ([optimizer] exclude_questionable, default true).
+# Once anything is listed here, FanDuel's Q/D tags are ignored and these lists decide (O/IR tags still apply).
+# Filled Oct 10 from data/2026-w05/Injury Report/Wk_5 NFL Injuries.docx (ESPN format, statuses as of Fri Oct 9).
+# QB/RB/WR/TE on main-slate teams only. Out and Doubtful -> out; Questionable -> questionable. Players on injured
+# reserve are left to FanDuel's IR tag (as in week 4: listing them here would hand their old volume to teammates a
+# second time), except Pat Bryant, who went on IR Friday and whom FanDuel still tags D.
+[status]
+# FINAL (Sun Oct 11, ~30 min before lock), from Doug's read of the ESPN inactives: every FanDuel Q tag on a main-slate
+# team is cleared (questionable = []); the Friday outs stay; Sunday inactives added. Tank Dell is on IR (FanDuel tag);
+# Zach Charbonnet is not in FanDuel's player list.
+out = [
+  "Marvin Harrison Jr.",                                   # ARI (FanDuel shows no tag)
+  "Caleb Williams", "Kyle Monangai",                       # CHI (Bagent starts)
+  "Tylan Wallace", "Carsen Ryan",                          # CLE
+  "Pat Bryant",                                            # DEN (IR Oct 9)
+  "Chris Brooks",                                          # GB
+  "Ashton Dulin", "Darius Slayton",                        # IND
+  "Jalen Nailor",                                          # LV
+  "Quentin Johnston", "Ladd McConkey", "Brenen Thompson", "Trey Lance",   # LAC
+  "Caleb Douglas", "Justin Joly",                          # MIA
+  "Jordan Addison",                                        # MIN
+  "Mack Hollins", "Reggie Gilliam",                        # NE
+  "Devin Singletary",                                      # NYG
+  "Breece Hall", "Adonai Mitchell",                        # NYJ
+  "Michael Pittman Jr.", "Rico Dowdle",                    # PIT
+  "George Holani",                                         # SEA
+  "Kyle Juszczyk",                                         # SF
+  "Nick Singleton", "Michael Carter",                      # TEN
+  "Marcus Mariota", "Stefon Diggs", "Kaytron Allen",       # WAS
+]
+questionable = []
+
+# Doug's starting-QB calls, team -> name. Default is the QB with the most attempts in the team's last game.
+[status.starting_qb]
+WAS = "Jayden Daniels"         # not on the injury report (cleared); Mariota out, Kaliakmanis started week 4
+CHI = "Tyson Bagent"           # Caleb Williams inactive (Doug, Oct 11)
+
+# Doug's projection reads: new mean FanDuel points (the player's sims are rescaled to it).
+[overrides]
+
+[optimizer]
+stack_allocation = "proportional"   # stack counts follow the weights exactly instead of random draws
+
+# Week 5 is entered model-only (Doug, Oct 10): no red/yellow/green and no overrides are applied. His colour review is
+# kept under [shadow] below. Comparison runs made with it applied, archived in weeks/2026-w05/: floor/ (green = forced
+# minimum, CIN weight 3, CIN rule Burrow + Chase Brown + 1 receiver, reserve_required), boost/ (green_mode "boost",
+# green_boost 0.15, random stack draws) and hybrid/ (green_boost 0.30, green_qb_weight 2.0, proportional stacks).
+[prefs]
+starters_only = true           # QB1, RB1, top-3 WR, TE1 per team (by projection); green players always eligible
+red_teams = []
+red = []
+
+[prefs.yellow]
+
+[prefs.green]
+
+[prefs.green_floor]
+
+[prefs.player_cap]             # hard per-player lineup caps (overrides exposure_cap)
+
+# Record only: NOT applied (nothing in the code reads [shadow]). Doug's colours from data/2026-w05/exposure_reviewed.xlsx,
+# a review of the first Oct 10 run (numbers = that run's lineups out of 150), kept so his reads can be scored against
+# the model after the games. red = exclude; yellow = less (cap at half); green = more (min max(2x, 12), or the floor).
+[shadow]
+reviewed = "data/2026-w05/exposure_reviewed.xlsx"
+red = [
+  "Braelon Allen", "Theo Wease Jr.", "KC Concepcion Jr.", "Roman Wilson", "Kalif Raymond", "Elic Ayomanor",
+  "Mike Washington Jr.", "Germie Bernard", "Troy Franklin", "Dyami Brown", "Isaiah Williams", "Chris Bell",
+  "Sterling Shepard", "Kevin Austin Jr.",
+  "Washington Commanders", "Tennessee Titans", "Miami Dolphins", "Arizona Cardinals",
+]
+
+[shadow.red_lineups]           # lineups each red player had in the reviewed run
+"Braelon Allen" = 22
+"Theo Wease Jr." = 13
+"Washington Commanders" = 12
+"KC Concepcion Jr." = 10
+"Roman Wilson" = 6
+"Kalif Raymond" = 6
+"Tennessee Titans" = 4
+"Elic Ayomanor" = 3
+"Miami Dolphins" = 3
+"Mike Washington Jr." = 3
+"Germie Bernard" = 3
+"Troy Franklin" = 2
+"Dyami Brown" = 2
+"Isaiah Williams" = 1
+"Chris Bell" = 1
+"Sterling Shepard" = 1
+"Kevin Austin Jr." = 1
+"Arizona Cardinals" = 1
+
+[shadow.yellow]
+"Romeo Doubs" = 25
+"DK Metcalf" = 25
+
+[shadow.green]
+"Aaron Jones Sr." = 19
+"T.J. Hockenson" = 13
+"Sam Darnold" = 10
+"Emanuel Wilson" = 7
+"Kirk Cousins" = 6
+"Luther Burden III" = 6
+"Tucker Kraft" = 5
+"Tyler Shough" = 4
+"Joe Burrow" = 2
+"Colston Loveland" = 1
+"Kayshon Boutte" = 1
+
+[shadow.green_floor]           # Doug asked for a lower floor of 5 (not 12) on these two
+"Colston Loveland" = 5
+"Kayshon Boutte" = 5
+
+# Stack QB-team weights (relative), for all 22 main-slate teams (11 games), all from the implied-total formula:
+# weight = round(2 * (implied total - 16)), min 1, from data/2026-w05/lines.csv (bet365 Oct 5).
+# Phase 2 #3 replaces this with Vegas-derived weights in code.
+[stacks.weights]
+DET = 26   # 29.0 vs ARI
+CIN = 18   # 25.0 @ MIA (Chase and Higgins are Q and excluded)
+SEA = 18   # 25.0 vs SF
+NE = 17    # 24.5 vs LV
+ARI = 17   # 24.5 vs DET
+CHI = 16   # 23.75 @ GB; back to the formula Oct 11 (Bagent starts)
+WAS = 16   # 23.75 vs NYG
+PIT = 15   # 23.5 vs IND
+HOU = 14   # 23.25 @ TEN
+DEN = 14   # 23.0 @ LAC
+SF = 13    # 22.5 @ SEA
+MIN = 11   # 21.5 @ NO
+IND = 10   # 21.0 @ PIT
+NYJ = 10   # 21.0 vs CLE
+LV = 10    # 21.0 @ NE
+NYG = 10   # 20.75 @ WAS
+GB = 10    # 20.75 vs CHI
+NO = 8     # 20.0 vs MIN
+LAC = 7    # 19.5 vs DEN
+CLE = 7    # 19.5 @ NYJ
+MIA = 3    # 17.5 vs CIN
+TEN = 1    # 16.25 vs HOU
+
+# No per-team stack rules: every team uses [optimizer.stack], QB + 2 receivers + 1 bring-back.
+[stacks.rules]
+
+[contest]
+field_size = 571483            # $35K Pooch Punt, Oct 11
+
+# FanDuel Guru suggestions, pre-lock (candidate ownership feature; see config/2026-w04/week.toml for the format notes).
+# Per slot: the 3 players Guru suggested, in its order, and the one Doug picked. Screenshots of each slot are fine:
+# Claude transcribes them here. Leave empty if Guru isn't used this week.
+[contest.guru]
+# Transcribed Oct 10 from data/2026-w05/Doug's Guru Picks (9 suggestion screens + the entered lineup, Oct 8 7:13-7:17 PM).
+# Guru does not go slot by slot: each screen offers 3 players of mixed positions, and names that weren't picked come
+# back on later screens (PIT DST x3; J. Love, Kraft, Burden, MIN DST x2). Each screen is filed under the slot its pick
+# filled in the entered lineup, so "options" can hold other positions. 21 distinct players were suggested.
+# Screens 4-7 share a 7:15 timestamp; their order is from the file names, and each pick is the one option that is in
+# the entered lineup and not shown again on a later screen.
+adapts = "yes"                 # unpicked names are re-offered and the position mix follows the open slots
+fill_order = ["QB", "RB1", "RB2", "FLEX", "WR1", "WR2", "DEF", "TE", "WR3"]
+QB = { options = ["Drake Maye", "Tyler Shough", "Jared Goff"], picked = "Jared Goff" }
+RB1 = { options = ["Jahmyr Gibbs", "Amon-Ra St. Brown", "Jameson Williams"], picked = "Jahmyr Gibbs" }
+RB2 = { options = ["Jaylen Warren", "Jeremiyah Love", "Braelon Allen"], picked = "Jaylen Warren" }
+FLEX = { options = ["Pittsburgh Steelers", "Aaron Jones Sr.", "Jeremiyah Love"], picked = "Aaron Jones Sr." }
+WR1 = { options = ["Pittsburgh Steelers", "Minnesota Vikings", "Romeo Doubs"], picked = "Romeo Doubs" }
+WR2 = { options = ["Jaylen Waddle", "Matthew Golden", "KC Concepcion Jr."], picked = "Matthew Golden" }
+DEF = { options = ["Minnesota Vikings", "Pittsburgh Steelers", "Tucker Kraft"], picked = "Minnesota Vikings" }
+TE = { options = ["Tucker Kraft", "Luther Burden III", "Tre' Harris"], picked = "Tucker Kraft" }
+WR3 = { options = ["Luther Burden III", "Michael Wilson", "Malik Washington"], picked = "Michael Wilson" }

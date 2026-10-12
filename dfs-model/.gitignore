@@ -1,5 +1,6 @@
 __pycache__/
 weeks/*/sims.npy
 data/cache/
-data/*/raw/          # full FanDuel contest result exports (~40 MB xlsx) live here, untracked
+# full FanDuel contest result exports (~200 MB csv, ~40 MB xlsx) live in data/<week>/raw/, untracked
+data/*/raw/
 *.xlsx
