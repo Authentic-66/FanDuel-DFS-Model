@@ -57,3 +57,91 @@ def report(week, proj):
     print(stack_performance(me).to_string())
     print('\nTop scorers with field ownership vs my exposure:')
     print(ownership_vs_exposure(sk, me).to_string(index=False))
+
+
+# --- Doug's reads: red / yellow / green, applied ([prefs]) and shadow ([shadow]) --------------------------------------
+
+COLOURS = {'red': ('red', 'red_teams'), 'yellow': ('yellow',), 'green': ('green', 'green_floor')}
+
+
+def read_groups(cfg):
+    """Doug's reads as rows of (colour, source, keys): source 'applied' = [prefs] (used in the run), 'shadow' =
+    [shadow] (recorded only). keys = that colour's config entries; colours with nothing listed are left out."""
+    out = []
+    for source, section in [('applied', cfg['prefs']), ('shadow', cfg.get('shadow', {}))]:
+        for colour, keys in COLOURS.items():
+            got = {k: section[k] for k in keys if section.get(k)}
+            if got.get(keys[0]) or got.get('red_teams'):
+                out.append((colour, source, got))
+    return out
+
+
+def read_variants(cfg):
+    """One counterfactual [prefs] per read group, each differing from the run as entered in that group only:
+    applied reads are taken out, shadow reads are put in. Returns rows of (colour, source, label, prefs)."""
+    out = []
+    for colour, source, got in read_groups(cfg):
+        prefs = dict(cfg['prefs'])
+        for k in COLOURS[colour]:
+            empty = [] if k in ('red', 'red_teams') else {}
+            mine, theirs = prefs.get(k, empty), got.get(k, empty)
+            if source == 'applied':
+                prefs[k] = empty
+            elif isinstance(empty, dict):
+                prefs[k] = {**mine, **theirs}
+            else:
+                prefs[k] = list(mine) + [x for x in theirs if x not in mine]
+        out.append((colour, source, f'{colour} ({source}) ' + ('removed' if source == 'applied' else 'added'), prefs))
+    return out
+
+
+def reads_players(cfg, proj, actuals, me):
+    """Every player Doug marked, by colour and source: projection, actual, field ownership, lineups we entered.
+    Players on a red team are listed if projected >= [optimizer] min_proj (or a DST)."""
+    held = pd.Series([i for l in me.ids for i in l]).value_counts()
+    p = proj.merge(actuals, on='Id', how='left')
+    rows = []
+    for colour, source, got in read_groups(cfg):
+        names = set(got.get(COLOURS[colour][0], []))
+        on_team = p.Team.isin(got.get('red_teams', [])) & ((p.Pos == 'D') | (p.Proj >= cfg['optimizer']['min_proj']))
+        for r in p[p.Name.isin(names) | on_team].itertuples():
+            rows.append(dict(colour=colour, source=source, Name=r.Name, Pos=r.Pos, Team=r.Team, Proj=r.Proj, FPTS=r.FPTS,
+                             diff=r.FPTS - r.Proj, own_pct=r.own_pct, my_lineups=int(held.get(r.Id, 0))))
+        for n in sorted(names - set(p.Name)):
+            rows.append(dict(colour=colour, source=source, Name=n, Pos='?', my_lineups=0))   # not on the slate
+    return pd.DataFrame(rows, columns=['colour', 'source', 'Name', 'Pos', 'Team', 'Proj', 'FPTS', 'diff', 'own_pct', 'my_lineups'])
+
+
+def reads_summary(players):
+    """Per colour and source: players, mean projection and actual, how many scored below projection, lineup slots."""
+    g = players.dropna(subset=['FPTS']).groupby(['colour', 'source'], sort=False)
+    return g.agg(players=('Name', 'size'), proj=('Proj', 'mean'), actual=('FPTS', 'mean'),
+                 below_proj=('diff', lambda d: int((d < 0).sum())), own_pct=('own_pct', 'mean'),
+                 my_lineup_slots=('my_lineups', 'sum')).reset_index()
+
+
+def reads_lineups(week, cfg, proj, sims):
+    """Each colour as lineups: re-run the optimizer as entered, then once per read group with only that group
+    changed (read_variants), and score every run on actual points. read_effect = points per lineup the reads were
+    worth: entered minus without them (applied), or with them minus entered (shadow). Nothing in weeks/ is rewritten."""
+    import os
+    from . import backtest, optimize
+    act = load_actuals(week.results_players).set_index('Id').FPTS
+    n_field = cfg['contest'].get('field_size', 0)
+    top_path = os.path.join(week.data, 'results_top2000.csv')
+    ranked = bool(n_field) and os.path.exists(top_path)
+    if ranked:
+        top, qs = pd.read_csv(top_path), pd.read_csv(os.path.join(week.data, 'results_field_quantiles.csv'))
+    rows = []
+    for colour, source, label, prefs in [('', '', 'as entered', cfg['prefs'])] + read_variants(cfg):
+        c = dict(cfg, prefs=prefs)
+        df = optimize.eligible_pool(proj, prefs, c['optimizer'])
+        lineups, _ = optimize.build_lineups(df, sims, c)
+        pts = np.array([act.reindex(df.Id[lp]).fillna(0).sum() for lp in lineups])
+        r = dict(run=label, colour=colour, source=source, lineups=len(lineups), avg=pts.mean(), best=pts.max())
+        if ranked:
+            rk = np.array([backtest.est_rank(x, top, qs, n_field) for x in pts])
+            r.update(best_rank=int(rk.min()), top_1pct=int((rk <= 0.01 * n_field).sum()), top_10pct=int((rk <= 0.10 * n_field).sum()))
+        r['read_effect'] = np.nan if not colour else (rows[0]['avg'] - r['avg'] if source == 'applied' else r['avg'] - rows[0]['avg'])
+        rows.append(r)
+    return pd.DataFrame(rows)

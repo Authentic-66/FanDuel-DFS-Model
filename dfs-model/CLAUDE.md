@@ -60,7 +60,10 @@ and thinks in those terms: fundamentals model + market/public overlay, calibrati
   from all earlier weeks' results (training rows cached in `weeks/<w>/ownership_train.csv`), shifted per position so
   QB/DST sum to 100%. Added in model.py, override.py (post-override) and optimize.py; also exposure.csv
   (`Own_proj_%`, `Exp_minus_Own`, plus 0-lineup players projected >= 5%) and stacks.csv. `fit_ownership.py` = CV report.
-- `dfs/analyze.py` (`analyze_results.py`) — post-slate grading. `dfs/backtest.py` (`backtest.py`) — Phase 2 tuning;
+- `dfs/analyze.py` (`analyze_results.py`) — post-slate grading, including Doug's reads: red, yellow and green graded
+  separately, applied (`[prefs]`) and shadow (`[shadow]`), per player and as lineups (optimizer re-run as entered, then
+  once per colour and source with only that group removed/added; `reads_players.csv`, `reads_lineups.csv`;
+  `--no-read-lineups` skips the re-runs). Weeks 4-5 pin `mean_weight = 0.4` so "as entered" still reproduces. `dfs/backtest.py` (`backtest.py`) — Phase 2 tuning;
   `backtest_leverage.py` — leverage settings on an archived slate.
 - `fetch_stats.py` — nflverse stats for the week's season and the prior one.
 - Tests: `python -m unittest discover -s tests` (stdlib unittest; scoring, usage/blend, ownership, week-4 regression checks).
@@ -78,6 +81,8 @@ and thinks in those terms: fundamentals model + market/public overlay, calibrati
 - Weekly review loop: he color-codes `exposure.csv` in Excel — **red = exclude, yellow = less (cap at ~half current),
   green = more (min = max(2x current, 12))**. Two shades of green both mean "more". Lists live in `config/<week>/week.toml`
   `[prefs]`.
+- From week 6, red/yellow reads are applied, green is shadow-only, based on weeks 4-5 (+3.0, +2.5 per lineup).
+  Red and yellow go under `[prefs]`, green under `[shadow.green]` (`[prefs.green]` stays empty).
 - When he wants more of a player the model projects low, prefer a projection override (ask his read) over forced exposure;
   forcing low-projected players cost ~5 points of average lineup projection in week 4.
 

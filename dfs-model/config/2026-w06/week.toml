@@ -1,5 +1,7 @@
 # Week 6 settings (2026-w06). Made Oct 12 from 2026-w05's final week.toml with the week-specific parts emptied.
 # Overrides any key in config/defaults.toml. Standing rules come from defaults: starters only, 25-lineup cap, leverage off.
+# Week-6 mode (Doug, Oct 12): his RED and YELLOW reads are APPLIED ([prefs]); GREEN is recorded under [shadow] only.
+# Based on weeks 4-5, where red + yellow were worth +3.0 and +2.5 points per lineup and green was +1.3 and -1.7.
 # TO FILL before the first run: [status] (Friday report), [stacks.weights] (from data/2026-w06/lines.csv), and
 # [contest.guru] if Guru is used. optimize.py stops with an error while [stacks.weights] is empty.
 
@@ -34,34 +36,36 @@ first_week_factor = 0.7        # first game in the offence: 0.15 x 0.7 = 10.5% o
 [optimizer]
 stack_allocation = "proportional"   # stack counts follow the weights exactly instead of random draws
 
-# Model-only again, as in week 5: no red/yellow/green is applied. Doug's colour review goes under [shadow] below.
+# Doug's colour review of the exposure sheet (numbers = that run's lineups out of 150).
+# APPLIED: red = exclude (players, DSTs by full name; whole teams under red_teams); yellow = cap at half the number listed.
+# NOT applied: green. Leave [prefs.green] and [prefs.green_floor] empty and put green under [shadow.green] below.
 [prefs]
-starters_only = true           # QB1, RB1, top-3 WR, TE1 per team (by projection); green players always eligible
-red_teams = []
+starters_only = true           # QB1, RB1, top-3 WR, TE1 per team (by projection)
+red_teams = []                 # nothing from these teams
 red = []
 
-[prefs.yellow]
+[prefs.yellow]                 # "Player" = lineups he had in the reviewed run
 
-[prefs.green]
+[prefs.green]                  # keep empty in week 6 (green is shadow-only)
 
-[prefs.green_floor]
+[prefs.green_floor]            # keep empty in week 6
 
 [prefs.player_cap]             # hard per-player lineup caps (overrides exposure_cap)
 
-# Record only: NOT applied (nothing in the code reads [shadow]). Doug's colours from his review of the exposure sheet
-# (numbers = that run's lineups out of 150), kept so his reads can be scored against the model after the games.
-# red = exclude; yellow = less (cap at half); green = more (min max(2x, 12), or the floor).
+# Record only: NOT applied (the model and optimizer never read [shadow]; analyze_results.py grades it after the games).
+# Week 6: Doug's GREEN reads go here (green = more: min max(2x listed, 12), or the floor). red / yellow stay empty
+# here because they are applied through [prefs] above; anything listed here would be graded as a shadow read.
 [shadow]
 reviewed = ""                  # path of the reviewed sheet, e.g. "data/2026-w06/exposure_reviewed.xlsx"
 red = []
 
-[shadow.red_lineups]           # lineups each red player had in the reviewed run
+[shadow.red_lineups]           # lineups each red player had in the reviewed run (red is applied, so record them here)
 
 [shadow.yellow]
 
-[shadow.green]
+[shadow.green]                 # "Player" = lineups he had in the reviewed run
 
-[shadow.green_floor]
+[shadow.green_floor]           # per-player floor instead of 12
 
 # Doug's trade reads. Unlike the colours these ARE applied (through [[status.trade]] above, which has no default);
 # the copy here is so the read can be scored against his actual share of the new team's targets after the games.

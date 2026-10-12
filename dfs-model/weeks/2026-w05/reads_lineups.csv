@@ -1,0 +1,5 @@
+run,colour,source,lineups,avg,best,best_rank,top_1pct,top_10pct,read_effect
+as entered,,,150,108.32533333333335,184.86,13708,0,3,
+red (shadow) added,red,shadow,150,109.75533333333333,173.1,32899,0,2,1.4299999999999784
+yellow (shadow) added,yellow,shadow,150,108.904,173.96,30204,0,3,0.5786666666666491
+green (shadow) added,green,shadow,150,106.62346666666666,170.85999999999999,39917,0,3,-1.7018666666666888

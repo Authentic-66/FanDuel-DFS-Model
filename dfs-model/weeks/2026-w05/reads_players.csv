@@ -1,0 +1,32 @@
+colour,source,Name,Pos,Team,Proj,FPTS,diff,own_pct,my_lineups
+red,shadow,Roman Wilson,WR,PIT,8.9,0.0,-8.9,6.619999999999999,8
+red,shadow,KC Concepcion Jr.,WR,CLE,8.3,1.0,-7.300000000000001,1.71,3
+red,shadow,Kalif Raymond,WR,CHI,8.0,1.9,-6.1,1.13,3
+red,shadow,Theo Wease Jr.,WR,LAC,8.0,2.1,-5.9,0.16999999999999998,7
+red,shadow,Braelon Allen,RB,NYJ,6.1,21.1,15.000000000000002,14.360000000000001,0
+red,shadow,Germie Bernard,WR,PIT,5.7,11.4,5.7,0.12,0
+red,shadow,Washington Commanders,D,WAS,5.7,6.0,0.2999999999999998,24.7,11
+red,shadow,Troy Franklin,WR,DEN,5.3,2.6,-2.6999999999999997,0.22999999999999998,2
+red,shadow,Mike Washington Jr.,RB,LV,5.2,1.5,-3.7,2.74,0
+red,shadow,Dyami Brown,WR,WAS,5.2,0.7,-4.5,0.08,2
+red,shadow,Tennessee Titans,D,TEN,4.9,2.0,-2.9000000000000004,4.66,9
+red,shadow,Elic Ayomanor,WR,TEN,4.6,2.2,-2.3999999999999995,0.1,1
+red,shadow,Isaiah Williams,WR,NYJ,4.4,2.4,-2.0000000000000004,0.49,0
+red,shadow,Kevin Austin Jr.,WR,NO,4.4,0.0,-4.4,0.0,0
+red,shadow,Arizona Cardinals,D,ARI,3.9,-1.0,-4.9,1.15,3
+red,shadow,Chris Bell,WR,MIA,3.8,2.6,-1.1999999999999997,0.5499999999999999,0
+red,shadow,Miami Dolphins,D,MIA,3.6,1.0,-2.6,2.2800000000000002,4
+red,shadow,Sterling Shepard,WR,NYJ,3.4,0.0,-3.4,0.01,0
+yellow,shadow,DK Metcalf,WR,PIT,13.0,3.8,-9.2,6.61,24
+yellow,shadow,Romeo Doubs,WR,NE,10.8,2.1,-8.700000000000001,10.02,17
+green,shadow,Joe Burrow,QB,CIN,21.8,24.6,2.8000000000000007,5.74,10
+green,shadow,Tyler Shough,QB,NO,20.2,1.84,-18.36,2.74,4
+green,shadow,Sam Darnold,QB,SEA,19.7,10.3,-9.399999999999999,3.32,10
+green,shadow,Kirk Cousins,QB,LV,17.4,13.72,-3.679999999999998,3.83,6
+green,shadow,Aaron Jones Sr.,RB,MIN,14.1,20.2,6.1,30.81,22
+green,shadow,Luther Burden III,WR,CHI,10.8,6.9,-3.9000000000000004,7.470000000000001,12
+green,shadow,Emanuel Wilson,RB,SEA,10.7,12.2,1.5,12.709999999999999,8
+green,shadow,T.J. Hockenson,TE,MIN,10.2,1.2,-9.0,5.2299999999999995,14
+green,shadow,Tucker Kraft,TE,GB,10.0,9.1,-0.9000000000000004,4.22,12
+green,shadow,Colston Loveland,TE,CHI,7.1,2.9,-4.199999999999999,1.9,5
+green,shadow,Kayshon Boutte,WR,HOU,5.6,5.3,-0.2999999999999998,0.27999999999999997,1

@@ -43,6 +43,7 @@ CHI = "Tyson Bagent"           # Caleb Williams inactive (Doug, Oct 11)
 [overrides]
 
 [optimizer]
+mean_weight = 0.4              # as entered: the default became 0.6 in week 6 (keeps the review's re-runs faithful)
 stack_allocation = "proportional"   # stack counts follow the weights exactly instead of random draws
 
 # Week 5 is entered model-only (Doug, Oct 10): no red/yellow/green and no overrides are applied. His colour review is
