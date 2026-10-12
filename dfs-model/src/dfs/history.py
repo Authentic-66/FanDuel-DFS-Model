@@ -204,3 +204,27 @@ def fit_taper(sims, mean, actual, weights, taper, split=16.0, target=0.10, hi=2.
         spec['low'] = solve(['low'], ~upper)
         spec['top'] = solve(['top'], upper)
     return spec
+
+
+def within_position(st, ev):
+    """How a missing starter's volume was split among the teammates at HIS position. st: one season's stats frame;
+    ev: that season's rows of absences(). For each event, the same-position teammates who played the missed game are
+    ranked by their per-game volume over the games the missing player played (rank 1 = the largest; 3 = third and
+    lower). One row per teammate: base, actual in the missed game, gain = actual - base, and prorata = the event's
+    total same-position gain split in proportion to base, which is what the model's rule hands him."""
+    col = {'tgt': 'targets', 'car': 'carries'}
+    rows = []
+    for e in ev.itertuples():
+        tm = st[(st.team == e.team) & (st.position == e.pos)]
+        his = set(tm.week[(tm.k == e.k) & (tm.week < e.week)])
+        now = tm[(tm.week == e.week) & (tm.k != e.k)].groupby('k')[col[e.col]].sum()
+        base = tm[tm.week.isin(his)].groupby('k')[col[e.col]].sum().reindex(now.index).fillna(0) / len(his)
+        if not len(now) or base.sum() <= 0:
+            continue
+        order = base.sort_values(ascending=False, kind='stable').index
+        gain = (now - base).reindex(order)
+        for i, k in enumerate(order):
+            rows.append(dict(season=e.season, week=e.week, team=e.team, out=e.k, pos=e.pos, col=e.col, mate=k,
+                             rank=min(i + 1, 3), base=base[k], actual=now[k], gain=gain[k],
+                             prorata=gain.sum() * base[k] / base.sum()))
+    return pd.DataFrame(rows)

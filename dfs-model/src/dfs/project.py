@@ -2,7 +2,7 @@
 import numpy as np
 import pandas as pd
 
-from . import data, sim, usage
+from . import data, opponent, sim, usage
 
 
 def load_usage(week, cfg):
@@ -71,6 +71,13 @@ def build(week, cfg, agg=None, st=None):
             raise ValueError(f'[status.starting_qb] {team}: {name!r} is not an active {team} QB on the slate')
         proj.loc[qbs, 'StartingQB'] = proj.Name[qbs] == name
     sims = adjust(proj, np.array(sims), lines, m)
+    opp = m.get('opponent', {})
+    if opp.get('enabled'):      # last: a multiplier on the finished draws, so the calibration and spread fits still hold
+        prior = data.load_stats(week.stats(week.season - 1), cfg)
+        tilts = opponent.tilt(opponent.allowed(st, sc), opponent.allowed(prior, sc), opp)
+        f = opponent.factors(proj.Pos.values, proj.Opp.values, tilts, opp)
+        proj['OppAdj'] = np.round(sims.mean(axis=1) * (f - 1), 2)      # points added or removed by the matchup
+        sims = sims * f[:, None]
     stats = pd.DataFrame([summarize(pts, sal) for pts, sal in zip(sims, proj.Salary)])
     proj[stats.columns] = stats
     order = proj.Proj.sort_values(ascending=False, kind='stable').index

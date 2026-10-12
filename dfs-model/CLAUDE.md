@@ -133,6 +133,14 @@ split by his position first: WR tgt 77% same / 16% other, RB car 94/1, RB tgt 70
 `[model.spread]` tapered `{low, top}` per position between `[model.spread_taper]` from 12 to 20 (QB 1.50/1.00, RB 1.43/1.04,
 WR 1.23/1.00, TE 1.22 flat; `src/fit_taper.py`). **Caveat flagged to Doug:** top-1% lineups went 1 and 4 (weeks 5, 4) to
 0 and 0 with all three on (routing cost week 4's, taper week 5's), and the taper alone fails the rule on week 4 (-1.2).
+Fifth pass (sections 9.1 and 10). **Rule from Doug (Oct 12): every lineup test reports average, top-10% count, top-1%
+count and best score, and no change is adopted automatically; Doug and Claude decide.** Routing and tapered spread are on
+by default but Doug has not yet confirmed them. The lost top finishes were reshuffles (week 4: same exposure to the big
+scorers, but lineups holding 3+ of them fell 17 -> 6; week 5: one lineup lost Gibbs). Inside a position the split is NOT
+pro rata: with a WR out, the top remaining WR gets ~20% of the gain (pro rata 57%), depth players 60% (14%); candidate fix,
+not changed. `[model.opponent]` (dfs/opponent.py, `fit_opponent.py`): defence-vs-position tilt beyond the defence's overall
+level, built and OFF: RMSE 7.251 -> 7.247 on 2021-2025, adjustments ~0.2 pts typical, 2.2 max. By-product, untested: WR/TE
+projections over-react to the implied total (coefficient about -0.33).
 
 ## History refits (Oct 12) — see docs/phase2_history.md
 `fetch_stats.py --seasons 2020-2025 --history` puts player stats, team stats and schedules with Vegas lines in

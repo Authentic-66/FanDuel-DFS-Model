@@ -92,5 +92,8 @@ def load_stats(path, cfg, before_week=None):
     st = st[st.season_type.isin(cfg['model']['season_types'])]
     if before_week is not None:
         st = st[st.week < before_week]
-    st = st.assign(team=st.team.replace(cfg['teams']['nflverse_to_fd']), k=st.player_display_name.map(norm_name))
+    fd = cfg['teams']['nflverse_to_fd']
+    st = st.assign(team=st.team.replace(fd), k=st.player_display_name.map(norm_name))
+    if 'opponent_team' in st:
+        st = st.assign(opp=st.opponent_team.replace(fd))     # the defence faced, FanDuel codes (dfs.opponent)
     return st[~((st.position == 'QB') & (st.attempts < cfg['model']['qb']['min_attempts']))].reset_index(drop=True)

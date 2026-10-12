@@ -835,6 +835,247 @@ Tests: `tests/test_routing.py` (6 tests); 62 pass in total.
 - `weeks/2026-w05/backtest_section9.csv` (9.4; runs `base`, `s1`, `s12`, `s123`, and `s13` = slope plus taper
   without routing).
 
+## 9.1 Follow-up to section 9 (Oct 12, fifth pass)
+
+Section 9 already has subsections numbered 9.1 to 9.5; this is the follow-up Doug asked for under the name 9.1.
+The three section-9 changes are still on by default. Doug has not yet decided on the routing or the tapered
+spread.
+
+**In short: neither lost top finish was caused by exposure to particular players. Both came from which players
+ended up in the same lineup.** That is the part of a 150-lineup run that changes whenever any projection moves,
+so the two slates say little for or against either change.
+
+### A1. Week 4, routing off against on (top-10% lineups 22 to 7)
+
+Both runs have the 0.36 slope and the flat RB spread; only the routing differs.
+
+Players whose lineup count changed most:
+
+| Player | Off | On | Change | Scored | Field owned |
+|---|---|---|---|---|---|
+| Parker Washington | 22 | 9 | -13 | 1.5 | 30% |
+| Aaron Jones Sr. | 19 | 10 | -9 | 14.8 | 40% |
+| Dontayvion Wicks | 11 | 20 | +9 | 3.3 | 10% |
+| Zach Ertz | 14 | 6 | -8 | 2.3 | 1% |
+| Travis Kelce | 19 | 12 | -7 | 2.5 | 21% |
+| Omarion Hampton | 6 | 13 | +7 | 12.3 | 1% |
+| Tyler Higbee | 8 | 15 | +7 | 9.2 | 3% |
+| Braelon Allen | 19 | 25 | +6 | 7.7 | 19% |
+| Michael Wilson | 19 | 25 | +6 | 13.0 | 20% |
+| CeeDee Lamb | 25 | 19 | -6 | 35.8 | 10% |
+| Jeremiyah Love | 23 | 17 | -6 | 6.0 | 33% |
+| Joshua Palmer | 16 | 10 | -6 | 0.8 | 0% |
+| Vikings DST | 19 | 13 | -6 | 8.0 | 18% |
+
+- **The swaps were good on balance.** The roster slots the routing added scored 9.6 on average and the ones it
+  removed scored 8.4. That is why the average went up by a point.
+- **Lamb is the one costly change:** six fewer lineups on a 35.8-point game. Lamb was not touched by the routing
+  itself; he lost lineups because other players' projections rose.
+- **The drop is spread across many lineups, not one or two players or stacks.** With the routing off, the 22
+  top-10% lineups came from 11 different stacks (Las Vegas, Dallas and Cincinnati had four each). With it on, the
+  7 come from 7 different stacks.
+- **What changed is how the week's big scorers were combined.** Take the eight who made week 4 (Lamb, Collins,
+  Higgins, Kyren Williams, Walker, Javonte Williams, Nacua, Emanuel Wilson). Total exposure to them is the same:
+  173 slots off, 171 on. But lineups holding three or more of them fell from 17 to 6, and 16 of the 22 top-10%
+  lineups had three or more. Lamb and Collins shared 8 lineups with the routing off and 3 with it on.
+- **The whole distribution narrowed.** The spread of lineup scores fell from 25.8 to 18.9 points, the median rose
+  from 105.7 to 107.8, and the 95th-percentile lineup fell from 154.6 to 137.0. No lineup is the same in both
+  runs.
+
+Nothing in the routing makes it spread hot players thinner by design. Any change that moves a dozen projections
+reshuffles all 150 lineups, and this reshuffle happened to break up the combinations that hit. I cannot tell from
+one slate whether that is chance alone.
+
+### A2. Week 5, the top-1% lineup lost under the tapered spread
+
+One lineup, one swap. 84 of the 150 lineups are identical in the two runs.
+
+| | Lineup | Score | Rank |
+|---|---|---|---|
+| Flat RB spread | Goff, Gibbs, Swift, Warren, Watson, Jameson Williams, Bourne, LaPorta, Chargers | 199.0 | 2,296 |
+| Tapered spread | Goff, Swift, St. Brown, Warren, Watson, Bourne, LaPorta, Bowers, Chargers | 175.0 | 27,262 |
+
+The same Detroit lineup lost Gibbs (38.2) and Jameson Williams for St. Brown (9.9) and Bowers (22.0). Gibbs is at
+the 25-lineup cap in both runs, so his exposure did not change; he simply landed in different lineups. The taper
+lowers the top RBs' ceilings (Gibbs is projected above 20, where the RB factor falls from 1.376 to 1.04), which
+makes him a little less likely to be picked on any one draw. Top-10% lineups are 6 in both runs. Exposure moved by
+at most four lineups for any player.
+
+### A3. Is the split inside a position pro rata?
+
+**No, and it leans the opposite way from the example.** When a starter is out, the teammate at his position with
+the largest existing role gets less than his pro-rata share, and the players further down get much more.
+
+From the same absences as `docs/phase2_history.md` section 4 (2021-2025, recent seasons weighted more). Teammates
+at the missing player's position who played the game are ranked by their volume in the games he played.
+
+| Player out | Teammate | His volume before | His gain per game | Share of the position's gain | Pro-rata share |
+|---|---|---|---|---|---|
+| WR (targets) | Largest role | 5.6 | +1.8 | 20% | 57% |
+| WR (targets) | Second | 2.9 | +1.7 | 20% | 28% |
+| WR (targets) | Third and lower (2.4 players a game) | 0.6 each | +2.2 each | 60% | 14% |
+| RB (carries) | Largest role | 5.0 | +8.3 | 58% | 82% |
+| RB (carries) | Second | 1.0 | +4.8 | 33% | 17% |
+| RB (carries) | Third and lower | 0.2 | +2.0 | 10% | 2% |
+| RB (targets) | Largest role | 1.7 | +1.6 | 47% | 82% |
+| RB (targets) | Second | 0.3 | +1.2 | 36% | 16% |
+| TE (targets) | Largest role | 1.5 | +2.0 | 67% | 89% |
+| TE (targets) | Second | 0.3 | +1.4 | 27% | 11% |
+
+- **WRs:** when the WR1 is out, the next receiver gains about 1.8 targets and so does the one after him. Pro rata
+  would give the first 4.8 and the second 2.4. Most of the vacated targets (60%) go to receivers who had almost no
+  role, because someone has to take the missing player's snaps. The pattern is the same in each of the five
+  seasons (the top remaining receiver took between 0% and 29% of the gain; pro rata says 52% to 61%).
+- **RBs and TEs:** the top remaining player does get the most, but still well under pro rata.
+- **What this means for the model:** the routing in section 9 moves volume to the right position and then gives
+  too much of it to the established player. That fits week 5, where the receivers it raised (Michael Wilson,
+  Doubs, Tre' Harris, Tucker) mostly missed. It also means the model cannot give the true replacement his share,
+  since a player with no volume gets nothing under a pro-rata rule.
+- Two cautions. A player ranked first on a few games' volume is partly there by luck, so his measured gain is
+  biased down somewhat; the gap for WRs (20% against 57%) is too large for that to be the whole story. And the
+  gains are among teammates who played that game, so they include volume left by any other teammate who also
+  sat out, which is why they add up to more than the missing starter's own share.
+
+Not changed, as asked. A more even split inside the position (or one that favours the next man on the depth
+chart) is the candidate.
+
+### A4. Reporting rule from now on
+
+Every lineup test reports average score, top-10% count, top-1% count and best score, and no change is adopted
+automatically. Doug and Claude decide. Section 10 follows this.
+
+## 10. Opponent adjustment (Oct 12)
+
+**Built, tested, and left off.** `[model.opponent] enabled = false`. On five seasons it barely changes accuracy:
+RMSE over all positions goes from 7.251 to 7.247. It helps QBs and RBs slightly and does nothing for WRs and TEs.
+
+### 10.1 What it does
+
+- **Defence against a position.** For each defence, FanDuel points allowed per game to QBs, RBs, WRs and TEs, as
+  a ratio to the league average. Games before the week only.
+- **Blended and shrunk.** The defence's prior-season ratio counts as 8 games and the league average (1.0) as 16
+  more, so after four games a defence's own current season is 4 parts in 28. These weights were fit, not chosen.
+- **No double-counting.** The team's Vegas implied total already prices how good the opposing defence is overall.
+  So each position's ratio is divided by the defence's ratio over all positions, and only that tilt is used. A
+  defence that gives up 10% more to everyone has no tilt. One that is average overall but gives up 10% more to
+  tight ends has a TE tilt of 1.10.
+- **The adjustment.** A player's draws are multiplied by 1 + beta x (tilt - 1), limited to 15% either way. It is
+  applied last, after the calibration and the spread, so those fits still hold.
+
+Fitted on 2021-2025, leaving one season out, recent seasons weighted more (`src/fit_opponent.py`):
+
+| Position | Beta | Range, leaving one season out |
+|---|---|---|
+| QB | 1.02 | 0.55 to 1.33 |
+| RB | 0.57 | 0.35 to 0.72 |
+| WR | 0.17 | 0.00 to 0.38 |
+| TE | 0.34 | 0.19 to 0.46 |
+
+A beta of 1 means the tilt carries over in full; 0.17 means a sixth of it does.
+
+### 10.2 Accuracy on 2021-2025
+
+12,193 player-games, weeks 4 to 18, each season graded with values fit on the other four.
+
+| Position | n | RMSE without | RMSE with | Typical adjustment | 95th percentile | Largest |
+|---|---|---|---|---|---|---|
+| QB | 2,067 | 7.813 | 7.796 | 0.48 pts | 1.25 | 2.2 |
+| RB | 3,365 | 7.579 | 7.573 | 0.34 | 0.88 | 2.0 |
+| WR | 5,063 | 7.126 | 7.128 | 0.06 | 0.22 | 0.8 |
+| TE | 1,698 | 6.179 | 6.183 | 0.18 | 0.54 | 1.9 |
+| All | 12,193 | 7.251 | 7.247 | 0.22 | 0.81 | 2.2 |
+
+- **The adjustments are small:** typically a quarter of a point, and never more than 2.2.
+- **So is the gain:** 0.02 of RMSE for QBs, 0.01 for RBs, and slightly negative for WRs and TEs. Fitting each
+  position on its own settings instead of shared ones, it was better in 3 of 5 seasons for QBs, RBs and TEs and
+  2 of 5 for WRs.
+- On the two 2026 slates it is the same story: skill RMSE 7.84 to 7.82 in week 5 and 7.44 to 7.41 in week 4. Of
+  the players it moved half a point or more, 5 of 7 moved the right way in week 5 and 4 of 9 in week 4.
+
+The double-counting check. The tilt is nearly unrelated to the defence's overall level (correlation between
+-0.10 and +0.33 by position), so the adjustment is not re-using what Vegas knows. Two things showed up while
+checking and are not acted on:
+
+- The defence's overall level still predicts a little for QBs after the Vegas total (0.37 of it carries over,
+  in-sample). The instruction was to use only the tilt, so this is left out.
+- WR and TE projections react too strongly to the implied total: their misses fall by about a third of whatever
+  the total added (coefficient -0.34 and -0.33, in-sample). Correcting that takes WR RMSE from 7.126 to 7.099,
+  several times what the opponent adjustment does. This is a candidate for week 7, not tested out of sample.
+
+### 10.3 Lineup test
+
+Weeks 4 and 5, model-only, cap 25, draw weight 40%, current defaults (all three section-9 changes on).
+
+| Week | Run | Avg score | Top 10% | Top 1% | Best score |
+|---|---|---|---|---|---|
+| 5 | Current defaults | 112.9 | 6 | 0 | 180.9 |
+| 5 | + opponent adjustment | 113.9 | 9 | 0 | 184.2 |
+| 4 | Current defaults | 107.8 | 12 | 0 | 160.4 |
+| 4 | + opponent adjustment | 108.2 | 11 | 0 | 160.7 |
+
+Slightly better on three of the four measures in week 5 and level in week 4. Given A1 and A2, differences of this
+size are within what a reshuffle alone produces.
+
+For reference, the section-9 runs in the same format:
+
+| Week | Run | Avg score | Top 10% | Top 1% | Best score |
+|---|---|---|---|---|---|
+| 5 | Slope 0.36 only | 113.5 | 5 | 1 | 191.3 |
+| 5 | Slope + routing | 113.4 | 6 | 1 | 199.0 |
+| 5 | Slope + taper | 114.4 | 7 | 1 | 191.3 |
+| 5 | Slope + routing + taper (current) | 112.9 | 6 | 0 | 180.9 |
+| 4 | Slope 0.36 only | 107.1 | 22 | 3 | 173.6 |
+| 4 | Slope + routing | 108.1 | 7 | 0 | 153.4 |
+| 4 | Slope + taper | 105.9 | 22 | 3 | 169.2 |
+| 4 | Slope + routing + taper (current) | 107.8 | 12 | 0 | 160.4 |
+
+### 10.4 The ten biggest week-5 adjustments
+
+For checking against ESPN. "Allowed" is FanDuel points per game the defence gave up to that position in weeks 1
+to 4; "league" is the average defence. "Last year" is the defence's 2025 ratio to the league (1.00 = average).
+
+| Player | Opponent | Before | Adjustment | After | Allowed / league | Last year | Defence overall | Scored |
+|---|---|---|---|---|---|---|---|---|
+| Tyler Shough (QB) | MIN | 18.7 | -1.0 | 17.7 | 11.7 / 17.9 | 0.68 | 25% under average | 1.8 |
+| Jeremiyah Love (RB) | DET | 12.9 | -0.8 | 12.1 | 21.1 / 19.4 | 0.87 | 52% over | 2.2 |
+| Jacoby Brissett (QB) | DET | 18.1 | +0.8 | 18.9 | 30.6 / 17.9 | 1.14 | 52% over | 25.8 |
+| D'Andre Swift (RB) | GB | 21.8 | +0.7 | 22.6 | 28.3 / 19.4 | 0.96 | 5% over | 15.3 |
+| Quinshon Judkins (RB) | NYJ | 11.5 | +0.7 | 12.2 | 25.8 / 19.4 | 1.33 | 9% under | 6.5 |
+| Tyson Bagent (QB) | GB | 16.3 | -0.6 | 15.8 | 15.8 / 17.9 | 0.93 | 5% over | 3.2 |
+| Tyler Allgeier (RB) | DET | 8.3 | -0.5 | 7.8 | 21.1 / 19.4 | 0.87 | 52% over | 2.6 |
+| Chase Brown (RB) | MIA | 15.3 | +0.5 | 15.8 | 25.5 / 19.4 | 1.14 | 1% over | 5.5 |
+| Trey McBride (TE) | DET | 17.0 | +0.5 | 17.5 | 24.6 / 11.1 | 1.03 | 52% over | 17.1 |
+| Jordan Love (QB) | CHI | 17.2 | +0.4 | 17.6 | 16.0 / 17.9 | 1.12 | 22% under | 28.3 |
+
+How to read two of them:
+
+- **Jeremiyah Love, down against Detroit.** Detroit had allowed 52% more than average in total, but only 9% more
+  to RBs. Its problem was the pass. The Vegas total already lifts every Cardinal for a bad defence, so the RB is
+  taken back down.
+- **Jordan Love, up against Chicago.** Chicago had allowed 22% less than average in total but only 10% less to
+  QBs, and was 12% worse than average against QBs last year.
+
+"Defence overall" is the raw four-game figure. After shrinking, Detroit's counts as 9% over, which is why the
+adjustments are under a point.
+
+### 10.5 To decide
+
+1. **Opponent adjustment:** off. My view is to leave it off: the measured gain is close to zero, and it adds a
+   moving part. If Doug wants it for QBs and RBs only, set `enabled = true` and the WR and TE betas to 0.
+2. **Routing and tapered spread** (from section 9): still on. A1 and A2 say the lost top finishes were reshuffles
+   rather than a flaw in either change. A3 says the routing gives the established teammate too much.
+3. **Candidates for week 7:** a more even split inside the position (A3), and WR/TE sensitivity to the implied
+   total (10.2).
+
+Tests: `tests/test_opponent.py` (4 tests); 66 pass in total.
+
+### Files added in this pass
+
+- `src/dfs/opponent.py`, `src/fit_opponent.py`; `weeks/history/opponent.csv`, `opponent_fits.csv`,
+  `opponent_shared.csv`.
+- `history.within_position`; `weeks/history/within_position.csv` and `within_position_summary.csv` (A3).
+- `weeks/2026-w05/backtest_section10.csv` (10.3, with the section-9 runs re-run in the new format).
+
 ## Files
 
 - `src/dfs/usage.py`, `src/dfs/project.py`, `config/defaults.toml`: the four changes.

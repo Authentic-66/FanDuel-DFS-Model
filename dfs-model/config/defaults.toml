@@ -150,6 +150,22 @@ TE = { low = 1.215, top = 1.215 }      # flat: too few TEs projected 16+ to fit 
 from = 12.0
 to = 20.0
 
+# Opponent adjustment (docs/week6_prep.md section 10; dfs/opponent.py). OFF: not adopted, Doug and Claude decide.
+# Each skill player's draws are multiplied by 1 + beta[position] * (tilt - 1), kept within 1 +/- cap. tilt = FanDuel
+# points the opposing defence allows to his position relative to the league, divided by the same ratio over all
+# positions, so only what the Vegas implied total does not already price is used. Games before the week only.
+[model.opponent]
+enabled = false
+shrink_games = 16.0        # pseudo-games at league average
+prior_games = 8.0          # pseudo-games of the defence's prior-season ratio
+cap = 0.15                 # largest adjustment either way
+
+[model.opponent.beta]      # filled by src/fit_opponent.py (2021-2025); 0 = no adjustment for the position
+QB = 1.02                  # leave-one-season-out range 0.55 to 1.33
+RB = 0.57                  # 0.35 to 0.72
+WR = 0.17                  # 0.00 to 0.38
+TE = 0.34                  # 0.19 to 0.46
+
 # Phase 2 #1: shrink current-season usage/efficiency toward the prior season.
 # Prior season adds `usage_games` pseudo-games of its per-game targets/carries/attempts, and `efficiency_games` games'
 # worth of its per-opportunity outcomes (yds, TDs, catches) before the league-prior shrink. 0 = off.

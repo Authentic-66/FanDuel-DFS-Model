@@ -101,7 +101,7 @@ def season_backtest(path, prior_path, cfg, settings, weeks, min_fppg=5.0, n_sims
 
 def season_rows(path, prior_path, cfg, weeks, min_fppg=5.0, n_sims=2000, seed=7, keep_sims=False, implied=None):
     """Uncalibrated per-player projections for each week of a season, as in season_backtest (neutral team totals,
-    usage from earlier weeks + prior blend). Columns: fold, Pos, Proj, FPTS, Ceiling_p90 (uncalibrated).
+    usage from earlier weeks + prior blend). Columns: fold, Pos, Proj, FPTS, Ceiling_p90 (uncalibrated), week, team, opp.
     keep_sims: return (rows, sims) with one row of draws per row of the frame (for fit_spread).
     implied: {(week, team): Vegas implied total} to scale each player by his team's total as the weekly model does
     (history.load_lines); teams missing from it, and every team when it is None, get the league-average total."""
@@ -124,10 +124,11 @@ def season_rows(path, prior_path, cfg, weeks, min_fppg=5.0, n_sims=2000, seed=7,
             f = np.exp(rng.normal(0, team_sd, n_sims) + m['correlation']['shift'])
             scale = implied.get((w, r.team), m['league_team_total']) / m['league_team_total'] if implied else 1.0
             pts = sim.sim_skill(rng, agg.loc[r.k], r.position, scale, f, 0, 0, m, sc, n_sims)
-            out.append((f'{year}-w{w:02d}', r.position, pts.mean(), r.fd, np.percentile(pts, 90)))
+            out.append((f'{year}-w{w:02d}', r.position, pts.mean(), r.fd, np.percentile(pts, 90), w, r.team,
+                        getattr(r, 'opp', '')))
             if keep_sims:
                 sims.append(pts.astype(np.float32))
-    rows = pd.DataFrame(out, columns=['fold', 'Pos', 'Proj', 'FPTS', 'Ceiling_p90'])
+    rows = pd.DataFrame(out, columns=['fold', 'Pos', 'Proj', 'FPTS', 'Ceiling_p90', 'week', 'team', 'opp'])
     return (rows, np.array(sims)) if keep_sims else rows
 
 
