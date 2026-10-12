@@ -52,6 +52,11 @@ def build(week, cfg, agg=None, st=None):
                          **summarize(pts, r.Salary)))
     proj = pd.DataFrame(rows)
     proj['StartingQB'] = (proj.Pos == 'QB') & proj.Key.isin(usage.starting_qbs(st))
+    for team, name in cfg['status'].get('starting_qb', {}).items():   # Doug's call beats last game's attempts
+        qbs = (proj.Pos == 'QB') & (proj.Team == team)
+        if not (qbs & (proj.Name == name)).any():
+            raise ValueError(f'[status.starting_qb] {team}: {name!r} is not an active {team} QB on the slate')
+        proj.loc[qbs, 'StartingQB'] = proj.Name[qbs] == name
     order = proj.Proj.sort_values(ascending=False, kind='stable').index
     return proj.loc[order].drop(columns='Key').reset_index(drop=True), np.array(sims)[order]
 
