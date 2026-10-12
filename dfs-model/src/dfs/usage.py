@@ -72,10 +72,23 @@ def present_share(agg, st, out_key, mate_key, team):
     return min(1.0, (shared + agg.at[mate_key, 'u_g'] - agg.at[mate_key, 'g']) / agg.at[mate_key, 'u_g'])
 
 
-def redistribute_out(agg, out_players, active_fd, share, st=None, mode='skip'):
-    """Give `share` of each OUT player's per-game targets/carries to active same-team RB/WR/TE, pro rata to their own
-    per-game volume. Returns ({key: extra targets/g}, {key: extra carries/g}). `st` = the stats frame; without it
-    every OUT player is handed out in full. [model.injury] absent_mode:
+def routes(routing, pos, col, share, same):
+    """How one OUT player's volume in `col` ('tgt' / 'car') is split: [(share of his volume, mask of the teammates
+    who divide it)]. routing = [model.injury.position_share], keyed by the OUT player's position, e.g.
+    WR = {tgt_same = 0.77, tgt_other = 0.16}: 77% of his targets to teammates at his position (`same`), 16% to the
+    rest. Without a rule for this position and column, `share` goes to every teammate (the pro-rata rule)."""
+    rule = (routing or {}).get(pos, {})
+    if col + '_same' not in rule:
+        return [(share, same | ~same)]
+    return [(rule[col + '_same'], same), (rule.get(col + '_other', 0.0), ~same)]
+
+
+def redistribute_out(agg, out_players, active_fd, share, st=None, mode='skip', routing=None):
+    """Give each OUT player's per-game targets/carries to active same-team RB/WR/TE. Returns ({key: extra targets/g},
+    {key: extra carries/g}). Without `routing`, `share` of it goes to all of them pro rata to their own per-game
+    volume. With `routing` ([model.injury.position_share]; out_players needs a Position column) it is split by
+    position first (see routes) and pro rata inside each group; a part whose group has no volume is not handed out.
+    `st` = the stats frame; without it every OUT player is handed out in full. [model.injury] absent_mode:
       "present_share": each teammate's gain is scaled by present_share (above). A player ruled out for the first time
           is handed out in full; one who has already missed games is handed out for the part of the sample he played
           in, so the gain fades as the games without him accumulate.
@@ -89,29 +102,34 @@ def redistribute_out(agg, out_players, active_fd, share, st=None, mode='skip'):
         if o.Key not in agg.index or (st is not None and mode == 'skip' and already_absent(st, o.Key, o.Team)):
             continue
         mates = active_fd[(active_fd.Team == o.Team) & active_fd.Position.isin(['RB', 'WR', 'TE'])]
-        mates = mates[mates.Key.isin(agg.index)].Key
+        mates = mates[mates.Key.isin(agg.index) & (mates.Key != o.Key)]
+        same = (mates.Position == getattr(o, 'Position', None)).values
+        mates = mates.Key
         frac = {k: present_share(agg, st, o.Key, k, o.Team) if st is not None and mode == 'present_share' else 1.0
                 for k in mates}
         for col, gained in extra.items():
-            wts = mates.map(lambda k: per_game(agg, k, col))
-            if wts.sum() > 0:
-                for k, w in zip(mates, wts):
-                    gained[k] = gained.get(k, 0) + share * per_game(agg, o.Key, col) * w / wts.sum() * frac[k]
+            wts = mates.map(lambda k: per_game(agg, k, col)).values
+            for part, group in routes(routing, getattr(o, 'Position', None), col, share, same):
+                if part and wts[group].sum() > 0:
+                    for k, w in zip(mates[group], wts[group]):
+                        gained[k] = gained.get(k, 0) + part * per_game(agg, o.Key, col) * w / wts[group].sum() * frac[k]
     return extra['tgt'], extra['car']
 
 
-def trade_volume(agg, trades, active_fd, share):
+def trade_volume(agg, trades, active_fd, share, routing=None):
     """Volume changes for [[status.trade]] players (rows from data.trades; active_fd already lists them on the new
     team). Returns ({key: extra targets/g}, {key: extra carries/g}) to add to redistribute_out's.
-    Old team: handled like a player ruled out for the first time: `share` of his per-game targets and carries goes to
-    his old teammates, in full, however many games he has already missed.
+    Old team: handled like a player ruled out for the first time: his per-game targets and carries go to his old
+    teammates (`share` pro rata, or by position with `routing`, as in redistribute_out), in full, however many games
+    he has already missed.
     New team (only if he is active): he gets share * factor of the team's targets per game, taken from his new
     teammates in proportion to their own targets, so the team total is unchanged. His carries stay his own."""
     xt, xc = {}, {}
     for t in trades.itertuples():
         if t.Key not in agg.index:
             raise ValueError(f'[[status.trade]] {t.Name}: no stats this season or last, nothing to move')
-        old_t, old_c = redistribute_out(agg, pd.DataFrame([dict(Key=t.Key, Team=t.From)]), active_fd, share)
+        old_t, old_c = redistribute_out(agg, pd.DataFrame([dict(Key=t.Key, Team=t.From, Position=t.Pos)]), active_fd,
+                                        share, routing=routing)
         for extra, gained in ((xt, old_t), (xc, old_c)):
             for k, v in gained.items():
                 extra[k] = extra.get(k, 0) + v

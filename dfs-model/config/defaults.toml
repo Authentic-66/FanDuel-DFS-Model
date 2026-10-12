@@ -103,6 +103,10 @@ team_exp = 0.5
 
 [model.injury]
 redistribute_share = 0.8           # share of newly-OUT players' targets/carries given to active teammates, pro rata
+                                   # (used when routing = "pro_rata", and for any position/volume without a rule below)
+routing = "position"               # Oct 12 2026 (docs/week6_prep.md section 9): "position" = split an OUT (or traded)
+                                   # player's volume by position first, per [model.injury.position_share];
+                                   # "pro_rata" = the rule through week 5: redistribute_share to every RB/WR/TE
 questionable_inactive_prob = 0.25
 absent_mode = "present_share"      # OUT players who already missed games (Oct 12 2026, docs/week6_prep.md):
                                    # "present_share" = hand out their volume for the share of each teammate's usage
@@ -111,22 +115,40 @@ absent_mode = "present_share"      # OUT players who already missed games (Oct 1
 skip_already_absent = true         # absent_mode "skip" only: don't redistribute an OUT player who missed his team's last
                                    # game at all; false = hand everyone out in full (the behaviour before Oct 10 2026)
 
+# Where an OUT player's per-game volume goes, by HIS position: *_same = share to teammates at his position, *_other =
+# share to the other skill positions (pro rata inside each group; a group with no volume gets nothing).
+# From the first game each starter missed, 2021-2025: 124 WRs, 105 RBs, 59 TEs (docs/phase2_history.md section 4).
+[model.injury.position_share]
+WR = { tgt_same = 0.77, tgt_other = 0.16 }                                       # 93% of his targets reach teammates
+RB = { car_same = 0.94, car_other = 0.01, tgt_same = 0.70, tgt_other = 0.0 }     # 95% of carries, 70% of targets
+TE = { tgt_same = 0.46, tgt_other = 0.04 }                                       # 49% of targets (rounded to 50)
+
 # Shrink applied to finished projections (fit by src/fit_calibration.py; docs/week6_prep.md). enabled = false turns it off.
 [model.calibration]
 enabled = true
 mode = "shift"             # "shift" = lower the mean and keep the simulated spread (uncalibrated ceilings were about
                            # right: 10.9% of 16+ projections beat their p90); "scale" = shrink every draw in proportion
 top_knee = 16.0            # every skill player: lose top_slope of each projected point above this
-top_slope = 0.28           # fit Oct 12 2026 on 2025 wks 4-18 + 2026 wks 4-5 (leave-one-week-out range 0.20-0.32)
+top_slope = 0.36           # 2021-2025 with Vegas totals, leave-one-season-out range 0.32-0.41 (docs/phase2_history.md);
+                           # 0.28 until Oct 12 2026 (fit on 2025 wks 4-18 with neutral totals + 2026 wks 4-5)
 rb_knee = 8.0              # RBs: also lose rb_slope of each projected point above this
 rb_slope = 0.12            # (leave-one-week-out range 0.09-0.14)
 
 # Wider simulated spread by position, applied after the calibration: every draw moves to this many times its distance
-# from the player's mean; the mean (and so the projection) is unchanged. 1.0 or no entry = off.
-# Fit by src/fit_spread.py so that 10% of players beat their simulated 90th percentile (docs/week6_prep.md section 8).
+# from the player's mean; the mean (and so the projection) is unchanged. A number = the same factor for everyone at the
+# position (1.0 or no entry = off). {low, top} = tapered: `low` for players projected up to [model.spread_taper] from,
+# falling in a straight line to `top` at `to` and above, because the top projections' ceilings were already about right.
+# Fit by src/fit_taper.py on 2021-2025 so that 10% of players beat their simulated 90th percentile, under 16 and from
+# 16 up (docs/week6_prep.md section 9). Until then: RB = 1.376 only (section 8, src/fit_spread.py).
 [model.spread]
-RB = 1.376                 # fit Oct 12 2026 on 2025 wks 4-18 (leave-one-week-out range 1.31-1.42): RBs beat their
-                           # 90th percentile 14.7% of the time before, 9.8% after
+QB = { low = 1.504, top = 1.0 }
+RB = { low = 1.429, top = 1.04 }
+WR = { low = 1.225, top = 1.0 }
+TE = { low = 1.215, top = 1.215 }      # flat: too few TEs projected 16+ to fit a taper
+
+[model.spread_taper]
+from = 12.0
+to = 20.0
 
 # Phase 2 #1: shrink current-season usage/efficiency toward the prior season.
 # Prior season adds `usage_games` pseudo-games of its per-game targets/carries/attempts, and `efficiency_games` games'

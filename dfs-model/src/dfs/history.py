@@ -145,3 +145,62 @@ def fit_knees(rows, weights, top_knees, rb_knees):
             if sse < best_sse:
                 best, best_sse = cal, sse
     return best
+
+
+# --- simulated season rows and the tapered spread ----------------------------------------------------------------------
+
+def season_rows(week, cfg, seasons, vegas=True, cache_dir=''):
+    """backtest.season_rows for weeks 4-18 of each season (prior blend from the season before), one frame with a
+    `season` column plus the matching draws. vegas: scale each team by its implied total from the schedule (how the
+    weekly model runs) instead of the league average. cache_dir: keep the result there between runs."""
+    from . import backtest
+    path = os.path.join(cache_dir, f"rows_{'vegas' if vegas else 'neutral'}_{min(seasons)}_{max(seasons)}") if cache_dir else ''
+    if path and os.path.exists(path + '.pkl'):
+        return pd.read_pickle(path + '.pkl'), np.load(path + '.npy')
+    rows, sims = [], []
+    for s in seasons:
+        ln = load_lines(week.cache, s, cfg)
+        implied = dict(zip(zip(ln.week, ln.team), ln.implied)) if vegas else None
+        r, x = backtest.season_rows(week.stats(s), week.stats(s - 1), cfg, range(4, 19), keep_sims=True, implied=implied)
+        rows.append(r.assign(season=s))
+        sims.append(x)
+    rows, sims = pd.concat(rows, ignore_index=True), np.concatenate(sims)
+    if path:
+        rows.to_pickle(path + '.pkl')
+        np.save(path + '.npy', sims)
+    return rows, sims
+
+
+def taper_p90(sims, mean, spec, taper):
+    """90th percentile of each row's draws after [model.spread] widening (spec = number or {low, top})."""
+    from . import project
+    return np.percentile(project.widen(sims, project.spread_factor(mean, spec, taper)), 90, axis=1)
+
+
+def fit_taper(sims, mean, actual, weights, taper, split=16.0, target=0.10, hi=2.5, steps=12, rounds=2, min_top=100):
+    """{low, top} spread factors for one position (project.spread_factor): `low` so that `target` of the players
+    projected under `split` beat their 90th percentile, `top` (never below 1) so that the same holds from `split`
+    up; the two are solved in turn because the taper between them touches both tiers. With fewer than min_top rows
+    at `split` or above there is nothing to fit a taper on, and one flat factor is fit to everyone (low = top)."""
+    upper = mean >= split
+    flat = upper.sum() < min_top
+    spec = {'low': 1.0, 'top': 1.0}
+
+    def solve(keys, rows):
+        beat = lambda v: np.average(actual[rows] > taper_p90(sims[rows], mean[rows], {**spec, **dict.fromkeys(keys, v)}, taper),
+                                    weights=weights[rows])
+        if beat(1.0) <= target:
+            return 1.0
+        a, b = 1.0, hi
+        for _ in range(steps):
+            mid = (a + b) / 2
+            a, b = (a, mid) if beat(mid) <= target else (mid, b)
+        return round(b, 3)
+
+    if flat:
+        k = solve(['low', 'top'], np.ones(len(mean), bool))
+        return {'low': k, 'top': k}
+    for _ in range(rounds):
+        spec['low'] = solve(['low'], ~upper)
+        spec['top'] = solve(['top'], upper)
+    return spec

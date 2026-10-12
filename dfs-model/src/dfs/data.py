@@ -32,7 +32,7 @@ def load_slate(path, status):
 
 
 def trades(fd, status):
-    """[[status.trade]] entries as rows (Key, Name, From, To, share, factor), validated against the slate.
+    """[[status.trade]] entries as rows (Key, Name, Pos, From, To, share, factor), validated against the slate.
     player / from / to are required. new_target_share (his share of the new team's targets) has no default: if he is
     on the slate the model stops rather than guess a traded player's role. first_week_factor (default 1.0) scales it."""
     rows = []
@@ -44,7 +44,8 @@ def trades(fd, status):
         if len(who) > 1:
             raise ValueError(f'[[status.trade]] {t["player"]!r}: {len(who)} players with that name on the slate')
         if who.empty:   # not on the slate (new team not playing it): his old teammates still get his volume
-            rows.append(dict(Key=norm_name(t['player']), Name=t['player'], From=t['from'], To=t['to'], share=0.0, factor=1.0))
+            rows.append(dict(Key=norm_name(t['player']), Name=t['player'], Pos=t.get('position', ''), From=t['from'],
+                             To=t['to'], share=0.0, factor=1.0))   # position (optional): routes his old volume by position
             continue
         team = who.Team.iloc[0]
         if team not in (t['from'], t['to']):
@@ -55,9 +56,10 @@ def trades(fd, status):
                              f'share of the {t["to"]} targets (e.g. 0.15). The model will not guess the role of a traded player.')
         if not 0 <= share < 1:
             raise ValueError(f'[[status.trade]] {t["player"]}: new_target_share must be between 0 and 1, not {share}')
-        rows.append(dict(Key=who.Key.iloc[0], Name=who.Nickname.iloc[0], From=t['from'], To=t['to'], share=float(share),
+        rows.append(dict(Key=who.Key.iloc[0], Name=who.Nickname.iloc[0], Pos=who.Position.iloc[0], From=t['from'],
+                         To=t['to'], share=float(share),
                          factor=float(t.get('first_week_factor', 1.0))))
-    return pd.DataFrame(rows, columns=['Key', 'Name', 'From', 'To', 'share', 'factor'])
+    return pd.DataFrame(rows, columns=['Key', 'Name', 'Pos', 'From', 'To', 'share', 'factor'])
 
 
 def active(fd):

@@ -29,11 +29,14 @@ def build(week, cfg, agg=None, st=None):
         agg, st = load_usage(week, cfg)
     inj = m['injury']
     absent_mode = inj.get('absent_mode', 'skip')
+    if inj.get('routing', 'pro_rata') not in ('pro_rata', 'position'):
+        raise ValueError(f'[model.injury] routing must be "pro_rata" or "position", not {inj["routing"]!r}')
+    routing = inj.get('position_share') if inj.get('routing') == 'position' else None
     xt, xc = usage.redistribute_out(agg, data.newly_out(fd_all, cfg['status']), fd, inj['redistribute_share'],
                                     st if absent_mode == 'present_share' or inj.get('skip_already_absent', True) else None,
-                                    absent_mode)
+                                    absent_mode, routing)
     moved = data.trades(fd_all, cfg['status'])
-    for extra, gained in zip((xt, xc), usage.trade_volume(agg, moved, fd, inj['redistribute_share'])):
+    for extra, gained in zip((xt, xc), usage.trade_volume(agg, moved, fd, inj['redistribute_share'], routing)):
         for k, v in gained.items():
             extra[k] = extra.get(k, 0) + v
     for name, fd_team, stat_team in usage.team_mismatches(agg, fd, moved):
@@ -91,10 +94,19 @@ def dst_target(proj, lines, m):
             + fl['salary_per_1k'] * (d.Salary - d.Salary.mean()) / 1000)
 
 
+def spread_factor(mean, spec, taper=None):
+    """[model.spread] factor for players projected `mean`. spec = one number (the same for everyone) or
+    {low, top}: `low` up to [model.spread_taper] from, falling in a straight line to `top` at `to` and above."""
+    if not isinstance(spec, dict):
+        return np.full(len(mean), float(spec))
+    return np.interp(mean, [taper['from'], taper['to']], [spec['low'], spec['top']])
+
+
 def widen(sims, k):
-    """[model.spread]: every draw moved to k times its distance from the player's mean (rows = players). Draws
-    pushed below zero are set to zero and the row is rescaled, so the mean is unchanged."""
+    """[model.spread]: every draw moved to k times its distance from the player's mean (rows = players; k = one
+    number or one per row). Draws pushed below zero are set to zero and the row is rescaled, so the mean is unchanged."""
     mu = sims.mean(axis=1, keepdims=True)
+    k = np.reshape(k, (-1, 1)) if np.ndim(k) else k
     out = np.maximum(mu + k * (sims - mu), 0)
     return out * mu / np.where(out.mean(axis=1, keepdims=True) > 0, out.mean(axis=1, keepdims=True), 1)
 
@@ -123,10 +135,10 @@ def adjust(proj, sims, lines, m):
             sims += np.where(hit, new - mean, 0.0)[:, None]
         else:                   # shrink every draw in proportion (ceilings come down with the mean)
             sims *= np.where(hit, new / np.where(mean > 0, mean, 1), 1.0)[:, None]
-    for pos, k in m.get('spread', {}).items():
-        rows = ((proj.Pos == pos).values & (sims.mean(axis=1) > 0)) if k != 1 else None
-        if rows is not None and rows.any():
-            sims[rows] = widen(sims[rows], k)
+    for pos, spec in m.get('spread', {}).items():
+        rows = (proj.Pos == pos).values & (sims.mean(axis=1) > 0)
+        if spec != 1 and rows.any():
+            sims[rows] = widen(sims[rows], spread_factor(sims[rows].mean(axis=1), spec, m.get('spread_taper')))
     if m['dst'].get('flatten', {}).get('enabled'):
         target = dst_target(proj, lines, m)
         sims[target.index] += (target.values - mean[target.index])[:, None]

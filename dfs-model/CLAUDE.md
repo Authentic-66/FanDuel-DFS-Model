@@ -127,6 +127,12 @@ calibration, plus `[model.spread] RB = 1.376` (RB draws widened around an unchan
 (11.9%) are also short and not widened. Week-4 gap measured: model-only 104.9 -> Doug's stack teams/BUF rule/Q allowed
 107.5 -> overrides 107.8 -> red+yellow 110.8 -> green 112.1 (reads +4.6; entered 111.3). Harrison trade set at
 `new_target_share = 0.15`, `first_week_factor = 0.7`, copied under `[shadow.trade]`.
+Fourth pass (section 9), from the history refit, all adopted under Doug's rule (no week worse by > 1 point of average):
+`top_slope = 0.36`; `[model.injury] routing = "position"` + `[model.injury.position_share]` (OUT/traded player's volume
+split by his position first: WR tgt 77% same / 16% other, RB car 94/1, RB tgt 70/0, TE tgt 46/4; `usage.routes`);
+`[model.spread]` tapered `{low, top}` per position between `[model.spread_taper]` from 12 to 20 (QB 1.50/1.00, RB 1.43/1.04,
+WR 1.23/1.00, TE 1.22 flat; `src/fit_taper.py`). **Caveat flagged to Doug:** top-1% lineups went 1 and 4 (weeks 5, 4) to
+0 and 0 with all three on (routing cost week 4's, taper week 5's), and the taper alone fails the rule on week 4 (-1.2).
 
 ## History refits (Oct 12) — see docs/phase2_history.md
 `fetch_stats.py --seasons 2020-2025 --history` puts player stats, team stats and schedules with Vegas lines in
@@ -135,7 +141,8 @@ recent seasons weighted 0.75 per year back. **No defaults changed; Doug and Clau
 -0.35 on opponent implied total holds (own DST average predicts nothing); injury volume goes to the missing player's own
 position (WR 93% total / 77% to WRs, RB carries 95%, RB targets 70%, TE 49%) while the model spreads 80% pro rata across
 positions; RB spread 1.376 holds (1.36), QB/WR/TE want 1.15/1.17/1.22 but a flat factor over-widens 16+ players;
-calibration slope above 16 fits 0.36 with Vegas totals (0.28 now), RB slope 0.12 holds, moving the knees gains nothing.
+calibration slope above 16 fits 0.36 with Vegas totals (0.28 then), RB slope 0.12 holds, moving the knees gains nothing.
+The slope, the routing and a tapered spread were then adopted for week 6 (week6_prep.md section 9).
 
 ## Phase 2 roadmap (in priority order)
 1. **Prior-season blend** — DONE Oct 5 (docs/phase2_prior_blend.md): usage 2 pseudo-games, efficiency 4 games of 2025.

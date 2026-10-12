@@ -3,7 +3,8 @@
 Work done after the week-5 review, in the order Doug asked for it.
 
 **What changes in week 6 if nothing is switched off.** Four defaults in `config/defaults.toml` now alter projections,
-one widens the RB simulations and one changes the optimizer (the last two rows, from section 8):
+one widens the RB simulations and one changes the optimizer (from section 8), and three more came from the
+history refit (the last three rows, section 9):
 
 | Change | Setting | To turn off |
 |---|---|---|
@@ -13,6 +14,9 @@ one widens the RB simulations and one changes the optimizer (the last two rows, 
 | DST from opponent total and salary only | `[model.dst.flatten] enabled = true` | `false` |
 | RB simulations 1.376 times as wide, projection unchanged (8.1) | `[model.spread] RB = 1.376` | `RB = 1.0` |
 | Objective is 60% projection, 40% one simulated draw (was 40 / 60) | `[optimizer] mean_weight = 0.6` | `0.4` |
+| Calibration slope above 16 raised (9.1) | `[model.calibration] top_slope = 0.36` | `0.28` |
+| An out or traded player's volume goes mainly to his own position (9.2) | `[model.injury] routing = "position"` | `"pro_rata"` |
+| Spread tapered for QB, RB, WR, TE; replaces the flat RB 1.376 (9.3) | `[model.spread]` `{ low, top }` | `[model.spread]` with only `RB = 1.376` |
 
 The exposure cap is unchanged at 25 (Doug's decision after section 5).
 
@@ -651,6 +655,185 @@ Still needed for the first week-6 run: `[status]`, `[stacks.weights]` from the w
 
 - `src/fit_spread.py`; `weeks/2026-w05/spread_cv.csv` and `spread_fit.csv` (coverage and factors by position).
 - `weeks/2026-w05/backtest_spread.csv` and `backtest_spread_p90.csv` (8.1), `backtest_w4_reads.csv` (8.2).
+
+## 9. Three changes from the history refit, for week 6 (Oct 12, fourth pass)
+
+From `docs/phase2_history.md`: the calibration slope above 16, injury volume routed by position, and tapered
+spread factors for all four positions. Each was added in the order Doug gave and tested on weeks 4 and 5.
+
+**All three are adopted as defaults: none made either week's average score worse by more than a point. But the
+top finishes got worse, and Doug should see that before week 6 locks.** Top-1% lineups went from 1 and 4 (weeks 5
+and 4) to 0 and 0 with all three on. The fall came with the routing in week 4 (3 to 0) and with the tapered spread
+in week 5 (1 to 0). Section 9.4 has the table and 9.5 has the switches to turn either off.
+
+### 9.1 Calibration slope above 16: 0.28 to 0.36
+
+`[model.calibration] top_slope = 0.36`. A projection loses 36% of each point above 16 instead of 28%: 20 becomes
+18.6 (was 18.9), 24 becomes 21.1 (was 21.8). Nothing under 16 changes. The RB slope stays at 0.12.
+
+### 9.2 Injury volume routed by position
+
+`[model.injury] routing = "position"`, with the shares in `[model.injury.position_share]`:
+
+| Player out | Volume | To teammates at his position | To the other positions | Total | Rule through week 5 |
+|---|---|---|---|---|---|
+| WR | Targets | 77% | 16% | 93% | 80% to everyone pro rata |
+| RB | Carries | 94% | 1% | 95% | same |
+| RB | Targets | 70% | 0% | 70% | same |
+| TE | Targets | 46% | 4% | 50% | same |
+
+Inside each group the volume is still split in proportion to each player's own volume. If the group has no volume
+at all (no other TE with targets, say), that part is not handed out. A WR's or TE's carries, which are a handful a
+season, keep the old 80% rule. The fading for players who have already missed games (section 2) still applies on
+top. The old team of a traded player is routed the same way.
+
+Projections before and after, week 5 (both with the 0.36 slope; "gained" is targets plus carries a game):
+
+| Player | Gained before | Gained after | Projection before | After | Actual |
+|---|---|---|---|---|---|
+| Braelon Allen | 8.2 | 11.3 | 11.2 | 13.7 | 21.1 |
+| Jaylen Warren | 5.7 | 7.7 | 17.4 | 18.6 | 36.8 |
+| Tre' Harris | 2.1 | 5.7 | 8.9 | 14.3 | 2.6 |
+| Emanuel Wilson | 3.2 | 5.1 | 10.5 | 12.5 | 12.2 |
+| Justin Jefferson | 1.3 | 2.5 | 12.6 | 14.6 | 15.8 |
+| Marquez Valdes-Scantling | 1.0 | 2.7 | 3.6 | 5.6 | 3.2 |
+| D'Andre Swift | 9.7 | 12.6 | 20.2 | 21.8 | 15.3 |
+| Tre Tucker | 0.4 | 1.4 | 9.4 | 10.9 | 5.5 |
+| Romeo Doubs | 0.9 | 1.6 | 10.8 | 12.3 | 2.1 |
+| Terry McLaurin | 1.2 | 2.1 | 12.7 | 14.1 | 10.2 |
+| Michael Wilson | 1.0 | 2.1 | 15.7 | 17.0 | 5.3 |
+| Antonio Williams | 0.8 | 1.4 | 8.3 | 9.3 | 4.6 |
+| Kenyon Sadiq | 1.0 | 0.2 | 8.0 | 7.0 | -0.7 |
+| Pat Freiermuth | 0.9 | 0.3 | 9.0 | 8.0 | 19.0 |
+| Mason Taylor | 1.1 | 0.3 | 6.6 | 5.6 | 3.9 |
+| Oronde Gadsden II | 1.9 | 0.6 | 8.6 | 6.7 | 0.0 |
+
+Week 4 moved ten players by a point or more: Braelon Allen 11.2 to 14.2 (scored 7.7), George Holani 5.9 to 7.8
+(2.5), Jordan Addison 10.5 to 12.2 (7.1), Dontayvion Wicks 10.5 to 12.2 (3.3), Isaiah Davis 3.7 to 5.0 (0.0),
+Jauan Jennings 7.5 to 8.7 (1.3), Emanuel Wilson 9.0 to 10.1 (25.5), and down a point each Saquon Barkley
+(1.5), Kenyon Sadiq (0.0) and T.J. Hockenson (21.4).
+
+- **It does what was intended for Allen and Warren:** both move toward what they scored, Allen by 2.5 and Warren
+  by 1.2. They are still well short (13.7 against 21.1, 18.6 against 36.8).
+- **It did not make the projections more accurate on these two slates.** For the players it moved by a point or
+  more, the average miss went from 6.6 to 6.9 in week 5 and from 7.5 to 8.4 in week 4. Over all players projected
+  5+, RMSE is unchanged (7.63 to 7.66 and 7.05 to 7.05). Receivers who were raised mostly missed (Tre' Harris,
+  Doubs, Tucker, Michael Wilson, Wicks, Addison).
+- The case for it is the history (the first missed game of 124 WRs, 105 RBs and 59 TEs), not these 26
+  players.
+
+Harrison trade, simulated on the week-5 slate with his week-6 entry (15% share, first-week factor 0.7):
+
+| Player | Gained, pro rata | Gained, by position | Projection, pro rata | By position |
+|---|---|---|---|---|
+| Michael Wilson (WR) | 0.95 | 2.13 | 15.7 | 17.0 |
+| Trey McBride (TE) | 1.06 | 0.37 | 17.9 | 17.1 |
+| Kendrick Bourne (WR) | 0.42 | 0.94 | 7.2 | 8.0 |
+| Jeremiyah Love (RB) | 0.31 | 0.11 | 13.1 | 12.8 |
+
+Harrison's Arizona targets now go mostly to the other Cardinals receivers: Wilson is up 1.3 and McBride down 0.8.
+Houston is unchanged by the routing (Collins 14.7, Harrison 6.5), because the new team's side of a trade was not
+touched. This table was run with 4,000 simulations, so projections carry about 0.1 of noise.
+
+### 9.3 Tapered spread for all four positions
+
+`[model.spread]` now takes `{ low, top }` for a position. `low` applies to players projected up to 12; the factor
+then falls in a straight line to `top` at 20 and above (`[model.spread_taper] from = 12, to = 20`). The projection
+itself is never changed, only how wide the draws around it are.
+
+Fit on 2021-2025 with Vegas totals and the 0.36 calibration (`src/fit_taper.py`): `low` so that 10% of the
+players projected under 16 beat their simulated 90th percentile, `top` so that the same holds from 16 up, never
+below 1.
+
+| Position | Low (up to 12) | Top (20 and up) | Low, leaving one season out | Flat factor before |
+|---|---|---|---|---|
+| QB | 1.50 | 1.00 | 1.44 to 1.56 | 1.0 |
+| RB | 1.43 | 1.04 | 1.41 to 1.46 | 1.376 |
+| WR | 1.23 | 1.00 | 1.17 to 1.27 | 1.0 |
+| TE | 1.22 | 1.22 | 1.20 to 1.22 | 1.0 |
+
+TEs get one flat factor: only about 45 TE games in five seasons were projected 16+, too few to fit a taper.
+
+Share beating the simulated 90th percentile (target 10%). "Before" is the section-8 setting (RB 1.376, others
+unwidened). "Tapered" grades each season with factors fit on the other four. Tiers are by calibrated projection.
+
+| Position | Tier | n | Before | Tapered |
+|---|---|---|---|---|
+| QB | All | 2,067 | 13.8% | 8.8% |
+| QB | 8-16 | 701 | 19.8% | 9.7% |
+| QB | 16+ | 1,365 | 10.7% | 8.3% |
+| QB | 20+ | 408 | 7.2% | 7.2% |
+| RB | All | 3,365 | 9.9% | 10.1% |
+| RB | Under 8 | 828 | 11.4% | 10.5% |
+| RB | 8-16 | 2,132 | 10.0% | 9.8% |
+| RB | 16+ | 405 | 6.7% | 11.0% |
+| WR | All | 5,063 | 12.3% | 9.7% |
+| WR | Under 8 | 1,757 | 14.4% | 11.8% |
+| WR | 8-16 | 2,771 | 11.8% | 8.8% |
+| WR | 16+ | 535 | 7.9% | 7.7% |
+| TE | All | 1,698 | 13.2% | 9.9% |
+| TE | Under 8 | 939 | 14.7% | 11.2% |
+| TE | 8-16 | 715 | 11.5% | 8.4% |
+
+- **RBs at 16+ go from 6.7% to 11.0%:** the flat 1.376 was making the top RBs' ceilings too high, and the taper
+  fixes that.
+- **Every position is within about 1 point of 10% overall.** By tier the range is 7.2% to 11.8%.
+- **QBs and WRs at 16+ stay under 10%** (8.3% and 7.7%). Their ceilings were already slightly high before any
+  widening, and the factor is not allowed below 1.
+- The QB factor of 1.50 applies to few players in practice: backup QBs project 0, and most starters project 16+.
+
+### 9.4 Lineup test
+
+Weeks 4 and 5, model-only, cap 25, draw weight 40%, adding the changes one at a time. The baseline is the
+default as of section 8.
+
+| Week | Run | Avg score | Change | Top 1% | Top 10% | Best score | RB / WR / TE flex |
+|---|---|---|---|---|---|---|---|
+| 5 | Baseline | 113.6 | | 1 | 6 | 191.3 | 35 / 28 / 37% |
+| 5 | + slope 0.36 | 113.5 | -0.1 | 1 | 5 | 191.3 | 37 / 27 / 36% |
+| 5 | + routing by position | 113.4 | -0.2 | 1 | 6 | 199.0 | 41 / 37 / 21% |
+| 5 | + tapered spread | 112.9 | -0.5 | 0 | 6 | 180.9 | 33 / 43 / 25% |
+| 4 | Baseline | 107.4 | | 4 | 24 | 173.6 | 31 / 31 / 38% |
+| 4 | + slope 0.36 | 107.1 | -0.3 | 3 | 22 | 173.6 | 29 / 31 / 39% |
+| 4 | + routing by position | 108.1 | +1.1 | 0 | 7 | 153.4 | 33 / 31 / 36% |
+| 4 | + tapered spread | 107.8 | -0.4 | 0 | 12 | 160.4 | 25 / 36 / 39% |
+
+"Change" is against the row above. The field's flex mix was 63 / 18 / 15% in week 5 and 56 / 22 / 19% in week 4.
+
+By Doug's rule (adopt unless either week is worse by more than a point), all three pass. The largest single drop
+is 0.5.
+
+What the rule does not capture:
+
+- **Top finishes fell.** With all three on, neither week has a top-1% lineup, against 1 and 4 at the baseline.
+  Week 4's top-10% count went from 22 to 7 when the routing was added, while its average went up by a point. The
+  best lineup in week 4 fell from 173.6 to 153.4.
+- **The tapered spread fails the rule if it is added without the routing.** On top of the slope alone it scores
+  114.4 in week 5 (+0.9) and 105.9 in week 4 (-1.2), with top-1% counts unchanged at 1 and 3. In the order asked,
+  on top of the routing, it passes.
+- **TE-flex dropped in week 5** (36% to 21% with the routing) and barely moved in week 4. WR-flex rose to 43% in
+  week 5. RB-flex ends lower than the baseline in both weeks (33% and 25%).
+- These are 150 lineups on two slates. Top-1% counts between 0 and 4 can move on one or two lineups, and no run
+  here differs from another by more than about 2 points of average score.
+
+### 9.5 Defaults after this pass, and how to undo each
+
+| Change | Setting now | To go back |
+|---|---|---|
+| Calibration slope above 16 | `[model.calibration] top_slope = 0.36` | `0.28` |
+| Injury routing | `[model.injury] routing = "position"` | `routing = "pro_rata"` |
+| Spread | `[model.spread]` QB 1.50/1.00, RB 1.43/1.04, WR 1.23/1.00, TE 1.22 | `[model.spread]` with only `RB = 1.376` |
+
+Any of these can be set for week 6 alone in `config/2026-w06/week.toml`. The run that kept the most top finishes
+while still using the history fit was the slope alone (1 and 3 top-1% lineups).
+
+Tests: `tests/test_routing.py` (6 tests); 62 pass in total.
+
+### Files added in this pass
+
+- `src/fit_taper.py`; `weeks/history/taper.csv` and `taper_fits.csv` (9.3).
+- `weeks/2026-w05/backtest_section9.csv` (9.4; runs `base`, `s1`, `s12`, `s123`, and `s13` = slope plus taper
+  without routing).
 
 ## Files
 
