@@ -43,6 +43,26 @@ class AdjustTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             project.adjust(self.proj, self.sims, self.lines, m)
 
+    def test_spread_widens_one_position_and_keeps_the_mean(self):
+        m = dict(qb={}, calibration=dict(enabled=False), dst={}, spread=dict(RB=2.0, WR=1.0))
+        out = project.adjust(self.proj, self.sims, self.lines, m)
+        np.testing.assert_allclose(out[2], [0, 26, 52])              # RB: 13 / 26 / 39 at twice the distance from 26
+        np.testing.assert_array_equal(out[[0, 1, 3, 4, 5]], self.sims[[0, 1, 3, 4, 5]])
+        wide = project.widen(np.array([[0.0, 2.0, 4.0, 18.0]]), 2.0)  # 0 and 2 would go below zero: floored, mean kept
+        self.assertAlmostEqual(wide.mean(), 6.0)
+        self.assertEqual(wide.min(), 0)
+        self.assertGreater(wide.max(), 18.0)
+
+    def test_fit_spread_finds_the_factor_that_covers_the_ceiling(self):
+        rng = np.random.default_rng(1)
+        sims = 20 + rng.normal(0, 4, (1500, 400))                    # the model draws sd 4
+        actual = 20 + rng.normal(0, 6, 1500)                         # the players really have sd 6
+        self.assertGreater(backtest.p90_coverage(sims, actual), 0.15)
+        k = backtest.fit_spread(sims, actual)
+        self.assertAlmostEqual(k, 1.5, delta=0.15)
+        self.assertAlmostEqual(backtest.p90_coverage(sims, actual, k), 0.10, delta=0.01)
+        self.assertEqual(backtest.fit_spread(sims, 20 + rng.normal(0, 2, 1500)), 1.0)   # already wide enough
+
     def test_second_rb_needs_the_minimum_projection(self):
         from dfs import optimize
         proj = pd.DataFrame(dict(Id=list('abcd'), Name=list('abcd'), Pos='RB', Team=['X', 'X', 'Y', 'Y'], Inj='',

@@ -2,7 +2,8 @@
 
 Work done after the week-5 review, in the order Doug asked for it.
 
-**What changes in week 6 if nothing is switched off.** Four defaults in `config/defaults.toml` now alter projections:
+**What changes in week 6 if nothing is switched off.** Four defaults in `config/defaults.toml` now alter projections,
+one widens the RB simulations and one changes the optimizer (the last two rows, from section 8):
 
 | Change | Setting | To turn off |
 |---|---|---|
@@ -10,8 +11,10 @@ Work done after the week-5 review, in the order Doug asked for it.
 | Non-starting QBs project 0 | `[model.qb] zero_backups = true` | `false` |
 | Shrink above 16 points, and RBs above 8 (mean only, spread kept: see 7.2) | `[model.calibration] enabled = true` | `false` |
 | DST from opponent total and salary only | `[model.dst.flatten] enabled = true` | `false` |
+| RB simulations 1.376 times as wide, projection unchanged (8.1) | `[model.spread] RB = 1.376` | `RB = 1.0` |
+| Objective is 60% projection, 40% one simulated draw (was 40 / 60) | `[optimizer] mean_weight = 0.6` | `0.4` |
 
-The exposure cap is unchanged at 25. Section 5 has the numbers for Doug's decision.
+The exposure cap is unchanged at 25 (Doug's decision after section 5).
 
 ## 1. Merge
 
@@ -429,6 +432,7 @@ look like the larger part: a re-run this morning with the full week-4 config on 
 on) averaged 115.7 with 7 top-1% lineups. That run includes Doug's week-4 greens, which hit at low ownership
 (Kyren Williams, Nacua, Emanuel Wilson, Hockenson). I did not finish the matching run with the week-4 config on
 the week-6 code (it is slow with forced players), so the split between reads and code is not measured.
+(Done since: see 8.2. The reads were worth +4.6.)
 
 For contrast, in week 5 the comparison is clean (both model-only, same settings): 108.3 entered, 113.2 on the
 new code.
@@ -523,6 +527,130 @@ Tests: `tests/test_trade.py` (3 tests). 46 tests pass in total.
 
 - `weeks/2026-w05/calibration_ceiling.csv` (7.2), `backtest_runs.csv` and `backtest_runs_chalk.csv` (7.3).
 - `[optimizer.starters_min_proj]` (off by default) is the switch used for the second-RB run.
+
+## 8. Week-6 defaults (Oct 12, third pass)
+
+Doug's decisions after section 7: cap stays 25, **draw weight 40%** adopted (`[optimizer] mean_weight = 0.6`,
+was 0.4), no second-RB rule, calibration stays mean-only. This pass adds the RB spread, measures the week-4 gap,
+and sets the Harrison trade.
+
+### 8.1 Wider RB spread
+
+**Adopted as a default: `[model.spread] RB = 1.376`.** Neither week got worse by more than a point (week 5 is
+0.6 lower, week 4 is 0.6 higher).
+
+What it does. After the calibration, every RB draw is moved to 1.376 times its distance from the player's mean.
+Draws pushed below zero are set to zero and the row is rescaled, so the mean, and therefore the projection, does
+not change. Only the ceiling and floor move: the average RB 90th percentile goes from 19.4 to 22.3.
+
+How it was fit. On 2025 weeks 4-18, with the calibration applied as in the model (mean only, leave-one-week-out
+slopes), the factor is the smallest one at which 10% of RBs beat their 90th percentile. It was fit on all graded
+RBs, not only those projected 16+, because RBs were short at every level. Leave-one-week-out, the factor ranges
+from 1.31 to 1.42; 1.376 is the fit on all 15 weeks. `src/fit_spread.py` refits it.
+
+Share beating the simulated 90th percentile (target 10%), 2025 weeks 4-18, each week graded with a factor fit on
+the other 14:
+
+| Position | Tier | n | Before | After |
+|---|---|---|---|---|
+| RB | All | 651 | 14.7% | 9.8% |
+| RB | Under 8 | 128 | 14.1% | 9.4% |
+| RB | 8-16 | 375 | 13.6% | 9.6% |
+| RB | 16+ | 148 | 18.2% | 10.8% |
+| QB | All | 411 | 11.9% | 11.9% |
+| WR | All | 945 | 10.9% | 10.9% |
+| TE | All | 371 | 13.7% | 13.7% |
+
+(The 18.9% in 7.2 was RBs at 16+ over 2025 and 2026 together; on 2025 alone it is 18.2%.)
+
+Check on the two 2026 slates with the real pipeline, which were not used in the fit: RBs beating their 90th
+percentile go from 10 of 62 (16%) to 6 of 62 (10%). The other positions are untouched: QB 6 of 43, WR 11 of 98,
+TE 6 of 40.
+
+Only RBs were widened, as asked. TEs are also short (13.7%; the same fit gives 1.24) and QBs slightly (11.9%;
+1.12). WRs are about right (1.07). Widening TEs would probably push the TE-flex share back up, and it is not
+tested.
+
+Weeks 4 and 5, model-only, cap 25, draw weight 40%, with and without the wider RB spread:
+
+| Week | Run | Avg score | Median | Best rank | Top 1% | Top 10% | RB / WR / TE flex |
+|---|---|---|---|---|---|---|---|
+| 5 | Draw weight 40% | 114.2 | 110.5 | 5,291 | 1 | 9 | 29 / 34 / 37% |
+| 5 | + RB spread 1.376 | 113.6 | 113.3 | 5,291 | 1 | 6 | 35 / 28 / 37% |
+| 4 | Draw weight 40% | 106.7 | 104.5 | about 4,400 | 3 | 22 | 18 / 33 / 49% |
+| 4 | + RB spread 1.376 | 107.4 | 105.6 | 1,820 | 4 | 24 | 31 / 31 / 38% |
+
+The field's flex mix was 63 / 18 / 15% in week 5 and 56 / 22 / 19% in week 4.
+
+- **Average score:** -0.6 in week 5, +0.6 in week 4. Both are inside the noise of one slate.
+- **Flex:** RB-flex rises in both weeks (29 to 35%, 18 to 31%). In week 4 it comes out of TE-flex (49 to 38%); in
+  week 5 it comes out of WR-flex and TE-flex stays at 37%.
+- **Top 1%:** unchanged in week 5, 3 to 4 in week 4, where the best lineup also improves (169.2 to 173.6).
+- Exposure on players the field owned 15%+ barely moves (14.7 to 15.0% in week 5, 13.9 to 14.0% in week 4): the
+  RBs at the 25 cap are the same players either way.
+
+The case for adopting it is the coverage table, which rests on 651 RB games. The two slates only show that it
+does no harm.
+
+### 8.2 Week 4: how much of 111.3 against 104.9 came from Doug's reads
+
+The run was not slow on the week-6 code (about a minute per step), so it is finished. Week 4, the code as of
+section 7 (mean-only calibration, draw weight 60%, cap 25, no RB spread, so it lines up with the 104.9 baseline
+and with what was entered), adding Doug's week-4 config one piece at a time:
+
+| Step | Avg score | Change | Top 1% | Top 10% | Best rank |
+|---|---|---|---|---|---|
+| Model-only (21 stack teams by implied total, questionable out) | 104.9 | | 3 | 20 | about 4,400 |
+| Doug's 10 stack teams and weights, BUF rule, questionable allowed | 107.5 | +2.6 | 1 | 16 | about 5,700 |
+| + 6 projection overrides | 107.8 | +0.3 | 3 | 15 | 1,459 |
+| + red and yellow | 110.8 | +3.0 | 3 | 13 | about 4,400 |
+| + green (the full week-4 config) | 112.1 | +1.3 | 2 | 17 | about 3,900 |
+| Entered on Oct 4 (Phase-1 code, 149 lineups) | 111.3 | | 4 | | 1,054 |
+
+- **Doug's reads were worth +4.6 of the 7.2 points** (overrides +0.3, red and yellow +3.0, green +1.3). His stack
+  teams, the Buffalo rule and allowing questionable players were worth the other +2.6.
+- **Red and yellow did most of it**, as in week 5 (+2.5 there). Green was positive here (+1.3) and negative in
+  week 5 (-1.7).
+- **Average score and top finishes do not move together.** The reads lifted the average by 4.6 but the top-1%
+  count went from 3 to 2.
+- **The code itself is about level on this slate:** 112.1 with the full config now against 111.3 entered. But the
+  same config on the pre-week-6 code scored 115.7 with 7 top-1% lineups (7.4), so the week-6 projection changes
+  cost 3.6 points on week 4 when Doug's reads are applied. Model-only on week 5 the same changes were worth
+  about +5 (108.3 to 113.2). This is one slate, and the yellow and green numbers were set against the old
+  projections.
+
+Results: `weeks/2026-w05/backtest_w4_reads.csv`.
+
+### 8.3 Harrison
+
+`config/2026-w06/week.toml` now has `new_target_share = 0.15` and `first_week_factor = 0.7` in his
+`[[status.trade]]` entry, so the week-6 run no longer stops on it. The same numbers are recorded under
+`[shadow.trade]` as Doug's trade read. Unlike the colours, this read is applied; the shadow copy is there so it
+can be scored against his actual share afterwards.
+
+This week he gets 0.15 x 0.7 = 10.5% of Houston's targets. On the simulated week-5 slate that is Harrison 10.5%,
+Collins 20.6% to 18.4%, Schultz 15.9% to 14.2%, Hutchinson 13.4% to 12.0%, team total 100%. His own number is
+close to the 10.1% he carried over from Arizona before the fix; the difference is that his new teammates now pay
+for it. Arizona is as in 7.6 (Wilson 25.2% to 27.6%).
+
+### 8.4 Defaults for week 6
+
+| Setting | Value | Changed in this pass |
+|---|---|---|
+| Exposure cap | 25 | no |
+| Draw weight | 40% (`[optimizer] mean_weight = 0.6`) | yes, was 60% |
+| Second RB per team | off | no |
+| Calibration | mean only, knee 16 | no |
+| RB spread | `[model.spread] RB = 1.376` | yes, new |
+
+To turn the RB spread off, set `RB = 1.0`. Tests: two added in `tests/test_adjust.py`; 48 pass in total.
+
+Still needed for the first week-6 run: `[status]`, `[stacks.weights]` from the week-6 lines, and Guru if used.
+
+### Files added in this pass
+
+- `src/fit_spread.py`; `weeks/2026-w05/spread_cv.csv` and `spread_fit.csv` (coverage and factors by position).
+- `weeks/2026-w05/backtest_spread.csv` and `backtest_spread_p90.csv` (8.1), `backtest_w4_reads.csv` (8.2).
 
 ## Files
 

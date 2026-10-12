@@ -99,16 +99,17 @@ def season_backtest(path, prior_path, cfg, settings, weeks, min_fppg=5.0, n_sims
 
 # --- calibration shrink ([model.calibration]) ----------------------------------------------------------------------
 
-def season_rows(path, prior_path, cfg, weeks, min_fppg=5.0, n_sims=2000, seed=7):
+def season_rows(path, prior_path, cfg, weeks, min_fppg=5.0, n_sims=2000, seed=7, keep_sims=False):
     """Uncalibrated per-player projections for each week of a season, as in season_backtest (neutral team totals,
-    usage from earlier weeks + prior blend). Columns: fold, Pos, Proj, FPTS, Ceiling_p90 (uncalibrated)."""
+    usage from earlier weeks + prior blend). Columns: fold, Pos, Proj, FPTS, Ceiling_p90 (uncalibrated).
+    keep_sims: return (rows, sims) with one row of draws per row of the frame (for fit_spread)."""
     m, sc = cfg['model'], cfg['scoring']
     season = data.load_stats(path, cfg)
     season = season.assign(fd=stats_points(sc, season))
     year = int(season.season.iloc[0])
     prior = usage.aggregate(data.load_stats(prior_path, cfg))
     team_sd = np.hypot(m['correlation']['team_sd'], m['correlation']['game_sd'])
-    out = []
+    out, sims = [], []
     for w in weeks:
         before = season[season.week < w]
         cur = usage.aggregate(before)
@@ -121,13 +122,17 @@ def season_rows(path, prior_path, cfg, weeks, min_fppg=5.0, n_sims=2000, seed=7)
             f = np.exp(rng.normal(0, team_sd, n_sims) + m['correlation']['shift'])
             pts = sim.sim_skill(rng, agg.loc[r.k], r.position, 1.0, f, 0, 0, m, sc, n_sims)
             out.append((f'{year}-w{w:02d}', r.position, pts.mean(), r.fd, np.percentile(pts, 90)))
-    return pd.DataFrame(out, columns=['fold', 'Pos', 'Proj', 'FPTS', 'Ceiling_p90'])
+            if keep_sims:
+                sims.append(pts.astype(np.float32))
+    rows = pd.DataFrame(out, columns=['fold', 'Pos', 'Proj', 'FPTS', 'Ceiling_p90'])
+    return (rows, np.array(sims)) if keep_sims else rows
 
 
 def slate_rows(week, cfg, min_fppg=5.0):
-    """Uncalibrated projections from the real pipeline on an archived slate vs FanDuel results: skill players with
+    """Uncalibrated, unwidened projections from the real pipeline on an archived slate vs FanDuel results: skill players with
     FanDuel FPPG >= min_fppg, starting QBs only. Columns: fold, Pos, Proj, FPTS (+ Name)."""
-    c = deep_merge(cfg, {'model': {'calibration': {'enabled': False}}})
+    off = {'calibration': {'enabled': False}, 'spread': dict.fromkeys(cfg['model'].get('spread', {}), 1.0)}
+    c = deep_merge(cfg, {'model': off})
     proj, _ = project.build(week, c)
     fd = data.load_slate(week.fd_players, c['status'])
     j = analyze.joined(proj, analyze.load_actuals(week.results_players))
@@ -163,6 +168,39 @@ def calibration_cv(rows, top_knee, rb_knee):
         out.append(test.assign(Cal=project.calibrated(test.Proj.values, test.Pos.values, cal)))
         fits.append(dict(fold=fold, **cal))
     return pd.concat(out), pd.DataFrame(fits)
+
+
+# --- simulation spread ([model.spread]) ---------------------------------------------------------------------------------
+
+def p90_coverage(sims, actual, k=1.0):
+    """Share of rows whose actual score beat the 90th percentile of their draws widened by k (target 0.10)."""
+    return float(np.mean(actual > np.percentile(project.widen(sims, k), 90, axis=1)))
+
+
+def fit_spread(sims, actual, target=0.10, hi=3.0, steps=20):
+    """Smallest spread factor k in [1, hi] (project.widen) at which no more than `target` of the rows beat their
+    90th percentile: bisection, coverage falls as k grows. 1.0 if the draws are already wide enough."""
+    if p90_coverage(sims, actual) <= target:
+        return 1.0
+    lo = 1.0
+    for _ in range(steps):
+        mid = (lo + hi) / 2
+        lo, hi = (lo, mid) if p90_coverage(sims, actual, mid) <= target else (mid, hi)
+    return round(hi, 3)
+
+
+def spread_cv(rows, sims, pos):
+    """Leave-one-week-out spread factor for one position. rows: fold, Pos, FPTS; sims: calibrated draws, one row
+    per row of `rows`. Returns (rows of that position with P90 before / P90_wide out-of-fold, per-fold factors)."""
+    keep = (rows.Pos == pos).values
+    d, s = rows[keep].reset_index(drop=True), sims[keep]
+    d['P90'], d['P90_wide'], fits = np.percentile(s, 90, axis=1), np.nan, []
+    for fold in sorted(d.fold.unique()):
+        test = (d.fold == fold).values
+        k = fit_spread(s[~test], d.FPTS.values[~test])
+        d.loc[test, 'P90_wide'] = np.percentile(project.widen(s[test], k), 90, axis=1)
+        fits.append(dict(fold=fold, k=k))
+    return d, pd.DataFrame(fits)
 
 
 # --- Phase 2 #2: leverage on an archived slate --------------------------------------------------------------------

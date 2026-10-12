@@ -53,7 +53,8 @@ and thinks in those terms: fundamentals model + market/public overlay, calibrati
   factor + shared game factor), Q players zeroed in 25% of sims, DST from opponent total + own FanDuel avg. Deterministic
   for a given seed (game order sorted; the old code depended on Python's hash seed).
 - `dfs/overrides.py` (`override.py`) — rescale a player's sims to Doug's mean; errors on unknown names; idempotent.
-- `dfs/optimize.py` (`optimize.py`) — sequential MILP (PuLP/CBC), one lineup per sim draw; objective 0.4*mean + 0.6*draw.
+- `dfs/optimize.py` (`optimize.py`) — sequential MILP (PuLP/CBC), one lineup per sim draw; objective 0.6*mean + 0.4*draw
+  (`[optimizer] mean_weight`; 0.4 / 0.6 through week 5).
   Upload written with the csv module (exact duplicate header).
 - `dfs/ownership.py` — projected field ownership (`Own_proj`, % of lineups): ridge on logit(%Drafted), refit every run
   from all earlier weeks' results (training rows cached in `weeks/<w>/ownership_train.csv`), shifted per position so
@@ -115,6 +116,12 @@ second RB per team and no-cap runs earned nothing, draw weight 40% was +1.0 / +1
 `[[status.trade]]` (player, from, to, new_target_share, first_week_factor): old team = first-time OUT in full, new team =
 his share of targets taken pro rata; missing share stops the run. Untraded team mismatches only print a warning.
 `[optimizer.starters_min_proj]` exists (off).
+Third pass (section 8), Doug's week-6 defaults: cap 25, draw weight 40% (`mean_weight = 0.6`), no second RB, mean-only
+calibration, plus `[model.spread] RB = 1.376` (RB draws widened around an unchanged mean; RBs beat their p90 14.7% ->
+9.8% on 2025 wks 4-18 leave-one-week-out; refit with `src/fit_spread.py`; week 5 -0.6, week 4 +0.6). TE (13.7%) and QB
+(11.9%) are also short and not widened. Week-4 gap measured: model-only 104.9 -> Doug's stack teams/BUF rule/Q allowed
+107.5 -> overrides 107.8 -> red+yellow 110.8 -> green 112.1 (reads +4.6; entered 111.3). Harrison trade set at
+`new_target_share = 0.15`, `first_week_factor = 0.7`, copied under `[shadow.trade]`.
 
 ## Phase 2 roadmap (in priority order)
 1. **Prior-season blend** — DONE Oct 5 (docs/phase2_prior_blend.md): usage 2 pseudo-games, efficiency 4 games of 2025.

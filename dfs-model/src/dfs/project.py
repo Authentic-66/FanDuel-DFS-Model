@@ -91,10 +91,19 @@ def dst_target(proj, lines, m):
             + fl['salary_per_1k'] * (d.Salary - d.Salary.mean()) / 1000)
 
 
+def widen(sims, k):
+    """[model.spread]: every draw moved to k times its distance from the player's mean (rows = players). Draws
+    pushed below zero are set to zero and the row is rescaled, so the mean is unchanged."""
+    mu = sims.mean(axis=1, keepdims=True)
+    out = np.maximum(mu + k * (sims - mu), 0)
+    return out * mu / np.where(out.mean(axis=1, keepdims=True) > 0, out.mean(axis=1, keepdims=True), 1)
+
+
 def adjust(proj, sims, lines, m):
     """Post-simulation corrections, in order: non-starting QBs to zero ([model.qb] zero_backups), calibration shrink
-    of skill players ([model.calibration]: sims shifted, or rescaled with mode = "scale"), DST flattening ([model.dst.flatten],
-    sims shifted). Returns the adjusted sims; proj.Proj must hold the unadjusted means."""
+    of skill players ([model.calibration]: sims shifted, or rescaled with mode = "scale"), wider spread by position
+    ([model.spread], mean kept), DST flattening ([model.dst.flatten], sims shifted). Returns the adjusted sims;
+    proj.Proj must hold the unadjusted means."""
     sims = sims.copy()
     skill = (proj.Pos != 'D').values
     if m['qb'].get('zero_backups'):
@@ -114,6 +123,10 @@ def adjust(proj, sims, lines, m):
             sims += np.where(hit, new - mean, 0.0)[:, None]
         else:                   # shrink every draw in proportion (ceilings come down with the mean)
             sims *= np.where(hit, new / np.where(mean > 0, mean, 1), 1.0)[:, None]
+    for pos, k in m.get('spread', {}).items():
+        rows = ((proj.Pos == pos).values & (sims.mean(axis=1) > 0)) if k != 1 else None
+        if rows is not None and rows.any():
+            sims[rows] = widen(sims[rows], k)
     if m['dst'].get('flatten', {}).get('enabled'):
         target = dst_target(proj, lines, m)
         sims[target.index] += (target.values - mean[target.index])[:, None]

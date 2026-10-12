@@ -121,6 +121,13 @@ top_slope = 0.28           # fit Oct 12 2026 on 2025 wks 4-18 + 2026 wks 4-5 (le
 rb_knee = 8.0              # RBs: also lose rb_slope of each projected point above this
 rb_slope = 0.12            # (leave-one-week-out range 0.09-0.14)
 
+# Wider simulated spread by position, applied after the calibration: every draw moves to this many times its distance
+# from the player's mean; the mean (and so the projection) is unchanged. 1.0 or no entry = off.
+# Fit by src/fit_spread.py so that 10% of players beat their simulated 90th percentile (docs/week6_prep.md section 8).
+[model.spread]
+RB = 1.376                 # fit Oct 12 2026 on 2025 wks 4-18 (leave-one-week-out range 1.31-1.42): RBs beat their
+                           # 90th percentile 14.7% of the time before, 9.8% after
+
 # Phase 2 #1: shrink current-season usage/efficiency toward the prior season.
 # Prior season adds `usage_games` pseudo-games of its per-game targets/carries/attempts, and `efficiency_games` games'
 # worth of its per-opportunity outcomes (yds, TDs, catches) before the league-prior shrink. 0 = off.
@@ -135,7 +142,8 @@ min_prior_games = 4         # ignore prior seasons shorter than this (injury-sho
 n_lineups = 150
 seed = 11
 exposure_cap = 25            # every player and DST; raise to 40 only if infeasible
-mean_weight = 0.4            # objective = mean_weight * proj + (1 - mean_weight) * one sim draw
+mean_weight = 0.6            # objective = mean_weight * proj + (1 - mean_weight) * one sim draw. 0.4 through week 5;
+                             # Doug's call Oct 12 2026 after +1.0 / +1.8 on weeks 5 / 4 (docs/week6_prep.md 7.3)
 max_overlap = 6              # max shared players between any two lineups
 min_proj = 4                 # drop non-DST players projected below this (unless green)
 exclude_questionable = true  # Doug's standing rule: pull Q players (incl. FanDuel Q/D tags before Friday's [status])
