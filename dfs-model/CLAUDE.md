@@ -163,9 +163,15 @@ trade entry got `position = "WR"` so his targets route by position. `data/2026-w
 are PRELIMINARY (nflverse schedule spread_line / total_line); `[status]` mirrors FanDuel's Oct 13 tags (O -> out,
 Q/D -> questionable; listed so the O players' volume is redistributed). All three are replaced before the final run.
 Preliminary optimizer run in `weeks/2026-w06/prelim/` (no upload file kept); Doug's review sheet is
-`data/2026-w06/review_sheet.xlsx` (untracked: *.xlsx is ignored). Open for the final run: IR players with real 2026
-volume are not redistributed unless listed (Travis Etienne would add ~3 to Kamara, A.J. Brown / Hollins ~2 to the NE
-WRs, Brooks ~2.4 to Hubbard); starting-QB calls for BAL (Huntley flagged, Lamar Q projects 0), CHI (Bagent flagged,
+`data/2026-w06/review_sheet.xlsx` (untracked: *.xlsx is ignored).
+Doug, Oct 13: IR players with real 2026 volume (3+ blended targets + carries a game, 16 of them) are listed out as
+well, so their volume is handed out under present_share (Kamara +3.1 for Etienne, Hubbard +2.4, NE WRs ~+2).
+Harrison off the slate was checked: `data.trades` returns him with share 0 and the configured position, and
+`usage.trade_volume` hands 93% of his 4.19 blended ARI targets to his old teammates (WRs 3.23 by depth rank, TEs
+0.48, RBs 0.19; ARI total 46.3 -> 46.0 a game). No code change was needed (freeze intact); test added in
+tests/test_routing.py. The Houston side and `[shadow.trade]` stay in week.toml, inactive until Houston is on a slate.
+`analyze_results.py` does not read `[shadow.trade]`: that read is scored by hand.
+Open for the final run: starting-QB calls for BAL (Huntley flagged, Lamar Q projects 0), CHI (Bagent flagged,
 Williams Q, Keenum split week 5) and ATL (Penix Q, so ATL cannot be stacked).
 
 ## Week-7 backlog (from docs/week6_prep.md section 11 and 10.2)

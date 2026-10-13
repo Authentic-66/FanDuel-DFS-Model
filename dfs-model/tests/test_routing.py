@@ -47,6 +47,27 @@ class RoutingTest(unittest.TestCase):
         self.assertAlmostEqual(xt[k('Wide One')], 6.0)
         self.assertAlmostEqual(xt[k('Tight')], 0.2 * 10 * 4 / 6)
 
+    def test_a_traded_player_off_the_slate_still_leaves_his_old_team_volume(self):
+        # week 6 2026: Harrison (ARI -> HOU) is not in the FanDuel list because Houston is not on the main slate
+        agg, _, active, k = setup('Out WR')
+        ranked = dict(ROUTING, WR=dict(ROUTING['WR'], tgt_rank=[0.25, 0.75, 0.0]))
+        entry = {'player': 'Out WR', 'position': 'WR', 'from': 'AAA', 'to': 'BBB', 'new_target_share': 0.15,
+                 'first_week_factor': 0.7}
+        moved = data.trades(active, {'trade': [entry]})
+        self.assertEqual((moved.Key[0], moved.Pos[0], moved.share[0]), (k('Out WR'), 'WR', 0.0))   # new-team read inactive
+        xt, _ = usage.trade_volume(agg, moved, active, 0.8, ranked)
+        self.assertAlmostEqual(xt[k('Wide One')], 0.8 * 10 * 0.25)         # old team: by position, WRs by depth rank
+        self.assertAlmostEqual(xt[k('Wide Two')], 0.8 * 10 * 0.75)
+        self.assertAlmostEqual(xt[k('Tight')], 0.2 * 10 * 4 / 6)
+        self.assertAlmostEqual(sum(xt.values()), 10.0)                     # all of it handed out, nobody loses targets
+        self.assertNotIn(k('Out WR'), xt)                                  # and no new-team share for him
+        self.assertTrue(all(v >= 0 for v in xt.values()))
+        # without `position` it still runs, on the 80% pro-rata rule (he cannot be looked up on the slate)
+        moved = data.trades(active, {'trade': [{key: v for key, v in entry.items() if key != 'position'}]})
+        xt, _ = usage.trade_volume(agg, moved, active, 0.8, ranked)
+        self.assertAlmostEqual(xt[k('Tight')], 0.8 * 10 * 4 / 14)
+        self.assertAlmostEqual(sum(xt.values()), 8.0)
+
     def test_depth_rank_split_inside_the_position(self):
         np.testing.assert_allclose(usage.rank_weights([2, 6, 0, 1], [0.2, 0.3, 0.5]), [0.3, 0.2, 0.25, 0.25])
         np.testing.assert_allclose(usage.rank_weights([2, 6], [0.2, 0.3, 0.5]), [0.6, 0.4])     # unused share rescaled

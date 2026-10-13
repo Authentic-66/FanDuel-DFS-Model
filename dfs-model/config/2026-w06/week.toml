@@ -14,13 +14,29 @@
 # PRELIMINARY (Tue Oct 13): no Friday report yet, so these lists mirror FanDuel's own tags in the Oct 13 player list
 # (data/2026-w06/fd_players.csv), skill positions and QBs: O -> out, Q and D -> questionable (FanDuel's tag rule).
 # They are listed rather than left empty so the O players' volume is handed to their teammates (Routing_bump); an
-# empty [status] applies the same tags but redistributes nothing. IR players are left to FanDuel's IR tag.
+# empty [status] applies the same tags but redistributes nothing.
+# IR players (Doug, Oct 13): those with real 2026 volume (3+ blended targets + carries a game) are listed out too, so
+# the part of their volume their teammates' samples do not yet reflect is handed out (absent_mode = "present_share").
+# Other IR players are left to FanDuel's IR tag. Not listed: Conner and Benson (ARI) and the rest, under 3 a game.
 # Baker Mayfield (TB, O) is a QB: out through FanDuel's tag, no volume to hand out.
 # REPLACE with Friday's report before the final run.
 [status]
 out = [
   "Roman Wilson", "Ben Skowronek",                         # PIT (finger, calf)
   "Tyler Scott",                                           # LV
+  # injured reserve, with real 2026 volume:
+  "Ja'Kobi Lane",                                          # BAL
+  "Jonathon Brooks", "Xavier Legette",                     # CAR
+  "Raheim Sanders", "Dylan Sampson",                       # CLE
+  "Alec Pierce",                                           # IND
+  "Tyquan Thornton",                                       # KC
+  "David Njoku",                                           # LAC
+  "Terrance Ferguson", "Ronnie Rivers",                    # LAR
+  "A.J. Brown", "Mack Hollins",                            # NE
+  "Travis Etienne Jr.",                                    # NO
+  "Tank Bigsby",                                           # PHI
+  "Michael Pittman Jr.",                                   # PIT
+  "Jalen McMillan",                                        # TB
 ]
 questionable = [
   "Michael Penix Jr.",                                     # ATL (ribs)
@@ -49,9 +65,12 @@ questionable = [
 # first_week_factor (optional, default 1.0) scales that share while he learns the offence. new_target_share has no
 # default: while it is missing and he is on the slate, the run stops instead of guessing. Remove the entry once his
 # new-team games carry his role (about three games).
-# Week 6: Houston plays in London (HOU @ JAC, Sunday 9:30) and is not on the main slate, so Harrison is not in the
-# player list and only the Arizona side applies: his targets go to his old teammates. `position` is needed for that
-# (he cannot be looked up on the slate); without it his volume falls back to the 80% pro-rata rule.
+# Week 6: Houston is NOT on bye; it plays in London (HOU @ JAC, Sunday 9:30) and is off the main slate, so Harrison
+# is not in the player list. Only the Arizona side runs: his targets go to his old teammates (WR depth split).
+# `position` is needed for that (he cannot be looked up on the slate); without it his volume falls back to the 80%
+# pro-rata rule. The Houston side (to, new_target_share, first_week_factor) is INACTIVE this week and is kept as
+# entered so it carries to the first slate Houston is on (week 7 if HOU is on the main slate; he will then have one
+# Houston game behind him, so confirm first_week_factor with Doug before that run).
 [[status.trade]]
 player = "Marvin Harrison Jr."
 position = "WR"                # added Oct 13: routes his Arizona targets by position (WR depth split), he is off the slate
@@ -106,6 +125,7 @@ red = []
 
 # Doug's trade reads. Unlike the colours these ARE applied (through [[status.trade]] above, which has no default);
 # the copy here is so the read can be scored against his actual share of the new team's targets after the games.
+# Week 6: inactive (Houston off the main slate); kept for the first slate Houston is on.
 [shadow.trade]
 "Marvin Harrison Jr." = { from = "ARI", to = "HOU", new_target_share = 0.15, first_week_factor = 0.7 }
 
