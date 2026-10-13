@@ -174,6 +174,24 @@ tests/test_routing.py. The Houston side and `[shadow.trade]` stay in week.toml, 
 Open for the final run: starting-QB calls for BAL (Huntley flagged, Lamar Q projects 0), CHI (Bagent flagged,
 Williams Q, Keenum split week 5) and ATL (Penix Q, so ATL cannot be stacked).
 
+**Pick up Friday Oct 16 (state at end of Oct 13: head 4052ead on origin/main, working tree clean):**
+1. `[status]` in `config/2026-w06/week.toml`: replace the FanDuel-tag lists with Friday's report (week-5 convention:
+   Out and Doubtful -> out, Questionable -> questionable). Keep the 16 IR players listed out (Doug's call) unless he
+   says otherwise; re-download `fd_players.csv` if FanDuel has updated it (salaries / tags).
+2. `[status.starting_qb]`: Doug's calls for BAL (Lamar or Huntley), CHI (Williams, Bagent or Keenum), ATL (Penix),
+   and confirm TB (Jalon Daniels, Mayfield out).
+3. Saturday: replace `data/2026-w06/lines.csv` (currently nflverse schedule lines, marked PRELIMINARY) with current
+   lines and redo `[stacks.weights]` with the same formula.
+4. Doug's colours from `data/2026-w06/review_sheet.xlsx` (Color column): red and yellow -> `[prefs]` (applied),
+   green -> `[shadow.green]` (record only). Candidates flagged to him: Kaden Wetjen (PIT, 5.2 all from routing),
+   Reggie Virgil (ARI, 7.3 off one game). Guru screens -> `[contest.guru]` if he uses it.
+5. Final run goes to `weeks/2026-w06/` (not `prelim/`), with the 149-lineup entry files if he has a free entry.
+   The review-sheet builder was a scratch script (not in the repo): pool = `optimize.eligible_pool`, columns Player,
+   Team, Opp, Pos, Salary, Proj, Value_per_1k, Implied_total, Routing_bump, Own_proj_%, Lineups, Color, sorted by
+   position then projection, second tab `held_out_Q`.
+6. Before the first slate Houston is on: ask Doug whether Harrison's `first_week_factor = 0.7` still applies (he
+   will have played one Houston game), and score `[shadow.trade]` by hand (analyze_results.py does not read it).
+
 ## Week-7 backlog (from docs/week6_prep.md section 11 and 10.2)
 - **Per-position redistribution mode**: RB out = routing by position; WR out = depth split; TE out = old 80% rule or none.
   Basis: the section 11.2 accuracy table (players moved 1+: RB out 6.65 routing vs 6.70 old; WR out 6.53 depth vs 6.77 pro
