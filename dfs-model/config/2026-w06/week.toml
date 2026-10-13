@@ -2,17 +2,43 @@
 # Overrides any key in config/defaults.toml. Standing rules come from defaults: starters only, 25-lineup cap, leverage off.
 # Week-6 mode (Doug, Oct 12): his RED and YELLOW reads are APPLIED ([prefs]); GREEN is recorded under [shadow] only.
 # Based on weeks 4-5, where red + yellow were worth +3.0 and +2.5 points per lineup and green was +1.3 and -1.7.
-# TO FILL before the first run: [status] (Friday report), [stacks.weights] (from data/2026-w06/lines.csv), and
-# [contest.guru] if Guru is used. optimize.py stops with an error while [stacks.weights] is empty.
+# Oct 13 preliminary run: [status] and [stacks.weights] hold PRELIMINARY values (FanDuel tags, nflverse lines).
+# TO REPLACE before the final run: [status] (Friday report), [stacks.weights] (Saturday's lines in
+# data/2026-w06/lines.csv), Doug's reads, and [contest.guru] if Guru is used.
 
 # Friday's official game statuses go here (skill positions). While both lists are empty, FanDuel's own tags apply:
 # O/IR = out, Q/D = questionable, and questionable players are excluded ([optimizer] exclude_questionable, default true).
 # Once anything is listed here, FanDuel's Q/D tags are ignored and these lists decide (O/IR tags still apply).
 # Players on injured reserve are left to FanDuel's IR tag. A player listed out who already missed games is now handed
 # out in proportion to the games he played ([model.injury] absent_mode = "present_share"), so keep listing him.
+# PRELIMINARY (Tue Oct 13): no Friday report yet, so these lists mirror FanDuel's own tags in the Oct 13 player list
+# (data/2026-w06/fd_players.csv), skill positions and QBs: O -> out, Q and D -> questionable (FanDuel's tag rule).
+# They are listed rather than left empty so the O players' volume is handed to their teammates (Routing_bump); an
+# empty [status] applies the same tags but redistributes nothing. IR players are left to FanDuel's IR tag.
+# Baker Mayfield (TB, O) is a QB: out through FanDuel's tag, no volume to hand out.
+# REPLACE with Friday's report before the final run.
 [status]
-out = []
-questionable = []
+out = [
+  "Roman Wilson", "Ben Skowronek",                         # PIT (finger, calf)
+  "Tyler Scott",                                           # LV
+]
+questionable = [
+  "Michael Penix Jr.",                                     # ATL (ribs)
+  "Lamar Jackson",                                         # BAL (ankle)
+  "Joshua Palmer",                                         # BUF
+  "Jalen Coker",                                           # CAR
+  "Caleb Williams", "Kyle Monangai",                       # CHI
+  "Quinshon Judkins", "KC Concepcion Jr.", "Tylan Wallace", "Carsen Ryan",   # CLE
+  "Darius Slayton", "Ashton Dulin",                        # IND
+  "Rashee Rice",                                           # KC
+  "Ladd McConkey", "Quentin Johnston", "Brenen Thompson", "Tre' Harris",     # LAC (Harris tagged D)
+  "Jalen Nailor",                                          # LV
+  "TreVeyon Henderson",                                    # NE (tagged D)
+  "Breece Hall", "Adonai Mitchell", "Kenyon Sadiq",        # NYJ
+  "Saquon Barkley", "DeVonta Smith", "Hollywood Brown", "Will Shipley",      # PHI (Shipley tagged D)
+  "Rico Dowdle",                                           # PIT
+  "David Martin-Robinson",                                 # TEN
+]
 
 # Doug's starting-QB calls, team -> name. Default is the QB with the most attempts in the team's last game.
 # Every other QB now projects 0 ([model.qb] zero_backups); a team with no starter flagged prints a warning.
@@ -23,8 +49,12 @@ questionable = []
 # first_week_factor (optional, default 1.0) scales that share while he learns the offence. new_target_share has no
 # default: while it is missing and he is on the slate, the run stops instead of guessing. Remove the entry once his
 # new-team games carry his role (about three games).
+# Week 6: Houston plays in London (HOU @ JAC, Sunday 9:30) and is not on the main slate, so Harrison is not in the
+# player list and only the Arizona side applies: his targets go to his old teammates. `position` is needed for that
+# (he cannot be looked up on the slate); without it his volume falls back to the 80% pro-rata rule.
 [[status.trade]]
 player = "Marvin Harrison Jr."
+position = "WR"                # added Oct 13: routes his Arizona targets by position (WR depth split), he is off the slate
 from = "ARI"
 to = "HOU"
 new_target_share = 0.15        # Doug's read (Oct 12): his share of Houston's targets once settled
@@ -79,9 +109,30 @@ red = []
 [shadow.trade]
 "Marvin Harrison Jr." = { from = "ARI", to = "HOU", new_target_share = 0.15, first_week_factor = 0.7 }
 
-# Stack QB-team weights (relative), one per main-slate team, from the implied-total formula used in week 5:
-# weight = round(2 * (implied total - 16)), min 1, from data/2026-w06/lines.csv.
+# Stack QB-team weights (relative), one per main-slate team (20 teams, 10 games), from the implied-total formula used
+# in week 5: weight = round(2 * (implied total - 16)), min 1, from data/2026-w06/lines.csv.
+# PRELIMINARY (Oct 13): the lines are the nflverse schedule's spread_line / total_line; redo from Saturday's lines.
 [stacks.weights]
+LAR = 32   # 32.0 vs ARI
+BUF = 27   # 29.5 @ LV
+CHI = 20   # 26.25 @ ATL (Caleb Williams Q; Bagent has the starter flag)
+IND = 20   # 25.75 vs TEN
+NE = 19    # 25.5 vs NYJ
+KC = 19    # 25.5 vs LAC
+LV = 16    # 24.0 vs BUF
+NO = 15    # 23.5 @ NYG
+ATL = 14   # 23.25 vs CHI (Penix Q)
+BAL = 14   # 23.0 @ CLE (Lamar Jackson Q; Huntley has the starter flag)
+NYG = 12   # 22.0 vs NO
+PHI = 10   # 21.0 vs CAR
+PIT = 10   # 21.0 @ TB
+CAR = 7    # 19.5 @ PHI
+ARI = 7    # 19.5 @ LAR
+TEN = 6    # 18.75 @ IND
+CLE = 5    # 18.5 vs BAL
+TB = 5     # 18.5 vs PIT (Mayfield out)
+NYJ = 4    # 18.0 @ NE
+LAC = 2    # 17.0 @ KC
 
 # No per-team stack rules: every team uses [optimizer.stack], QB + 2 receivers + 1 bring-back.
 [stacks.rules]

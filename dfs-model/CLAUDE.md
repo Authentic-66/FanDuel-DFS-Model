@@ -156,6 +156,18 @@ defaults.toml stays pro rata). `exposure.csv` has a `Routing_bump` column (proj.
 projection gained from injury / trade redistribution, so depth players lifted into lineups can be spotted and red-listed.
 It is report-only: added after the freeze tag, draws verified identical before and after.
 
+## Week 6 preliminary run (Tue Oct 13) — inputs only, model frozen
+Slate: 10 games, 20 teams (byes CIN, DET, MIA, MIN; off-slate SEA@DEN Thu, HOU@JAC London, DAL@GB SNF, WAS@SF MNF).
+Houston is off the slate, so Harrison is not in the player list: only the Arizona side of the trade applies, and the
+trade entry got `position = "WR"` so his targets route by position. `data/2026-w06/lines.csv` and `[stacks.weights]`
+are PRELIMINARY (nflverse schedule spread_line / total_line); `[status]` mirrors FanDuel's Oct 13 tags (O -> out,
+Q/D -> questionable; listed so the O players' volume is redistributed). All three are replaced before the final run.
+Preliminary optimizer run in `weeks/2026-w06/prelim/` (no upload file kept); Doug's review sheet is
+`data/2026-w06/review_sheet.xlsx` (untracked: *.xlsx is ignored). Open for the final run: IR players with real 2026
+volume are not redistributed unless listed (Travis Etienne would add ~3 to Kamara, A.J. Brown / Hollins ~2 to the NE
+WRs, Brooks ~2.4 to Hubbard); starting-QB calls for BAL (Huntley flagged, Lamar Q projects 0), CHI (Bagent flagged,
+Williams Q, Keenum split week 5) and ATL (Penix Q, so ATL cannot be stacked).
+
 ## Week-7 backlog (from docs/week6_prep.md section 11 and 10.2)
 - **Per-position redistribution mode**: RB out = routing by position; WR out = depth split; TE out = old 80% rule or none.
   Basis: the section 11.2 accuracy table (players moved 1+: RB out 6.65 routing vs 6.70 old; WR out 6.53 depth vs 6.77 pro
