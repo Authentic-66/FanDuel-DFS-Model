@@ -299,10 +299,15 @@ passing the role guard (201), columns incl. Role_vol, Status, In_model_pool, Col
 Fixed: `ownership` feature `gained_vol` floored at 0 (Harrison's -1.34 made log1p NaN and every WR projected 0% owned;
 training rows never negative, so weeks 4-6 fits unchanged). Found:
 - Harrison (HOU): 4 of 32 targets in week 6; projects 4.3 at 0.15 x 0.5; RoleVol 3.4 (just over the floor). ARI side
-  hands out his volume although ARI's weeks 5-6 already lacked him (backlog). **Confirm factor 0.5 with Doug.**
+  hands out his volume although ARI's weeks 5-6 already lacked him (backlog). **Doug, Oct 19: factor 0.7** (10.5% of
+  HOU targets; also under [shadow.trade]). proj.csv / prelim / review sheet still use 0.5: re-run for the final.
 - SF gets 0 stacks: Kittle is the only usable SF receiver (Jennings, Cooks, Watkins under the role floor; Deebo O,
   Evans Q). An override on an SF WR would make SF stackable.
-- Team mismatches (no trade entry): Kaytron Allen WAS -> MIA, Jared Wayne HOU -> MIA (both keep old-team volume).
+- Kaytron Allen WAS -> MIA: real move (Doug: waiver claim after Achane's injury). Trade entry written but commented
+  out in week.toml, PENDING his MIA share: the code needs new_target_share and moves targets only (carries stay his WAS
+  4 a game; none of Achane's volume reaches him). WAS on bye, so the old side hands out nothing. Projects 2.0 as-is.
+- Jared Wayne HOU -> MIA (WR, 3.5, keeps HOU volume): Doug's answer pending.
+- Estime and SF override reads: Doug decides after Friday's report.
 - Role-guard no-data list (all real, no missing aliases): Josh Johnson (CIN QB), Audric Estime (CLE RB 8.4), Phil Mafah
   (NYG RB 9.6), Jaret Patterson (CLE RB), Michael Bandy, Shedrick Jackson, Devin Culp. CLE RB room thin (Judkins Q,
   Sanders IR): Estime may start.

@@ -41,8 +41,8 @@ questionable = [
 [status.starting_qb]
 
 # Traded players (see config/2026-w06/week.toml for the full notes).
-# Week 7: Houston is on the main slate, so both sides of the Harrison trade run. Doug's read (Oct 18): settled share
-# 0.15, first_week_factor 0.5 -> 7.5% of Houston's targets this week. In London (week 6) he played 12 of ~59 snaps (~20%)
+# Week 7: Houston is on the main slate, so both sides of the Harrison trade run. Doug's read: settled share 0.15,
+# first_week_factor 0.7 (Oct 19; 0.5 on Oct 18) -> 10.5% of Houston's targets this week. In London (week 6) he played 12 of ~59 snaps (~20%)
 # with 4 of 32 targets (12.5%): docs/week6_review.md section 7.
 [[status.trade]]
 player = "Marvin Harrison Jr."
@@ -50,7 +50,21 @@ position = "WR"
 from = "ARI"
 to = "HOU"
 new_target_share = 0.15        # Doug's settled read
-first_week_factor = 0.5        # Doug, Oct 18: ~20% of snaps in his first Houston game
+first_week_factor = 0.7        # Doug, Oct 19 (was 0.5 on Oct 18 from ~20% of snaps in London) -> 10.5% of HOU targets
+
+# Kaytron Allen (RB): real move, Doug Oct 19: Miami claimed him off waivers from WAS after Achane's injury.
+# PENDING Doug's MIA share; switched off until then (the run stops on a trade entry without new_target_share).
+# Old side: WAS is on bye this week (no WAS players on the slate), so nothing is handed out there, as Doug wants.
+# New side: the code moves TARGETS only (share x factor of MIA's targets, taken from MIA teammates); his carries stay
+# his WAS backup carries (4 a game, 0 targets in 2026), and none of Achane's volume reaches him (his stats are WAS's).
+# For a lead-back read, an [overrides] mean is the existing tool.
+# [[status.trade]]
+# player = "Kaytron Allen"
+# position = "RB"
+# from = "WAS"
+# to = "MIA"
+# new_target_share = ???        # Doug's read
+# first_week_factor = 1.0
 
 # Doug's projection reads: new mean FanDuel points.
 [overrides]
@@ -92,7 +106,7 @@ red = []
 
 # Doug's trade read, recorded so it can be scored by hand after the games (analyze_results.py does not read it).
 [shadow.trade]
-"Marvin Harrison Jr." = { from = "ARI", to = "HOU", new_target_share = 0.15, first_week_factor = 0.5 }
+"Marvin Harrison Jr." = { from = "ARI", to = "HOU", new_target_share = 0.15, first_week_factor = 0.7 }   # Doug, Oct 19
 
 # Stack QB-team weights: weight = round(2 * (implied total - 16)), min 1, from data/2026-w07/lines.csv.
 # PRELIMINARY (Oct 19, nflverse schedule lines): rebuild from Saturday / Sunday lines.
