@@ -2,63 +2,79 @@
 # Overrides any key in config/defaults.toml. Standing rules come from defaults: starters only, 25-lineup cap, leverage off.
 # Week-6 mode (Doug, Oct 12): his RED and YELLOW reads are APPLIED ([prefs]); GREEN is recorded under [shadow] only.
 # Based on weeks 4-5, where red + yellow were worth +3.0 and +2.5 points per lineup and green was +1.3 and -1.7.
-# Oct 13 preliminary run: [status] and [stacks.weights] hold PRELIMINARY values (FanDuel tags, nflverse lines).
-# TO REPLACE before the final run: [status] (Friday report), [stacks.weights] (Saturday's lines in
-# data/2026-w06/lines.csv), Doug's reads, and [contest.guru] if Guru is used.
+# Final run (Sun Oct 18): [status] is Doug's Sunday-morning list, lines are the nflverse schedule as updated Sunday
+# 08:15 CT, [stacks.weights] rebuilt from them. Player list = Sunday's download (Tuesday's kept as fd_players_tue.csv).
+# Still to come before the upload file: Doug's red / yellow reads from data/2026-w06/exposure_review.xlsx.
 
 # Friday's official game statuses go here (skill positions). While both lists are empty, FanDuel's own tags apply:
 # O/IR = out, Q/D = questionable, and questionable players are excluded ([optimizer] exclude_questionable, default true).
 # Once anything is listed here, FanDuel's Q/D tags are ignored and these lists decide (O/IR tags still apply).
 # Players on injured reserve are left to FanDuel's IR tag. A player listed out who already missed games is now handed
 # out in proportion to the games he played ([model.injury] absent_mode = "present_share"), so keep listing him.
-# PRELIMINARY (Tue Oct 13): no Friday report yet, so these lists mirror FanDuel's own tags in the Oct 13 player list
-# (data/2026-w06/fd_players.csv), skill positions and QBs: O -> out, Q and D -> questionable (FanDuel's tag rule).
-# They are listed rather than left empty so the O players' volume is handed to their teammates (Routing_bump); an
-# empty [status] applies the same tags but redistributes nothing.
-# IR players (Doug, Oct 13): those with real 2026 volume (3+ blended targets + carries a game) are listed out too, so
-# the part of their volume their teammates' samples do not yet reflect is handed out (absent_mode = "present_share").
-# Other IR players are left to FanDuel's IR tag. Not listed: Conner and Benson (ARI) and the rest, under 3 a game.
-# Baker Mayfield (TB, O) is a QB: out through FanDuel's tag, no volume to hand out.
-# REPLACE with Friday's report before the final run.
+# FINAL (Sun Oct 18), Doug's list. OUT players' volume is handed to teammates (Routing_bump).
+# QBs: Lamar Jackson (BAL, O), Jalen Hurts (PHI, IR) and Baker Mayfield (TB, O) are out through FanDuel's tags and
+# zero_backups, NOT listed: listing a QB out hands 80% of his rushing carries to his RBs / receivers (there is no QB
+# rule in [model.injury.position_share]), which would double up with the starting QB's own rushing.
+# Kept from Tuesday's list though Doug's Sunday list does not name them (still O / IR on FanDuel): Roman Wilson,
+# Ben Skowronek (PIT), Tyler Scott (LV).
+# Activated from IR Saturday (A.J. Brown, Ja'Kobi Lane, Trevor Etienne, KeAndre Lambert-Smith, Omar Cooper Jr.):
+# questionable = excluded from lineups, nothing redistributed.
+# Active (Q, expected to play; not listed): Alvin Kamara, Chris Olave, TreVeyon Henderson, Pat Freiermuth,
+# Rico Dowdle, Kenyon Sadiq, Caleb Williams.
 [status]
 out = [
-  "Roman Wilson", "Ben Skowronek",                         # PIT (finger, calf)
-  "Tyler Scott",                                           # LV
-  # injured reserve, with real 2026 volume:
-  "Ja'Kobi Lane",                                          # BAL
+  "Saquon Barkley",                                        # PHI
+  "Breece Hall", "Adonai Mitchell",                        # NYJ
+  "Kyle Monangai",                                         # CHI
+  "Jeremiyah Love",                                        # ARI
+  "Sean Tucker",                                           # TB (FanDuel Q; Doug: out)
+  "AJ Dillon",                                             # CAR
+  "Rashee Rice",                                           # KC
+  "Tre' Harris",                                           # LAC
+  "Ashton Dulin",                                          # IND
+  "Theo Johnson",                                          # NYG
+  "Matt Hibner",                                           # BAL
+  "Carter Runyon",                                         # LV
+  "Roman Wilson", "Ben Skowronek",                         # PIT (from Tuesday's list)
+  "Tyler Scott",                                           # LV (from Tuesday's list)
+  # injured reserve with real 2026 volume (Tuesday's list, less A.J. Brown and Ja'Kobi Lane, activated):
   "Jonathon Brooks", "Xavier Legette",                     # CAR
   "Raheim Sanders", "Dylan Sampson",                       # CLE
   "Alec Pierce",                                           # IND
   "Tyquan Thornton",                                       # KC
   "David Njoku",                                           # LAC
   "Terrance Ferguson", "Ronnie Rivers",                    # LAR
-  "A.J. Brown", "Mack Hollins",                            # NE
+  "Mack Hollins",                                          # NE
   "Travis Etienne Jr.",                                    # NO
   "Tank Bigsby",                                           # PHI
   "Michael Pittman Jr.",                                   # PIT
   "Jalen McMillan",                                        # TB
 ]
 questionable = [
-  "Michael Penix Jr.",                                     # ATL (ribs)
-  "Lamar Jackson",                                         # BAL (ankle)
+  # activated from IR Saturday, questionable:
+  "A.J. Brown",                                            # NE
+  "Ja'Kobi Lane",                                          # BAL
+  "Trevor Etienne",                                        # CAR
+  "KeAndre Lambert-Smith",                                 # LAC
+  "Omar Cooper Jr.",                                       # NYJ
+  # game-time decision or Q with no news:
+  "Quinshon Judkins",                                      # CLE
+  "Tyler Warren",                                          # IND
+  "DJ Moore",                                              # BUF (no FanDuel tag)
   "Joshua Palmer",                                         # BUF
-  "Jalen Coker",                                           # CAR
-  "Caleb Williams", "Kyle Monangai",                       # CHI
-  "Quinshon Judkins", "KC Concepcion Jr.", "Tylan Wallace", "Carsen Ryan",   # CLE
-  "Darius Slayton", "Ashton Dulin",                        # IND
-  "Rashee Rice",                                           # KC
-  "Ladd McConkey", "Quentin Johnston", "Brenen Thompson", "Tre' Harris",     # LAC (Harris tagged D)
-  "Jalen Nailor",                                          # LV
-  "TreVeyon Henderson",                                    # NE (tagged D)
-  "Breece Hall", "Adonai Mitchell", "Kenyon Sadiq",        # NYJ
-  "Saquon Barkley", "DeVonta Smith", "Hollywood Brown", "Will Shipley",      # PHI (Shipley tagged D)
-  "Rico Dowdle",                                           # PIT
-  "David Martin-Robinson",                                 # TEN
+  "Tyjae Spears",                                          # TEN
+  "Brenen Thompson",                                       # LAC: FanDuel Q, not on Doug's list (Claude's call, same rule)
 ]
 
 # Doug's starting-QB calls, team -> name. Default is the QB with the most attempts in the team's last game.
 # Every other QB now projects 0 ([model.qb] zero_backups); a team with no starter flagged prints a warning.
 [status.starting_qb]
+BAL = "Tyler Huntley"          # Lamar Jackson out
+CHI = "Caleb Williams"
+ATL = "Michael Penix Jr."
+TB = "Jalon Daniels"           # depth chart, Mayfield out
+PHI = "Tanner McKee"           # Hurts on IR (ESPN, Oct 17)
+CLE = "Deshaun Watson"         # flagged by Claude: Watson starts, Gabriel out (Yahoo, Oct 17)
 
 # Traded players. Old team: handled like a player ruled out for the first time (his volume goes to his old teammates
 # in full). New team: he gets new_target_share of the team's targets per game, taken from his new teammates pro rata;
@@ -98,9 +114,18 @@ stack_allocation = "proportional"   # stack counts follow the weights exactly in
 [prefs]
 starters_only = true           # QB1, RB1, top-3 WR, TE1 per team (by projection)
 red_teams = []                 # nothing from these teams
-red = []
+red = ["Devaughn Vele", "Carnell Tate", "Wan'Dale Robinson", "Germie Bernard", "Reggie Virgil", "Kendrick Bourne", "KC Concepcion Jr.", "Ted Hurst III", "Konata Mumpfield", "Malachi Fields"]
 
 [prefs.yellow]                 # "Player" = lineups he had in the reviewed run
+"Tyler Huntley" = 6
+"Jacoby Brissett" = 4
+"Deshaun Watson" = 2
+"Michael Penix Jr." = 11
+"Jalon Daniels" = 2
+"Justin Herbert" = 1
+"Alvin Kamara" = 17
+"DeVonta Smith" = 7
+"DK Metcalf" = 16
 
 [prefs.green]                  # keep empty in week 6 (green is shadow-only)
 
@@ -112,10 +137,20 @@ red = []
 # Week 6: Doug's GREEN reads go here (green = more: min max(2x listed, 12), or the floor). red / yellow stay empty
 # here because they are applied through [prefs] above; anything listed here would be graded as a shadow read.
 [shadow]
-reviewed = ""                  # path of the reviewed sheet, e.g. "data/2026-w06/exposure_reviewed.xlsx"
+reviewed = "data/2026-w06/exposure_reviewed.xlsx"   # Doug, Oct 18 11:32; no greens                  # path of the reviewed sheet, e.g. "data/2026-w06/exposure_reviewed.xlsx"
 red = []
 
 [shadow.red_lineups]           # lineups each red player had in the reviewed run (red is applied, so record them here)
+"Devaughn Vele" = 8
+"Carnell Tate" = 8
+"Wan'Dale Robinson" = 8
+"Germie Bernard" = 3
+"Reggie Virgil" = 6
+"Kendrick Bourne" = 5
+"KC Concepcion Jr." = 1
+"Ted Hurst III" = 1
+"Konata Mumpfield" = 2
+"Malachi Fields" = 4
 
 [shadow.yellow]
 
@@ -131,34 +166,34 @@ red = []
 
 # Stack QB-team weights (relative), one per main-slate team (20 teams, 10 games), from the implied-total formula used
 # in week 5: weight = round(2 * (implied total - 16)), min 1, from data/2026-w06/lines.csv.
-# PRELIMINARY (Oct 13): the lines are the nflverse schedule's spread_line / total_line; redo from Saturday's lines.
+# FINAL (Oct 18): nflverse schedule spread_line / total_line as updated Sunday 08:15 CT (Tuesday's were preliminary).
 [stacks.weights]
 LAR = 32   # 32.0 vs ARI
 BUF = 27   # 29.5 @ LV
-CHI = 20   # 26.25 @ ATL (Caleb Williams Q; Bagent has the starter flag)
-IND = 20   # 25.75 vs TEN
+CHI = 22   # 27.0 @ ATL
+ATL = 19   # 25.5 vs CHI
+IND = 19   # 25.5 vs TEN
 NE = 19    # 25.5 vs NYJ
-KC = 19    # 25.5 vs LAC
+KC = 17    # 24.5 vs LAC
+NO = 16    # 24.0 @ NYG
 LV = 16    # 24.0 vs BUF
-NO = 15    # 23.5 @ NYG
-ATL = 14   # 23.25 vs CHI (Penix Q)
-BAL = 14   # 23.0 @ CLE (Lamar Jackson Q; Huntley has the starter flag)
-NYG = 12   # 22.0 vs NO
-PHI = 10   # 21.0 vs CAR
-PIT = 10   # 21.0 @ TB
-CAR = 7    # 19.5 @ PHI
+NYG = 13   # 22.5 vs NO
+BAL = 10   # 21.25 @ CLE (Huntley)
+CAR = 10   # 21.25 @ PHI
+PIT = 9    # 20.5 @ TB
 ARI = 7    # 19.5 @ LAR
-TEN = 6    # 18.75 @ IND
-CLE = 5    # 18.5 vs BAL
-TB = 5     # 18.5 vs PIT (Mayfield out)
+TEN = 6    # 19.0 @ IND
+CLE = 4    # 18.25 vs BAL
+PHI = 4    # 18.25 vs CAR (McKee)
 NYJ = 4    # 18.0 @ NE
+TB = 4     # 18.0 vs PIT (Daniels)
 LAC = 2    # 17.0 @ KC
 
 # No per-team stack rules: every team uses [optimizer.stack], QB + 2 receivers + 1 bring-back.
 [stacks.rules]
 
 [contest]
-field_size = 0                 # fill in after the slate (for grading)
+field_size = 571917            # Pooch Punt entries (export, Oct 18)
 
 # FanDuel Guru suggestions, pre-lock (see config/2026-w05/week.toml for a filled-in example and the format notes).
 # Per slot: the 3 players Guru suggested, in its order, and the one Doug picked. Leave empty if Guru isn't used.

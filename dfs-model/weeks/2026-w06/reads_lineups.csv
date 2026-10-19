@@ -1,0 +1,4 @@
+run,colour,source,lineups,avg,best,best_rank,top_1pct,top_10pct,read_effect
+as entered,,,150,103.97133333333333,158.4,5089,1,8,
+red (applied) removed,red,applied,150,102.5792,140.3,41280,0,6,1.3921333333333337
+yellow (applied) removed,yellow,applied,150,104.49373333333332,152.5,12794,0,8,-0.5223999999999904

@@ -192,6 +192,31 @@ Williams Q, Keenum split week 5) and ATL (Penix Q, so ATL cannot be stacked).
 6. Before the first slate Houston is on: ask Doug whether Harrison's `first_week_factor = 0.7` still applies (he
    will have played one Houston game), and score `[shadow.trade]` by hand (analyze_results.py does not read it).
 
+## Week 6 final run (Sun Oct 18) — done 11:35 with Doug's reads (10 red, 9 yellow, no green); entered as below
+Inputs done (uncommitted): Sunday `fd_players.csv` (Tuesday's kept as `fd_players_tue.csv`; salaries unchanged, 42 tag
+changes), `lines.csv` from nflverse updated 08:15 CT Sunday (no longer PRELIMINARY: BAL -4.5 -> -3, PHI -1.5 -> +3,
+CHI/ATL total 49.5 -> 52.5; PIT@TB flat, Mayfield was already out Tuesday), `[stacks.weights]` rebuilt, Doug's
+Sunday `[status]` and `[status.starting_qb]` (BAL Huntley, CHI Williams, ATL Penix, TB Daniels, PHI McKee, CLE Watson).
+QBs out (Lamar, Hurts, Mayfield) are left to FanDuel's tags, not listed: listing a QB out hands 80% of his carries to
+his skill players. Brenen Thompson (LAC, FanDuel Q, not on Doug's list) excluded by Claude. Tanner McKee projects 0
+(no passing sample, overrides cannot scale zero sims), so PHI cannot be stacked (2 lineups reallocated).
+Review run in `weeks/2026-w06/review/` (upload.csv deleted on purpose); sheet `data/2026-w06/exposure_review.xlsx`
+(149 = lowest-projected lineup dropped, Color column empty; builder script was scratch). Free entry confirmed by Doug.
+**Next:** Doug's reds -> `[prefs] red`, yellows -> `[prefs.yellow]` with his sheet's Lineups numbers (record red under
+`[shadow.red_lineups]`), greens -> `[shadow.green]`; then `model.py` is not needed again (status unchanged), run
+`optimize.py --week 2026-w06` (main folder) and write the 149 files (`entered_upload_149.csv`, `entered_readable_149.csv`,
+`entered_exposure.csv`). Lock noon CT; Doug wants lineups by 11:00.
+
+## Week 6 (2026-w06) result — see docs/week6_review.md
+149 model lineups (Doug changed 3 by hand to spend leftover salary, +60.9 pts) + 1 free entry (Doug's own lineup) in
+the Pooch Punt (571,917 entries; no $0.25 export). Model avg 104.5 vs field 110.7; best 158.4 (Maye stack, rank 3,975,
+top 0.70%); 1 in top 1%, 8 in top 10%; winner 189.96. Winnings not yet recorded (running total before week 6 -$2.39).
+Reads as lineups: red +1.4/lineup, yellow -0.5 (Penix fade wrong; ATL best stack). RB again the gap (Walker). 20+ tier
++7.8 (n 5; third week of +5-8); WR r -0.02; DST r 0.11; ownership MAE 1.3, mid-priced chalk missed again (Likely 10% vs
+38%). Q exclusion cost nothing (1 rostered slot behind an excluded Q). 14 lineups left $3,000+ (all late in the build,
+22 players at the 25 cap): salary-floor test in the review section 8. Harrison (London): 4 of 32 targets (12.5%) vs
+read 0.15 / applied 0.105, but on 12 snaps of ~59 (Doug, from a game page): keep a factor below 1 in week 7.
+
 ## Week-7 backlog (from docs/week6_prep.md section 11 and 10.2)
 - **Per-position redistribution mode**: RB out = routing by position; WR out = depth split; TE out = old 80% rule or none.
   Basis: the section 11.2 accuracy table (players moved 1+: RB out 6.65 routing vs 6.70 old; WR out 6.53 depth vs 6.77 pro
