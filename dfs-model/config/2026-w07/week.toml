@@ -96,6 +96,9 @@ red = []
 reviewed = ""
 red = []
 
+# Doug's SF stack read (applied in [stacks] extra_receivers), recorded so it can be graded by hand after the games.
+extra_receivers = ["Christian McCaffrey"]
+
 [shadow.red_lineups]
 
 [shadow.yellow]
@@ -107,6 +110,11 @@ red = []
 # Doug's trade read, recorded so it can be scored by hand after the games (analyze_results.py does not read it).
 [shadow.trade]
 "Marvin Harrison Jr." = { from = "ARI", to = "HOU", new_target_share = 0.15, first_week_factor = 0.7 }   # Doug, Oct 19
+
+# Doug, Oct 19: SF is stackable as Purdy + Kittle + Christian McCaffrey. Named RBs count as stack receivers for their own
+# QB ([stacks] extra_receivers; off unless listed). Without it SF had 1 usable receiver (Kittle) and 0 stacks.
+[stacks]
+extra_receivers = ["Christian McCaffrey"]
 
 # Stack QB-team weights: weight = round(2 * (implied total - 16)), min 1, from data/2026-w07/lines.csv.
 # PRELIMINARY (Oct 19, nflverse schedule lines): rebuild from Saturday / Sunday lines.

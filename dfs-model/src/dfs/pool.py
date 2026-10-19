@@ -116,7 +116,7 @@ def stack_weights(df, cfg, max_filler):
     for team in pool.Team[pool.Pos == 'QB']:
         rule = optimize.stack_rule(team, stacks, o)
         opp = pool.Opp[(pool.Team == team) & (pool.Pos == 'QB')].iloc[0]
-        rec = int(((pool.Team == team) & pool.Pos.isin(['WR', 'TE'])).sum())
+        rec = int(((pool.Team == team) & optimize.receivers(pool, stacks)).sum())
         back = int(((pool.Team == opp) & ~pool.Pos.isin(['D', 'QB'])).sum())   # one QB per lineup: his QB can't be it
         req_out = [n for n in rule['require'] if n not in set(pool.Name)]
         missing = [n for n in rule['require'] if n not in set(df.Name)]

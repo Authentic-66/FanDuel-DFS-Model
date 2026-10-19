@@ -92,7 +92,20 @@ def assign_forced(df, need, n, rnd):
 def stack_rule(team, stacks, opt):
     rule = {'receivers': opt['stack']['receivers'], 'bring_back': opt['stack']['bring_back'], 'require': []}
     rule.update(stacks['rules'].get(team, {}))
+    rule['extra'] = set(stacks.get('extra_receivers', []))
     return rule
+
+
+def receivers(df, stacks):
+    """Stack receivers: every WR and TE, plus RBs named in [stacks] extra_receivers (Doug, week 7: McCaffrey, so SF
+    can be stacked as Purdy + Kittle + McCaffrey). They count for their own team's QB only. Off unless listed.
+    Errors on a named player who is in df but not an RB; a named player not in df (out, red, Q) just counts for nothing."""
+    extra = set(stacks.get('extra_receivers', []))
+    named = df.Name.isin(extra)
+    wrong = sorted(set(df.Name[named & (df.Pos != 'RB')]))
+    if wrong:
+        raise ValueError(f'[stacks] extra_receivers: {wrong} are not RBs (WR / TE count already; QB / DST cannot)')
+    return df.Pos.isin(['WR', 'TE']) | (named & (df.Pos == 'RB'))
 
 
 def solve_lineup(df, obj, team, rule, cap, use, forced, prior_lineups, roster, opt, outside=None):
@@ -115,7 +128,8 @@ def solve_lineup(df, obj, team, rule, cap, use, forced, prior_lineups, roster, o
         P += pulp.lpSum(x[i] for i in idx if df.Team[i] == t and df.Pos[i] != 'D') <= roster['max_per_team']
     # stack: this team's QB + receivers (+ required players) + bring-back from the opponent
     P += pulp.lpSum(x[i] for i in pos('QB') if df.Team[i] == team) == 1
-    P += pulp.lpSum(x[i] for i in idx if df.Team[i] == team and df.Pos[i] in ('WR', 'TE')) >= rule['receivers']
+    P += pulp.lpSum(x[i] for i in idx if df.Team[i] == team and (df.Pos[i] in ('WR', 'TE') or
+                                                                 (df.Pos[i] == 'RB' and df.Name[i] in rule.get('extra', ())))) >= rule['receivers']
     for name in rule['require']:
         P += pulp.lpSum(x[i] for i in idx if df.Name[i] == name) == 1
     P += pulp.lpSum(x[i] for i in idx if df.Team[i] == opp and df.Pos[i] != 'D') >= rule['bring_back']
@@ -215,6 +229,10 @@ def build_lineups(df, sims, cfg, pool_mode=None):
                 cap[i] = pool_mode['cap']
     force = assign_forced(df, need, n, rnd)
     pool = [t for t, w in stacks['weights'].items() for _ in range(w)]
+    missing = sorted(set(stacks.get('extra_receivers', [])) - set(df.Name))
+    receivers(df, stacks)   # validates the named players
+    if missing:
+        print(f'[stacks] extra_receivers not in the eligible pool (count for nothing): {missing}')
     if not pool:
         raise ValueError('no stack weights: set [stacks.weights] in week.toml')
     lev = opt['leverage']
@@ -251,7 +269,7 @@ def build_lineups(df, sims, cfg, pool_mode=None):
         counts = allocate_stacks(live, n)
         # Tightest teams first (receiver lineups needed / receiver lineups available under the caps): built late, other
         # stacks have used their receivers up to the cap and the team can no longer be stacked.
-        rec = df[df.Pos.isin(['WR', 'TE'])]
+        rec = df[receivers(df, stacks)]
         room = {t: sum(cap[i] for i in rec.index[rec.Team == t]) for t in counts}
         tight = {t: counts[t] * stack_rule(t, stacks, opt)['receivers'] / max(room[t], 1) for t in counts}
         queue = [t for t in sorted(counts, key=lambda t: -tight[t]) for _ in range(counts[t])]

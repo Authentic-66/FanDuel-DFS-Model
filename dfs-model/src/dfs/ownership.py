@@ -220,16 +220,17 @@ def attach(week, cfg, proj, quiet=False):
     return out
 
 
-def stack_table(df, weights, chalk_qb_own, receivers=2):
+def stack_table(df, weights, chalk_qb_own, receivers=2, extra_receivers=()):
     """Per stack team: our share of stack draws, the field's projected QB ownership (≈ share of field lineups built
     on that QB), its top receivers' ownership, a CHALK flag when the field is likely to overweight it
     (QB own >= chalk_qb_own %), and Leverage = our share / field share (< 1: we are chalkier than the field).
-    df needs Own_proj."""
+    extra_receivers: RBs that count as stack receivers ([stacks] extra_receivers). df needs Own_proj."""
     tot = sum(weights.values()) or 1
     rows = []
     for t, w in weights.items():
         qb = df[(df.Team == t) & (df.Pos == 'QB') & df.StartingQB]
-        rec = df[(df.Team == t) & df.Pos.isin(['WR', 'TE'])].nlargest(receivers, 'Own_proj')
+        rec = df[(df.Team == t) & (df.Pos.isin(['WR', 'TE']) | ((df.Pos == 'RB') & df.Name.isin(extra_receivers)))]
+        rec = rec.nlargest(receivers, 'Own_proj')
         q = qb.Own_proj.max() if len(qb) else np.nan
         rows.append(dict(Team=t, Our_share_pct=round(100 * w / tot, 1), Field_QB_own=q,
                          Top_receivers=', '.join(f'{n} {o:.0f}%' for n, o in zip(rec.Name, rec.Own_proj)),

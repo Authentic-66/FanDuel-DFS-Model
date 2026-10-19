@@ -41,7 +41,8 @@ print(readable.Stack.value_counts().to_string())
 print(exposure.head(8)[['Player', 'Lineups']].to_string(index=False))
 if 'Own_proj' in proj:
     weights = info['stack_weights'] if args.pool else cfg['stacks']['weights']
-    stacks = ownership.stack_table(df, weights, cfg['ownership']['chalk_qb_own'])
+    stacks = ownership.stack_table(df, weights, cfg['ownership']['chalk_qb_own'],
+                                   extra_receivers=cfg['stacks'].get('extra_receivers', []))
     stacks.to_csv(out('stacks.csv'), index=False)
     print('\nStacks vs field (CHALK = QB projected >= %.0f%% owned; Leverage < 1 = we are chalkier than the field):'
           % cfg['ownership']['chalk_qb_own'])
