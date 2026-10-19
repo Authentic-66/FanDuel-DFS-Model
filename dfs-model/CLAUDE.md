@@ -39,6 +39,8 @@ and thinks in those terms: fundamentals model + market/public overlay, calibrati
   `[shadow]` = Doug's colour review saved as a record only (never applied; week 5 ran model-only), to score his
   reads against the model after the games.
   New week: copy last week's `week.toml` and edit.
+  `[pool]` QB/RB/WR/TE/DST lists (+ `ranked`) = Doug's player pool for pool mode (docs/pool_mode.md); settings
+  (`max_filler`, `rank_boost`, `raise_cap_to`) in defaults.toml `[pool]`.
 
 ## Pipeline (`src/` scripts are thin CLIs over the `src/dfs/` package; all take `--week`, default `$DFS_WEEK`)
 - `dfs/config.py` — `Week` paths (data/, weeks/, config/, stats cache by season) and config loading.
@@ -65,6 +67,9 @@ and thinks in those terms: fundamentals model + market/public overlay, calibrati
   once per colour and source with only that group removed/added; `reads_players.csv`, `reads_lineups.csv`;
   `--no-read-lineups` skips the re-runs). Weeks 4-5 pin `mean_weight = 0.4` so "as entered" still reproduces. `dfs/backtest.py` (`backtest.py`) — Phase 2 tuning;
   `backtest_leverage.py` — leverage settings on an archived slate.
+- `dfs/pool.py` (`optimize.py --pool`) — Doug's pool mode: 150 lineups from `[pool]` only, at most 1 filler per lineup
+  (role-guard test, never the QB), pool players' cap raised 25 -> 40 when 25 is infeasible; writes `weeks/<week>/pool/`
+  (model files untouched); `analyze_results.py` grades it vs the model and the entries (`pool/grade.csv`).
 - `fetch_stats.py` — nflverse stats for the week's season and the prior one.
 - Tests: `python -m unittest discover -s tests` (stdlib unittest; scoring, usage/blend, ownership, week-4 regression checks).
 
@@ -273,6 +278,13 @@ salary floor, role guard (WR/TE), WR implied-total correction, name fix and alia
 8. After the slate: `convert_results.py`, set `[contest] field_size`, `analyze_results.py`, write
    `docs/week7_review.md` (week-6 format: model vs field, reads, manual swaps, salary left, calibration, stacks, DST,
    ownership, Harrison's trade read by hand), ask Doug for winnings (running total -$3.88 after week 6).
+
+## Doug's pool mode (Oct 19) — see docs/pool_mode.md
+Built on Doug's spec, inside the model. **Deviation he must decide:** his sizes (QB 10, RB 10, WR 10, TE 8, DST 5)
+can't fill 150 lineups at cap 25 (375 fillers needed, 150 allowed) and stalled at 138/138/145 at cap 40 on weeks 4-6
+(stand-in pools); WR 14 at cap 40 built 150 valid lineups every week (also cap 45 or 2 fillers on week 4). Pool mode
+raises pool players to 40 under the standing rule and stops with advice beyond that. Open: pool size / cap,
+rank_boost 0.05, auto-raise, Q exemption for pool players. Normal model proven unchanged (week 6 identical, 150/150).
 
 ## Week-8 backlog
 - **Per-position redistribution mode**: RB out = routing by position; WR out = depth split; TE out = old 80% rule or none.

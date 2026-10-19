@@ -2,7 +2,11 @@
 and Doug's reads: red, yellow and green graded separately, both applied ([prefs]) and shadow ([shadow]), per player
 and as lineups (the optimizer is re-run once as entered and once per colour and source; --no-read-lineups skips that).
 Inputs: weeks/<week>/proj.csv, sims.npy, data/<week>/results_players.csv, results_my_entries.csv.
-Writes weeks/<week>/reads_players.csv and reads_lineups.csv."""
+Writes weeks/<week>/reads_players.csv and reads_lineups.csv.
+Doug's pool lineups (weeks/<week>/pool/upload.csv, from optimize.py --pool) are graded against the model's lineups
+and the entries, entered or not (shadow): weeks/<week>/pool/grade.csv."""
+import os
+
 import pandas as pd
 
 from dfs import analyze, config, ownership, project
@@ -12,6 +16,16 @@ proj, sims = project.load(week)
 analyze.report(week, proj)
 
 pd.set_option('display.width', 250)
+grade = analyze.pool_report(week, cfg)
+if grade is not None:
+    grade.to_csv(week.output('pool/grade.csv'), index=False)
+    print("\nDoug's pool lineups vs the model's lineups vs entered (entered = lineups of that set actually entered):")
+    print(grade.to_string(index=False))
+    qpath = os.path.join(week.data, 'results_field_quantiles.csv')
+    if os.path.exists(qpath):
+        q = pd.read_csv(qpath).set_index('quantile').points
+        print('Field: median %.1f, top 10%% from %.1f, top 1%% from %.1f'
+              % (q.get(0.5, float('nan')), q.get(0.9, float('nan')), q.get(0.99, float('nan'))))
 players = analyze.reads_players(cfg, proj, analyze.load_actuals(week.results_players), analyze.entries(week.results_entries, proj))
 if players.empty:
     print("\nDoug's reads: none listed under [prefs] or [shadow]")

@@ -252,6 +252,15 @@ TE = 1
 receivers = 2
 bring_back = 1
 
+# --- Doug's pool mode (docs/pool_mode.md): `optimize.py --pool` builds 150 lineups from [pool] in week.toml ---
+# The lists (QB, RB, WR, TE, DST = names, optionally in rank order) go in week.toml; these are the settings.
+[pool]
+max_filler = 1       # players per lineup from outside the pool (must pass the role guard test; never the QB)
+ranked = false       # week.toml: true = lists are in Doug's rank order -> objective boost by rank
+rank_boost = 0.05    # rank 1 objective x 1.05, falling linearly to x 1.00 for the last listed (pending Doug's OK)
+raise_cap_to = 40    # standing rule "raise to 40 only if infeasible", applied automatically to pool players only when
+                     # the capacity check fails at exposure_cap (Doug's sizes need ~33+). 0 = stop with an error instead
+
 # --- Phase 2 #2: field ownership (docs/phase2_ownership.md) ---
 # Projected %Drafted from pre-lock info, fit on every earlier week with data/<week>/results_players.csv (refit each run).
 [ownership]

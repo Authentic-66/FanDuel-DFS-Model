@@ -145,3 +145,29 @@ def reads_lineups(week, cfg, proj, sims):
         r['read_effect'] = np.nan if not colour else (rows[0]['avg'] - r['avg'] if source == 'applied' else r['avg'] - rows[0]['avg'])
         rows.append(r)
     return pd.DataFrame(rows)
+
+
+# --- Doug's pool lineups (dfs/pool.py), graded whether or not they were entered ----------------------------------------
+
+def pool_report(week, cfg, folder='pool'):
+    """Pool lineups (weeks/<week>/pool/upload.csv) vs the model's lineups (weeks/<week>/upload.csv) vs what was
+    entered (results_my_entries.csv), all scored on actual points: lineups, avg, top-10% / top-1% counts, best and
+    best rank (when [contest] field_size and the field files exist), and how many of each set were entered.
+    folder: weeks/<week>/<folder>/ (e.g. 'pool/test' for optimize.py --pool --subdir test).
+    Returns None when the week has no pool lineups."""
+    import os
+    from . import optimize, pool
+    path = os.path.join(week.out, folder, 'upload.csv')
+    if not os.path.exists(path):
+        return None
+    act = load_actuals(week.results_players)
+    ent = [re.findall(ID_RE, s) for s in pd.read_csv(week.results_entries).Lineup]
+    sets = {'pool': optimize.read_upload(path)[1]}
+    if os.path.exists(os.path.join(week.out, 'upload.csv')):
+        sets['model'] = optimize.read_upload(os.path.join(week.out, 'upload.csv'))[1]
+    sets['entered'] = ent
+    n_field = cfg['contest'].get('field_size', 0)
+    top_path, q_path = os.path.join(week.data, 'results_top2000.csv'), os.path.join(week.data, 'results_field_quantiles.csv')
+    if n_field and os.path.exists(top_path) and os.path.exists(q_path):
+        return pool.grade(sets, act, ent, pd.read_csv(top_path), pd.read_csv(q_path), n_field)
+    return pool.grade(sets, act, ent)

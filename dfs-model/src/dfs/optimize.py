@@ -95,7 +95,9 @@ def stack_rule(team, stacks, opt):
     return rule
 
 
-def solve_lineup(df, obj, team, rule, cap, use, forced, prior_lineups, roster, opt):
+def solve_lineup(df, obj, team, rule, cap, use, forced, prior_lineups, roster, opt, outside=None):
+    """One lineup (df indices) or None if infeasible. outside = (indices, max) for pool mode: at most max players
+    from those indices (the non-pool fillers)."""
     import pulp
     idx = df.index
     pos = lambda p: [i for i in idx if df.Pos[i] == p]
@@ -128,6 +130,8 @@ def solve_lineup(df, obj, team, rule, cap, use, forced, prior_lineups, roster, o
         P += x[i] == 1
     for lp in prior_lineups:
         P += pulp.lpSum(x[i] for i in lp) <= opt['max_overlap']
+    if outside is not None:
+        P += pulp.lpSum(x[i] for i in outside[0]) <= outside[1]
     lev = opt['leverage']
     if lev['enabled'] and lev['max_lineup_own']:
         P += pulp.lpSum(df.Own_proj[i] * x[i] for i in idx) <= lev['max_lineup_own']
@@ -196,12 +200,19 @@ def allocate_stacks(weights, n):
     return counts
 
 
-def build_lineups(df, sims, cfg):
-    """Returns (lineups as lists of df index, exposure counts)."""
+def build_lineups(df, sims, cfg, pool_mode=None):
+    """Returns (lineups as lists of df index, exposure counts).
+    pool_mode (Doug's pool mode, dfs/pool.py): dict(members = df indices in the pool, max_filler = players allowed from
+    outside it per lineup, cap = exposure cap for pool players at the standing cap, mult = objective multiplier per row).
+    None = the normal model, unchanged."""
     opt, prefs, stacks = cfg['optimizer'], cfg['prefs'], cfg['stacks']
     n = opt['n_lineups']
     rnd = random.Random(opt['seed'])
     cap, need = exposure_limits(df, prefs, opt)
+    if pool_mode is not None:
+        for i in pool_mode['members']:
+            if cap[i] == opt['exposure_cap']:   # yellow / player_cap limits stay
+                cap[i] = pool_mode['cap']
     force = assign_forced(df, need, n, rnd)
     pool = [t for t, w in stacks['weights'].items() for _ in range(w)]
     if not pool:
@@ -223,6 +234,10 @@ def build_lineups(df, sims, cfg):
     if green_qb_teams:
         qb_mult = prefs.get('green_qb_weight') or boost
         lw = {t: w * (qb_mult if t in green_qb_teams else 1) for t, w in (lw or stacks['weights']).items()}
+    outside = None   # pool mode: rank multiplier (after the green-QB check above) and the filler limit
+    if pool_mode is not None:
+        mult = mult * pool_mode['mult']
+        outside = ([i for i in df.index if i not in pool_mode['members']], pool_mode['max_filler'])
     if lw is not None:
         teams, tw = list(lw), list(lw.values())
         pool = None
@@ -262,13 +277,17 @@ def build_lineups(df, sims, cfg):
             team = rnd.choice(pool) if pool else rnd.choices(teams, tw)[0]
         obj = (w * df.Proj.values + (1 - w) * sims[df.row.values, draw % sims.shape[1]]) * mult - penalty
         caps = reserved_caps(df, cap, force, slot, team, stacks, opt, queue) if opt.get('reserve_required') else cap
-        lp = solve_lineup(df, obj, team, stack_rule(team, stacks, opt), caps, use, F, lineups, cfg['roster'], opt)
+        lp = solve_lineup(df, obj, team, stack_rule(team, stacks, opt), caps, use, F, lineups, cfg['roster'], opt, outside)
         if lp is None:
             if tries > 20 * opt['drop_force_after']:   # e.g. a [optimizer.leverage] max_lineup_own nothing can meet
-                raise RuntimeError(f'no feasible lineup for slot {slot + 1} after {tries} tries')
+                raise RuntimeError(f'no feasible lineup for slot {slot + 1} after {tries} tries; stacks built so far: '
+                                   f'{stacks_built(df, lineups)}')
             if queue is not None and not F:   # nothing forced, so this team can't be stacked any more (caps/overlap):
                 short = queue.count(team)     # hand its remaining lineups to the other teams, again by weight
                 live.pop(team)
+                if not live:
+                    raise RuntimeError(f'no stack team left for slot {slot + 1}; stacks built so far: '
+                                       f'{stacks_built(df, lineups)}')
                 queue = [t for t in queue if t != team] + [t for t, k in allocate_stacks(live, short).items()
                                                            for _ in range(k)]
                 print(f'stack allocation: {team} cannot be stacked again; {short} lineup(s) reallocated')
@@ -283,6 +302,11 @@ def build_lineups(df, sims, cfg):
         print(f"salary floor ${opt['min_salary']:,}: {FLOOR_LOG['relief']} lineup(s) used cap relief "
               f"(up to {opt['exposure_cap'] + opt.get('floor_cap_overflow', 0)}), {FLOOR_LOG['no_floor']} solve(s) without the floor")
     return lineups, use
+
+
+def stacks_built(df, lineups):
+    """{QB team: lineups} for an error message."""
+    return pd.Series([df.Team[[i for i in lp if df.Pos[i] == 'QB'][0]] for lp in lineups]).value_counts().to_dict()
 
 
 def slot_order(df, lp, roster):
