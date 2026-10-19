@@ -93,7 +93,8 @@ def load_stats(path, cfg, before_week=None):
     if before_week is not None:
         st = st[st.week < before_week]
     fd = cfg['teams']['nflverse_to_fd']
-    cols = dict(team=st.team.replace(fd), k=st.player_display_name.map(norm_name))
+    alias = cfg.get('names', {}).get('aliases', {})    # nflverse name -> FanDuel name (nicknames: Josh / Joshua Palmer)
+    cols = dict(team=st.team.replace(fd), k=st.player_display_name.map(lambda n: norm_name(alias.get(n, n))))
     if 'opponent_team' in st:
         cols['opp'] = st.opponent_team.replace(fd)           # the defence faced, FanDuel codes (dfs.opponent)
     st = st.assign(**cols)

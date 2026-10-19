@@ -41,6 +41,17 @@ flex = ["RB", "WR", "TE"]
 nflverse_to_fd = { JAX = "JAC", LA = "LAR" }
 
 # --- Projection model ---
+# Name aliases, nflverse display name -> FanDuel name, for players whose two names differ beyond case, punctuation and
+# Jr./Sr./II/III (found Oct 18 by the role guard's "no 2026 usage data" list, weeks 4-6). Without an entry such a player
+# has no stats and is projected from FanDuel FPPG alone (or 0 with the role guard on). Add new ones as they appear.
+[names.aliases]
+"Josh Palmer" = "Joshua Palmer"
+"Marquise Brown" = "Hollywood Brown"
+"Matthew Hibner" = "Matt Hibner"
+"Nicholas Singleton" = "Nick Singleton"
+"Mitchell Tinsley" = "Mitch Tinsley"
+"Andrew Ogletree" = "Drew Ogletree"
+
 [model]
 n_sims = 10000
 seed = 42
@@ -104,6 +115,16 @@ sd = 0.5
 total_exp = 0.5
 team_exp = 0.5
 
+# Role guard (week 7, docs/week7_prep.md section 7): skill players with no current-season stats (the fallback above,
+# FanDuel FPPG alone) project 0, and RB / WR / TE averaging under min_volume targets + carries a game in their
+# current-season games (before injury / trade routing) project 0. A read in [overrides] exempts the player.
+[model.role_guard]
+enabled = true             # Doug, Oct 18: on if the weeks 4-6 test was clean (docs/week7_prep.md section 7)
+min_volume = 3.0
+positions = ["WR", "TE"]   # role floor positions. RB left out by Claude: RB backups who inherit the job get real work
+                           # (Bam Knight 17 touches, week 6); add "RB" to apply Doug's spec to every skill position
+report_min_proj = 3.0      # warnings list guarded players who would otherwise project at least this
+
 [model.injury]
 redistribute_share = 0.8           # share of newly-OUT players' targets/carries given to active teammates, pro rata
                                    # (used when routing = "pro_rata", and for any position/volume without a rule below)
@@ -145,6 +166,14 @@ top_slope = 0.36           # 2021-2025 with Vegas totals, leave-one-season-out r
                            # 0.28 until Oct 12 2026 (fit on 2025 wks 4-18 with neutral totals + 2026 wks 4-5)
 rb_knee = 8.0              # RBs: also lose rb_slope of each projected point above this
 rb_slope = 0.12            # (leave-one-week-out range 0.09-0.14)
+
+# WR/TE over-react to the team implied total (docs/week7_prep.md section 3): after the calibration, each player's mean
+# moves by b * mean * (implied / league_team_total - 1). Fit 2021-2025 leave-one-season-out: WR -0.34 (-0.29 to -0.41),
+# TE -0.27 (-0.21 to -0.33). OFF pending Doug (week 7 lineup test, section 6); TE kept at 0 (Doug asked for WR).
+[model.implied_sensitivity]
+enabled = false
+WR = -0.34
+TE = 0.0
 
 # Wider simulated spread by position, applied after the calibration: every draw moves to this many times its distance
 # from the player's mean; the mean (and so the projection) is unchanged. A number = the same factor for everyone at the

@@ -171,3 +171,6 @@ WR2 = { options = ["Jaylen Waddle", "Matthew Golden", "KC Concepcion Jr."], pick
 DEF = { options = ["Minnesota Vikings", "Pittsburgh Steelers", "Tucker Kraft"], picked = "Minnesota Vikings" }
 TE = { options = ["Tucker Kraft", "Luther Burden III", "Tre' Harris"], picked = "Tucker Kraft" }
 WR3 = { options = ["Luther Burden III", "Michael Wilson", "Malik Washington"], picked = "Michael Wilson" }
+
+[model.role_guard]
+enabled = false                # as entered: the role guard became the default in week 7

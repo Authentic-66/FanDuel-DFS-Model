@@ -236,6 +236,19 @@ lists weekly. Fallback players with no stats (Phil Mafah, FPPG 9.9 from one game
 risk if their starter sits. Projection draws share one random stream: per-player seeds would cut test noise.
 `config/2026-w07/week.toml` is a template: HOU is on the main slate (hosts NYG), Harrison trade active with Doug's read
 `new_target_share = 0.15`, `first_week_factor = 0.5` (12 of ~59 snaps in London), copied to `[shadow.trade]`.
+Doug's decisions (second pass, Oct 18): floor kept as built (no relief for yellow caps); slope stays 0.36; ownership
+flags dropped (he records full Guru lists when he uses it). Built in the second pass (docs/week7_prep.md sections 6-7):
+- `[model.implied_sensitivity]` (OFF, `project.implied_shift`): WR mean x (1 - 0.34 x (implied/22.5 - 1)) after the
+  calibration; TE = 0. Lineup test (floor on): avg +4.2 / +0.9 / -1.3 on weeks 4/5/6, top-10% 11->22 in week 4.
+  Recommended for week 7; Doug decides.
+- **Role guard ON** `[model.role_guard]` (`project.role_guard`): skill players with no current-season stats project 0
+  unless in `[overrides]` (warning lists them); WR/TE under 3 targets + carries a game in 2026 games (pre-routing) project
+  0. RB left out of the floor by Claude (inherited RB jobs get real work: Bam Knight 17 touches); add "RB" to
+  `positions` for Doug's spec. Weeks 4-6: 43 entered slots removed, scored 1.0 (proj 5.9); lineups +0.1 / +0.8 / -0.1;
+  blocked Thornton (KC, 28.6, never rostered). Weeks 4-6 pin it off. proj gains RoleVol, NoData, RoleGuard.
+- **`[names.aliases]` ON** (nflverse -> FanDuel name): Josh/Joshua Palmer, Marquise/Hollywood Brown, Matthew/Matt
+  Hibner, Nicholas/Nick Singleton, Mitchell/Mitch Tinsley, Andrew/Drew Ogletree. The guard's no-data warning is the
+  place new aliases show up: check it every run.
 
 ## Week-7 backlog (from docs/week6_prep.md section 11 and 10.2)
 - **Per-position redistribution mode**: RB out = routing by position; WR out = depth split; TE out = old 80% rule or none.

@@ -199,3 +199,6 @@ field_size = 571917            # Pooch Punt entries (export, Oct 18)
 # FanDuel Guru suggestions, pre-lock (see config/2026-w05/week.toml for a filled-in example and the format notes).
 # Per slot: the 3 players Guru suggested, in its order, and the one Doug picked. Leave empty if Guru isn't used.
 [contest.guru]
+
+[model.role_guard]
+enabled = false                # as entered: the role guard became the default in week 7

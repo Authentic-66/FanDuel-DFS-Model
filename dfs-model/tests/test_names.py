@@ -62,6 +62,21 @@ class NameMatchTest(unittest.TestCase):
         self.assertEqual(len(new), 2)
         self.assertEqual(usage.aggregate(new).at['travishunter', 'g'], 2)
 
+    def test_nickname_alias(self):
+        # FanDuel "Joshua Palmer" = nflverse "Josh Palmer": [names.aliases] maps the nflverse name to FanDuel's
+        df = pd.DataFrame([{**COLS, 'player_id': 'jp', 'player_display_name': 'Josh Palmer', 'position': 'WR',
+                            'team': 'BUF', 'week': 1, 'targets': 4}])
+        fd, path = tempfile.mkstemp(suffix='.csv')
+        os.close(fd)
+        df.to_csv(path, index=False)
+        try:
+            plain = data.load_stats(path, cfg(True))
+            aliased = data.load_stats(path, {**cfg(True), 'names': {'aliases': {'Josh Palmer': 'Joshua Palmer'}}})
+        finally:
+            os.remove(path)
+        self.assertEqual(plain.k.iloc[0], 'joshpalmer')
+        self.assertEqual(aliased.k.iloc[0], data.norm_name('Joshua Palmer'))
+
     def test_offensive_player_without_volume_kept(self):
         # a fullback or blocking tight end with no touches is still an offensive player
         _, new = stats(dict(player_id='fb', player_display_name='Andrew Beck', position='FB', team='NYJ', week=1))

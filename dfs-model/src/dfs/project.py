@@ -52,9 +52,11 @@ def build(week, cfg, agg=None, st=None):
     tf = sim.team_factors(rng, lines, m['correlation'], n)
     league_dst = fd[fd.Position == 'D'].FPPG.mean()
 
+    role = role_volume(st)                       # [model.role_guard]: 2026 targets + carries per game, before routing
     rows, sims, unrouted = [], [], {}
     for r in fd.itertuples():
         t, k, pos = r.Team, r.Key, r.Position
+        fallback = False
         opp, implied = lines.opp[t], lines.implied[t]
         scale, f = implied / m['league_team_total'], tf[t]
         if pos == 'D':
@@ -68,12 +70,14 @@ def build(week, cfg, agg=None, st=None):
                 unrouted[len(sims)] = (pts.mean(), sim.sim_skill(twin, agg.loc[k], pos, scale, f, 0, 0, m, sc, n).mean())
         else:
             pts = sim.sim_fallback(rng, r.FPPG, scale, f, m, n)
+            fallback = True
         if r.Inj == 'Q':
             pts = pts * (rng.random(n) > m['injury']['questionable_inactive_prob'])
         sims.append(pts)
         rows.append(dict(Id=r.Id, Name=r.Nickname, Pos=pos, Team=t, Opp=opp, Salary=r.Salary, Inj=r.Inj,
                          ImpliedTeamTotal=round(implied, 1), GameTotal=round(implied + lines.implied[opp], 1),
                          FD_FPPG=round(r.FPPG, 1), GainedVol=round(xt.get(k, 0) + xc.get(k, 0), 2), Key=k,
+                         RoleVol=round(role.get(k, 0.0), 2) if pos != 'D' else np.nan, NoData=fallback and pos != 'D',
                          **summarize(pts, r.Salary)))
     proj = pd.DataFrame(rows)
     proj['StartingQB'] = (proj.Pos == 'QB') & proj.Key.isin(usage.starting_qbs(st))
@@ -83,7 +87,9 @@ def build(week, cfg, agg=None, st=None):
             raise ValueError(f'[status.starting_qb] {team}: {name!r} is not an active {team} QB on the slate')
         proj.loc[qbs, 'StartingQB'] = proj.Name[qbs] == name
     proj['RoutingBump'] = routing_bump(proj, unrouted, m)
-    sims = adjust(proj, np.array(sims), lines, m)
+    sims = np.array(sims)
+    proj['RoleGuard'] = role_guard(proj, sims, m.get('role_guard', {}), cfg.get('overrides', {}))
+    sims = adjust(proj, sims, lines, m)
     opp = m.get('opponent', {})
     if opp.get('enabled'):      # last: a multiplier on the finished draws, so the calibration and spread fits still hold
         prior = data.load_stats(week.stats(week.season - 1), cfg)
@@ -95,6 +101,43 @@ def build(week, cfg, agg=None, st=None):
     proj[stats.columns] = stats
     order = proj.Proj.sort_values(ascending=False, kind='stable').index
     return proj.loc[order].drop(columns='Key').reset_index(drop=True), sims[order]
+
+
+def role_volume(st):
+    """Targets + carries per game in the current-season rows of st (games with a stat row), per name key, before any
+    prior-season blend or injury / trade routing. Name collisions resolved as in usage.aggregate."""
+    agg = usage.aggregate(st)
+    return ((agg.tgt + agg.car) / agg.g).to_dict()
+
+
+def role_guard(proj, sims, rg, overrides):
+    """[model.role_guard]: zero the draws (in place) of skill players with no current-season stats (projected from
+    FanDuel FPPG alone) and of RB / WR / TE averaging under min_volume targets + carries a game in their current-season
+    games. Players in [overrides] are exempt (their read sets the mean). The draws were already taken, so no other
+    player's simulation changes. Returns the reason per row ('' = not guarded) and prints the lists."""
+    why = np.full(len(proj), '', dtype=object)
+    if not rg.get('enabled'):
+        return why
+    exempt = proj.Name.isin(set(overrides)).values
+    nodata = proj.NoData.values & ~exempt
+    low = ((proj.Pos.isin(rg.get('positions', ['RB', 'WR', 'TE']))).values & ~proj.NoData.values & ~exempt
+           & (proj.RoleVol.fillna(0).values < rg.get('min_volume', 3.0)))
+    why[nodata], why[low] = 'no 2026 data', f"role < {rg.get('min_volume', 3.0):g}"
+    pre = sims.mean(axis=1)
+    shown = lambda m: ', '.join(f'{proj.Name[i]} ({proj.Team[i]} {proj.Pos[i]}, {pre[i]:.1f})' for i in np.flatnonzero(m)
+                                if pre[i] >= rg.get('report_min_proj', 3.0))
+    if nodata.any():
+        print(f'WARNING: role guard: no 2026 usage data, projected 0 unless given an [overrides] read: {shown(nodata) or "none projected 3+"}')
+    if low.any() and shown(low):
+        print(f"role guard: under {rg.get('min_volume', 3.0):g} targets + carries a game in 2026, projected 0: {shown(low)}")
+    sims[nodata | low] = 0
+    return why
+
+
+def implied_shift(mean, pos, implied, spec, league):
+    """[model.implied_sensitivity]: mean-only correction per position, b * mean * (implied / league - 1)."""
+    b = np.array([spec.get(p, 0.0) for p in pos])
+    return b * mean * (implied / league - 1)
 
 
 def routing_bump(proj, unrouted, m):
@@ -169,6 +212,11 @@ def adjust(proj, sims, lines, m):
             sims += np.where(hit, new - mean, 0.0)[:, None]
         else:                   # shrink every draw in proportion (ceilings come down with the mean)
             sims *= np.where(hit, new / np.where(mean > 0, mean, 1), 1.0)[:, None]
+    isens = m.get('implied_sensitivity', {})
+    if isens.get('enabled'):    # after the calibration (it was fit on calibrated means), before the spread
+        mean2 = sims.mean(axis=1)
+        sims += np.where(skill & (mean2 > 0), implied_shift(mean2, proj.Pos.values, proj.ImpliedTeamTotal.values,
+                                                            isens, m['league_team_total']), 0.0)[:, None]
     for pos, spec in m.get('spread', {}).items():
         rows = (proj.Pos == pos).values & (sims.mean(axis=1) > 0)
         if spec != 1 and rows.any():

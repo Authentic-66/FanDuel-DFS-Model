@@ -7,10 +7,16 @@ item 5 is his trade read. Scratch scripts (not in the repo) did every test again
 | # | Item | Status |
 |---|---|---|
 | 1 | Name matching: skip defensive players with no offensive volume | **ON by default** (bug fix) |
-| 2 | Salary floor $59,000, cap relief to 28 for floor lineups only | **ON by default** (Doug approved) |
-| 3 | Calibration on Vegas totals + WR/TE implied-total term | Recommend the WR/TE term; slope unchanged |
-| 4 | Ownership: Guru flag, cheap-new-role flag | Neither fixes the chalk miss; nothing to adopt |
+| 2 | Salary floor $59,000, cap relief to 28 for floor lineups only | **ON by default**; Doug: keep as built, no relief for yellow caps |
+| 3 | Calibration on Vegas totals + WR/TE implied-total term | Doug: keep 0.36. WR correction built, **OFF**; lineup test in section 6 |
+| 4 | Ownership: Guru flag, cheap-new-role flag | Doug: dropped. He records full Guru lists when he uses Guru |
 | 5 | Harrison: share 0.15, first-week factor 0.5 | Set in `config/2026-w07/week.toml` (HOU hosts NYG Sunday 1:00) |
+| 6 | WR implied-total correction, weeks 4-6 lineup test | Recommend adopting (section 6) |
+| 7 | Role guard: no 2026 data -> 0; WR/TE role floor of 3 a game | **ON by default** (test clean); RB left out of the floor (section 7) |
+| 7a | Nickname aliases (Josh / Joshua Palmer and 5 more) | **ON** (bug fix found by the guard's warning) |
+
+Doug's decisions after the first pass (Oct 18): floor kept as built; calibration slope kept at 0.36; WR correction
+built switched off and lineup-tested; both ownership flags dropped; new role guard, switched on if its test was clean.
 
 ## 1. Name matching
 
@@ -217,9 +223,123 @@ One note on the Arizona side: the trade entry still hands his full Arizona volum
 game was already played without him, so about one game in five of their sample already reflects the change. That is
 a small double count. No change for week 7; the entry should come out after about three Houston games, as planned.
 
+## 6. WR implied-total correction: built (off) and lineup-tested
+
+`[model.implied_sensitivity]` in defaults.toml, `project.implied_shift` in `project.adjust`: after the calibration and
+before the spread, each WR's draws move by b x mean x (implied / 22.5 - 1), with b = -0.34. It is a mean-only shift,
+as fit in section 3. `enabled = false`; `TE = 0.0` (the history fit is -0.27, tested below as a second variant). With
+it off, projections are bit-identical to before.
+
+Lineup test: each week's final config with the week-7 salary floor on, projections rebuilt with today's code (name
+fix and aliases on), 150 lineups, scored on actual points:
+
+| Week | Run | Avg | Top 10% | Top 1% | Best (est. rank) |
+|---|---|---|---|---|---|
+| 4 | Base | 111.3 | 11 | 2 | 164.7 (5,683) |
+| 4 | **WR correction** | **115.5** | **22** | **4** | **178.3 (1,112)** |
+| 4 | WR + TE correction | 115.1 | 21 | 5 | 174.1 (1,719) |
+| 5 | Base | 112.4 | 7 | 0 | 179.0 (22,158) |
+| 5 | **WR correction** | 113.4 | 7 | 0 | 179.0 |
+| 5 | WR + TE correction | 113.5 | 7 | 0 | 179.0 |
+| 6 | Base | 104.1 | 6 | 0 | 153.8 (10,507) |
+| 6 | **WR correction** | 102.9 | 5 | 0 | 149.1 (18,777) |
+| 6 | WR + TE correction | 103.1 | 5 | 1 | 162.2 (3,808) |
+
+WR correction against base: average **+4.2, +0.9, -1.3** (mean +1.3 a lineup); top-10% 11→22, 7→7, 6→5; top-1%
+2→4, 0→0, 0→0; best +13.6, 0, -4.7. Better in two weeks of three, and week 4's jump is larger than any one change
+should cause, so part of it is the usual reshuffle. Week 6 is the week Nacua (trimmed 23.7 → 20.4 by the correction)
+busted, yet the run with him trimmed scored lower: the reshuffle cuts both ways. WR + TE behaves about the same.
+
+**Recommendation: adopt the WR correction for week 7** (`enabled = true`). The case rests mainly on the history:
+-0.34 in every left-out season (-0.29 to -0.41), WR over-projection rising steadily with the team total, and better
+calibration in history and on the live weeks. The lineup test agrees on balance (better average and top end in two
+weeks of three) without being proof. Leave TE at 0 until it shows up in a test of its own.
+
+## 7. Role guard (on)
+
+`[model.role_guard]` in defaults.toml (`project.role_guard`, `project.role_volume`; `tests/test_role_guard.py`):
+
+1. **No 2026 data → 0.** A skill player with no current-season stat rows (until now projected from FanDuel FPPG alone,
+   the fallback) projects 0 unless he has a read in `[overrides]`. The run prints `WARNING: role guard: no 2026 usage
+   data, projected 0 unless given an [overrides] read: ...`, listing those who would have projected 3+, e.g. week 6:
+   Shane Buechele (BUF QB, 5.1), Jaydon Blue (PHI RB, 4.1), Cedric Tillman (NO WR, 4.8), Isaiah Hodgins (PIT WR,
+   4.0), Tyler Johnson (NYJ WR, 3.6), Jaret Patterson (CLE RB, 3.5), Phil Mafah (NYG RB, 11.1). With a read the player
+   comes back (checked: Mafah with a 5.0 read projects 5.0).
+2. **Role floor.** WR and TE must average **3+ targets + carries a game in their 2026 games played**, measured from
+   the current-season rows before the prior-season blend and before injury / trade routing. Otherwise they project 0,
+   and the run prints the list. Braelon Allen-type backups who already had volume qualify (5+ a game); Wetjen (0
+   targets, 5.1 points all from routing) does not. Overrides exempt here too.
+
+Mechanics: the guarded players' draws are taken and then set to 0, so no other player's simulation changes (no
+random-stream shift). A zeroed player cannot hold starter depth, so the next eligible player at the position moves
+up, as with excluded Q players (in weeks 4-6 nobody new entered the pool that way). Weeks 4-6 pin `enabled = false`.
+
+**Why RB is not in the floor (Claude's call, against "skill players" in Doug's spec):** running backs who inherit the
+job do get the work. Bam Knight (RoleVol 1.5) had 17 touches with Love out in week 6, Tyrone Tracy 17.5 points in week
+6, Jaleel McLaughlin 13 touches, Roschon Johnson 12. For receivers, routed volume mostly does not show up (Wetjen 0).
+With RB in the floor the weeks 4-6 lineups are **identical** (an RB only enters the pool as his team's RB1, and every
+RB1 had 3+ a game), so leaving RB out costs nothing in the test. It only matters when a backup becomes the RB1 late,
+and then the guard would zero the obvious replacement. To apply the spec as written: `positions = ["RB", "WR", "TE"]`.
+
+### 7.1 Test on weeks 4-6
+
+| Week | Players guarded who would project 3+ | In the optimizer pool before | Entered lineup slots removed | Those slots scored |
+|---|---|---|---|---|
+| 4 | 51 | 7 | 15 (Joshua Palmer 10, Zach Ertz 5) | 0.8 and 2.3 |
+| 5 | 42 | 10 | 11 (Theo Wease 7, Troy Franklin 2, Jauan Jennings 1, Elic Ayomanor 1) | 2.1, 2.6, 0.0, 2.2 |
+| 6 | 43 | 5 | 17 (Cedric Tillman 7, Kaden Wetjen 5, Elic Ayomanor 3, Cody White 2) | 0.0, 0.0, 0.8, 0.0 |
+
+**43 entered lineup slots removed; those players averaged 1.0 point, against 5.9 projected.** Every one of them is a WR
+or TE (or no-data), so the WR/TE-only floor removes exactly the same slots. Lineup re-runs (same settings as section 6):
+
+| Week | Base avg / top 10% / top 1% / best | Role guard | WR/TE-only floor |
+|---|---|---|---|
+| 4 | 111.3 / 11 / 2 / 164.7 | 111.4 / 12 / 2 / 167.0 | same as role guard |
+| 5 | 112.4 / 7 / 0 / 179.0 | 113.2 / 7 / 0 / 179.0 | same |
+| 6 | 104.1 / 6 / 0 / 153.8 | 104.1 / 6 / 0 / 152.0 | same |
+
+Average +0.1, +0.8, -0.1 a lineup; top-10% +1, 0, 0; top-1% unchanged; best +2.3, 0, -1.8. No week worse in any way
+that matters.
+
+**Real starters blocked.** Of the guarded players the model counted as starters (in the pool), four had a real role
+that week (6+ targets + carries): **Tyquan Thornton (KC WR, week 4: 8 touches, 28.6 points, 0.3% owned)**, Oronde
+Gadsden (LAC TE1, week 4: 9 touches, 6.3), Jerry Jeudy (CLE, week 5: 7 touches, 3.4) and Darnell Mooney (NYG, week 5:
+7 touches, 2.4). None was in our lineups, so the guard would have cost nothing, but Thornton shows its price: a
+low-volume starter can still have a big game. Outside the pool, a few low-volume players had big games (Omar Cooper Jr.
+22.3, Darius Cooper 16.8, Kyle Williams 16.6, Josh Cuevas 12.4, all projected under 4 and never in our lineups).
+
+**Verdict: clean enough, switched on.** It removed 43 slots that scored 1.0, never made a lineup set worse by more than
+0.1, and blocked no player we actually rostered. The cost is the occasional Thornton. If Doug wants one of them, an
+`[overrides]` read brings the player back.
+
+### 7.2 Found by the guard: nickname mismatches (aliases, on)
+
+The "no 2026 data" list turned up six players whose FanDuel and nflverse names differ by more than case or a suffix,
+so they had no stats and ran on FanDuel FPPG. With the guard on, they would have been zeroed for a name problem:
+
+| FanDuel | nflverse | Effect of the fix |
+|---|---|---|
+| Joshua Palmer (BUF WR) | Josh Palmer | week 4: 8.7 → 5.3 (in 10 entered lineups; scored 0.8); week 6: 5.2 → 4.2 |
+| Mitch Tinsley (CIN WR) | Mitchell Tinsley | week 5: 7.6 → 6.1 (in 10 entered lineups; scored 0) |
+| Matt Hibner (BAL TE) | Matthew Hibner | week 4: 7.1 → 2.9 |
+| Hollywood Brown (PHI WR) | Marquise Brown | week 4: 0.7 → 7.6, week 6: 0.6 → 4.7 |
+| Nick Singleton (TEN RB) | Nicholas Singleton | 0.4 → 2.0 |
+| Drew Ogletree (IND TE) | Andrew Ogletree | 0.0 → 1.0 |
+
+`[names.aliases]` in defaults.toml (nflverse name → FanDuel name, applied in `data.load_stats`, so every caller gets
+it; test in `tests/test_names.py`). Teammates move where a newly matched player's volume now counts: Mark Andrews +0.7
+in week 6 (Hibner out), Wicks -1.4 and Lemon -0.6 in week 4 (Brown's share), Pollard +0.8 in week 5. Everything else
+moves ≤ 0.3 (random stream). Most of these players still fail the role floor (Palmer 2.5 a game, Hibner 1.5); Tinsley
+passes (7 in his one game). New aliases go in the same table as the warning shows them. **Check the warning list every
+week: a name on it is either a player with no 2026 snaps or a missing alias.**
+
 ## Files
 
-- `src/dfs/data.py` (`no_offense`, `skip_defense_names`), `config/defaults.toml`, `tests/test_names.py`.
+- `src/dfs/data.py` (`no_offense`, `skip_defense_names`, `[names.aliases]`), `config/defaults.toml`,
+  `tests/test_names.py`.
+- `src/dfs/project.py` (`role_guard`, `role_volume`, `implied_shift`; proj gains `RoleVol`, `NoData`, `RoleGuard`),
+  `config/defaults.toml` (`[model.role_guard]` on, `[model.implied_sensitivity]` off), `tests/test_role_guard.py`,
+  `config/2026-w04..06/week.toml` (`[model.role_guard] enabled = false`, as entered).
 - `src/dfs/optimize.py` (salary floor + relief, `FLOOR_LOG`), `config/defaults.toml` (`min_salary`, `floor_cap_overflow`),
   `config/2026-w04..06/week.toml` (`min_salary = 0`, as entered).
 - `config/2026-w07/week.toml`: new template with the Harrison read.
