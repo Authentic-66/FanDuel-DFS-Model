@@ -121,7 +121,7 @@ team_exp = 0.5
 [model.role_guard]
 enabled = true             # Doug, Oct 18: on if the weeks 4-6 test was clean (docs/week7_prep.md section 7)
 min_volume = 3.0
-positions = ["WR", "TE"]   # role floor positions. RB left out by Claude: RB backups who inherit the job get real work
+positions = ["WR", "TE"]   # role floor positions (Doug, Oct 18: keep RBs out). RB left out: RB backups who inherit the job get real work
                            # (Bam Knight 17 touches, week 6); add "RB" to apply Doug's spec to every skill position
 report_min_proj = 3.0      # warnings list guarded players who would otherwise project at least this
 
@@ -169,9 +169,9 @@ rb_slope = 0.12            # (leave-one-week-out range 0.09-0.14)
 
 # WR/TE over-react to the team implied total (docs/week7_prep.md section 3): after the calibration, each player's mean
 # moves by b * mean * (implied / league_team_total - 1). Fit 2021-2025 leave-one-season-out: WR -0.34 (-0.29 to -0.41),
-# TE -0.27 (-0.21 to -0.33). OFF pending Doug (week 7 lineup test, section 6); TE kept at 0 (Doug asked for WR).
+# TE -0.27 (-0.21 to -0.33). ON from week 7 (Doug, Oct 18, after the section 6 lineup test); TE kept at 0.
 [model.implied_sensitivity]
-enabled = false
+enabled = true
 WR = -0.34
 TE = 0.0
 

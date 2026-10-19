@@ -118,3 +118,6 @@ DEF = { options = ["Minnesota Vikings"], picked = "Minnesota Vikings" }
 
 [model.role_guard]
 enabled = false                # as entered: the role guard became the default in week 7
+
+[model.implied_sensitivity]
+enabled = false                # as entered: the WR implied-total correction became the default in week 7

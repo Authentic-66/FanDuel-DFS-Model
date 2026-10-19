@@ -78,6 +78,8 @@ and thinks in those terms: fundamentals model + market/public overlay, calibrati
   FanDuel's Q/D tags are ignored. Excluded Q/OUT players don't hold starter depth: RB1/top-3 WR/TE1 are ranked among
   eligible players, so backups move up (green exempt).
 - If he has a free entry, upload 149 (drop lowest projected) and use the free entry separately.
+- From week 7: role guard on (WR/TE only), WR implied-total correction on, $59K salary floor with relief to 28 for
+  capped players only.
 - Weekly review loop: he color-codes `exposure.csv` in Excel — **red = exclude, yellow = less (cap at ~half current),
   green = more (min = max(2x current, 12))**. Two shades of green both mean "more". Lists live in `config/<week>/week.toml`
   `[prefs]`.
@@ -240,11 +242,10 @@ Doug's decisions (second pass, Oct 18): floor kept as built (no relief for yello
 flags dropped (he records full Guru lists when he uses it). Built in the second pass (docs/week7_prep.md sections 6-7):
 - `[model.implied_sensitivity]` (OFF, `project.implied_shift`): WR mean x (1 - 0.34 x (implied/22.5 - 1)) after the
   calibration; TE = 0. Lineup test (floor on): avg +4.2 / +0.9 / -1.3 on weeks 4/5/6, top-10% 11->22 in week 4.
-  Recommended for week 7; Doug decides.
+  Doug turned it ON for week 7 (Oct 18); weeks 4-6 pin it off.
 - **Role guard ON** `[model.role_guard]` (`project.role_guard`): skill players with no current-season stats project 0
   unless in `[overrides]` (warning lists them); WR/TE under 3 targets + carries a game in 2026 games (pre-routing) project
-  0. RB left out of the floor by Claude (inherited RB jobs get real work: Bam Knight 17 touches); add "RB" to
-  `positions` for Doug's spec. Weeks 4-6: 43 entered slots removed, scored 1.0 (proj 5.9); lineups +0.1 / +0.8 / -0.1;
+  0. RBs stay out of the floor (Doug, Oct 18; inherited RB jobs get real work: Bam Knight 17 touches). Weeks 4-6: 43 entered slots removed, scored 1.0 (proj 5.9); lineups +0.1 / +0.8 / -0.1;
   blocked Thornton (KC, 28.6, never rostered). Weeks 4-6 pin it off. proj gains RoleVol, NoData, RoleGuard.
 - **`[names.aliases]` ON** (nflverse -> FanDuel name): Josh/Joshua Palmer, Marquise/Hollywood Brown, Matthew/Matt
   Hibner, Nicholas/Nick Singleton, Mitchell/Mitch Tinsley, Andrew/Drew Ogletree. The guard's no-data warning is the
