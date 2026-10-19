@@ -10,9 +10,32 @@
 # O/IR = out, Q/D = questionable, and questionable players are excluded ([optimizer] exclude_questionable).
 # Week-6 conventions: Out and Doubtful -> out, Questionable -> questionable; IR players with real 2026 volume are
 # listed out (Doug, Oct 13); QBs who are out are left to FanDuel's tags (listing a QB out hands his carries away).
+# PRELIMINARY (Mon Oct 19): mirrors FanDuel's Oct 19 tags (week-6 preliminary convention: O -> out, Q/D -> questionable),
+# plus IR players with 3+ targets + carries a game in 2026 (Doug, Oct 13). QBs on IR (Jaxson Dart) are left to FanDuel's
+# tag. Questionable QBs (Lamar Jackson, Baker Mayfield) are listed so they stay held out: once these lists have entries,
+# FanDuel's Q/D tags are ignored. Replace with Friday's report.
 [status]
-out = []
-questionable = []
+out = [
+  "Davante Adams", "Deebo Samuel Sr.",                                   # FanDuel O
+  # IR with real 2026 volume (targets + carries a game)
+  "De'Von Achane",                                                       # MIA 15.3
+  "Jordan Mason",                                                        # MIN 15.0
+  "Jonah Coleman", "Pat Bryant",                                         # DEN 6.5, 3.2
+  "Jonathon Brooks", "Xavier Legette",                                   # CAR 6.0, 3.0
+  "Ronnie Rivers", "Terrance Ferguson",                                  # LAR 6.0, 4.0
+  "Chris Brooks", "Jayden Reed",                                         # GB 5.0, 4.0
+  "Raheim Sanders",                                                      # CLE 4.2
+  "Alec Pierce",                                                         # IND 3.5
+  "Jack Bech",                                                           # LV 3.0
+  "Demarcus Robinson",                                                   # SF 3.0
+]
+questionable = [
+  "Adonai Mitchell",                                                     # FanDuel D
+  "Lamar Jackson", "Baker Mayfield",                                     # QBs
+  "Mike Evans", "Breece Hall", "Quinshon Judkins", "David Montgomery", "Jeremiyah Love", "Jordan Addison",
+  "Rashod Bateman", "Tyler Warren", "Caleb Douglas", "T.J. Hockenson", "Darnell Mooney", "AJ Dillon", "Ashton Dulin",
+  "Theo Johnson", "Anthony Gould", "Tyler Badie", "Sean Tucker", "Colbie Young", "Justin Joly", "Matt Hibner",
+]
 
 # Doug's starting-QB calls, team -> name. Default is the QB with the most attempts in the team's last game.
 [status.starting_qb]
@@ -72,7 +95,28 @@ red = []
 "Marvin Harrison Jr." = { from = "ARI", to = "HOU", new_target_share = 0.15, first_week_factor = 0.5 }
 
 # Stack QB-team weights: weight = round(2 * (implied total - 16)), min 1, from data/2026-w07/lines.csv.
+# PRELIMINARY (Oct 19, nflverse schedule lines): rebuild from Saturday / Sunday lines.
 [stacks.weights]
+DET = 24   # 27.8 vs GB
+SF = 23    # 27.5 @ ATL
+BAL = 22   # 27.0 vs CIN
+HOU = 20   # 26.0 vs NYG
+LAR = 20   # 26.0 @ LV
+GB = 18    # 24.8 @ DET
+CIN = 17   # 24.5 @ BAL
+DEN = 16   # 24.0 @ ARI
+CAR = 16   # 24.0 vs TB
+MIN = 16   # 23.8 vs IND
+ATL = 14   # 23.0 vs SF
+NYJ = 11   # 21.5 vs MIA
+LV = 11    # 21.5 vs LAR
+TB = 9     # 20.5 @ CAR
+CLE = 8    # 20.0 @ TEN
+ARI = 7    # 19.5 vs DEN
+TEN = 5    # 18.5 vs CLE
+IND = 4    # 17.8 @ MIN
+MIA = 2    # 17.0 @ NYJ
+NYG = 1    # 16.5 @ HOU
 
 [stacks.rules]
 

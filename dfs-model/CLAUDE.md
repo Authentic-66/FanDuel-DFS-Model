@@ -288,6 +288,27 @@ raises pool players to 40 under the standing rule and stops with advice beyond t
 rank_boost 0.05 stays (ranking optional); auto-raise to 40 fine, beyond that stop and ask; Q pool players held out
 unless he clears them Sunday (same as the model). **Week 7 is shadow:** build both sets, enter the model's, grade both.
 
+## Week 7 preliminary run (Mon Oct 19) — inputs only
+Slate confirmed: 10 games / 20 teams exactly as in week.toml (byes BUF, JAX, LAC, WAS; off-slate NE@CHI, PIT@NO,
+KC@SEA, DAL@PHI). Stats cache now includes week 6. `lines.csv` = nflverse schedule lines downloaded Oct 19 23:23 UTC
+(**PRELIMINARY**); `[stacks.weights]` rebuilt from them (DET 24 ... NYG 1). `[status]` = FanDuel's Oct 19 tags (O -> out,
+Q/D -> questionable, Q QBs Lamar / Mayfield listed) + 14 IR players with 3+ targets + carries a game in 2026 (Achane
+15.3, Jordan Mason 15.0, ...). Preliminary run in `weeks/2026-w07/prelim/` (upload.csv deleted): 150 lineups, all
+>= $59,000, no cap relief, mean proj 118.3. Review sheet `data/2026-w07/review_sheet.xlsx` (untracked): every player
+passing the role guard (201), columns incl. Role_vol, Status, In_model_pool, Color, Pool, Rank; tabs held_out_Q, notes.
+Fixed: `ownership` feature `gained_vol` floored at 0 (Harrison's -1.34 made log1p NaN and every WR projected 0% owned;
+training rows never negative, so weeks 4-6 fits unchanged). Found:
+- Harrison (HOU): 4 of 32 targets in week 6; projects 4.3 at 0.15 x 0.5; RoleVol 3.4 (just over the floor). ARI side
+  hands out his volume although ARI's weeks 5-6 already lacked him (backlog). **Confirm factor 0.5 with Doug.**
+- SF gets 0 stacks: Kittle is the only usable SF receiver (Jennings, Cooks, Watkins under the role floor; Deebo O,
+  Evans Q). An override on an SF WR would make SF stackable.
+- Team mismatches (no trade entry): Kaytron Allen WAS -> MIA, Jared Wayne HOU -> MIA (both keep old-team volume).
+- Role-guard no-data list (all real, no missing aliases): Josh Johnson (CIN QB), Audric Estime (CLE RB 8.4), Phil Mafah
+  (NYG RB 9.6), Jaret Patterson (CLE RB), Michael Bandy, Shedrick Jackson, Devin Culp. CLE RB room thin (Judkins Q,
+  Sanders IR): Estime may start.
+Next: Doug's sheet (Color -> [prefs] / [shadow]; Pool / Rank -> [pool]), Friday status, Saturday / Sunday lines,
+then final model run, `optimize.py` (main folder) and `optimize.py --pool` (shadow), 149 files if free entry.
+
 ## Week-8 backlog
 - **Per-position redistribution mode**: RB out = routing by position; WR out = depth split; TE out = old 80% rule or none.
   Basis: the section 11.2 accuracy table (players moved 1+: RB out 6.65 routing vs 6.70 old; WR out 6.53 depth vs 6.77 pro

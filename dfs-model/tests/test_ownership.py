@@ -36,6 +36,17 @@ class OwnershipTest(unittest.TestCase):
         m = (df.Pos == 'RB').values
         self.assertTrue((np.argsort(out[m]) == np.argsort(z[m])).all())
 
+    def test_traded_in_player_does_not_zero_his_position(self):
+        """Week 7: Harrison (traded in) had GainedVol -1.34; log1p of it was NaN and every WR projected 0%."""
+        df = synthetic(400)
+        model = ownership.fit(df, self.oc)
+        slate = df.copy()
+        slate.loc[slate.index[slate.Pos == 'WR'][:3], 'GainedVol'] = [-1.34, -0.57, 2.0]
+        own = ownership.predict(slate, model, self.oc)
+        self.assertFalse(np.isnan(own).any())
+        wr = (slate.Pos == 'WR').values
+        self.assertAlmostEqual(own[wr].sum(), model['totals']['WR'], places=4)
+
     def test_fit_recovers_signal(self):
         df = synthetic(400)
         model = ownership.fit(df, self.oc)

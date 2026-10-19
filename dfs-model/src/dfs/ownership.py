@@ -26,7 +26,9 @@ FEATURES = {
     'fppg': lambda d: d.FD_FPPG,
     'implied': lambda d: d.ImpliedTeamTotal,
     'game_total': lambda d: d.GameTotal,
-    'gained_vol': lambda d: np.log1p(d.GainedVol),   # targets + carries/g inherited from OUT teammates
+    # targets + carries/g inherited from OUT teammates. Floored at 0: a traded-in player takes volume from his new
+    # teammates (negative GainedVol); log1p below -1 is NaN, and one NaN zeroed every WR's Own_proj (week 7, Harrison)
+    'gained_vol': lambda d: np.log1p(d.GainedVol.clip(lower=0)),
 }
 TRAIN_COLS = ['Id', 'Name', 'Pos', 'Team', 'Opp', 'Salary', 'Proj', 'Value_per_1k', 'FD_FPPG', 'ImpliedTeamTotal',
               'GameTotal', 'GainedVol', 'StartingQB', 'own']
