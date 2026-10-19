@@ -251,12 +251,44 @@ flags dropped (he records full Guru lists when he uses it). Built in the second 
   Hibner, Nicholas/Nick Singleton, Mitchell/Mitch Tinsley, Andrew/Drew Ogletree. The guard's no-data warning is the
   place new aliases show up: check it every run.
 
-## Week-7 backlog (from docs/week6_prep.md section 11 and 10.2)
+## Week 7 run checklist (state at end of Oct 18: head d93be88 on origin/main, tree clean)
+`config/2026-w07/week.toml` is a template (Harrison trade active, everything else empty). Defaults now include the
+salary floor, role guard (WR/TE), WR implied-total correction, name fix and aliases. Same flow as week 6:
+1. Inputs arrive in `data/2026-w07/` (Doug's own folder names): FanDuel player list -> `fd_players.csv`, injury report,
+   Guru screens if he uses Guru (full suggestion lists -> `[contest.guru]`). Confirm the main slate against the
+   schedule in week.toml (10 games expected; byes BUF, JAX, LAC, WAS).
+2. `python src/fetch_stats.py --week 2026-w07` first: the stats cache must include week 6 (HOU's London game and
+   Harrison's first Houston game).
+3. `[status]` from Friday's report (Out/Doubtful -> out, Questionable -> questionable, IR players with real volume out,
+   QBs out left to FanDuel tags) and `[status.starting_qb]` calls. Lines -> `data/2026-w07/lines.csv` (Saturday /
+   Sunday morning), `[stacks.weights]` = round(2 x (implied - 16)), min 1.
+4. Harrison: before the run, confirm `first_week_factor = 0.5` with Doug (set Oct 18 from his 12 London snaps).
+5. Run `model.py`, then **read the role-guard warning**: each name is either a player with no 2026 snaps (fine, 0) or a
+   missing nickname alias (add to `[names.aliases]` in defaults.toml and re-run). Doug can override any guarded player.
+6. Review run (`optimize.py --subdir review`) and the exposure sheet with Color column (recipe in "Week 6 preliminary
+   run" item 5; add Routing_bump and RoleGuard); Doug's red -> `[prefs] red` (+ `[shadow.red_lineups]`), yellow ->
+   `[prefs.yellow]`, green -> `[shadow.green]`.
+7. Final `optimize.py` in the main folder, check the floor line it prints (lineups using cap relief), and write the
+   149 files if he has a free entry (`entered_upload_149.csv`, `entered_readable_149.csv`, `entered_exposure.csv`).
+8. After the slate: `convert_results.py`, set `[contest] field_size`, `analyze_results.py`, write
+   `docs/week7_review.md` (week-6 format: model vs field, reads, manual swaps, salary left, calibration, stacks, DST,
+   ownership, Harrison's trade read by hand), ask Doug for winnings (running total -$3.88 after week 6).
+
+## Week-8 backlog
 - **Per-position redistribution mode**: RB out = routing by position; WR out = depth split; TE out = old 80% rule or none.
   Basis: the section 11.2 accuracy table (players moved 1+: RB out 6.65 routing vs 6.70 old; WR out 6.53 depth vs 6.77 pro
   rata; TE out 4.71 none / 4.75 old vs 5.15 routing).
-- **Cap the boost to depth players**: the depth split projects the players it raises at 5.1 and they scored 3.6.
-- **WR/TE sensitivity to the implied total**: in-sample coefficient about -0.33; run an out-of-sample test first.
+- **Cap the boost to depth players**: the depth split projects the players it raises at 5.1 and they scored 3.6
+  (partly covered now by the WR/TE role guard).
+- **Per-player random streams** in the projection sims, so a change to one player stops reshuffling everyone else's
+  draws (docs/week7_prep.md 1.1): cleaner lineup tests.
+- **Zero-score risk**: 9.7% of live slate players score 0 vs 3.5% in the history rows (week7_prep 3); a play-probability
+  term for players without a stat row in their team's recent games.
+- **Ownership**: chalk under-predicted ~10 pts; needs a pre-lock signal the field sees (full Guru lists weekly, or a
+  public ownership projection). Guru / cheap-new-role flags were tested and dropped.
+- **Harrison trade, Arizona side**: full volume handed out although ARI's week-6 game already lacked him (small double
+  count); remove the trade entry after ~3 Houston games.
+- 149-lineup script (still an inline snippet each week).
 
 ## History refits (Oct 12) — see docs/phase2_history.md
 `fetch_stats.py --seasons 2020-2025 --history` puts player stats, team stats and schedules with Vegas lines in
