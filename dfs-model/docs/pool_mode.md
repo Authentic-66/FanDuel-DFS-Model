@@ -4,7 +4,7 @@ A second set of 150 lineups built only from Doug's player pool, inside the exist
 objective, stack rules, salary floor and standing rules. Written to `weeks/<week>/pool/`, apart from the model's
 files, and graded every week by `analyze_results.py` whether entered or not (shadow).
 
-**One deviation from the spec, needs Doug's decision (section 3):** with the pool sizes in the spec, 150 lineups
+**One deviation from the spec, decided by Doug on Oct 19 (section 6: WR 14, cap 40):** with the pool sizes in the spec, 150 lineups
 can't be built at cap 25. They can't be built at cap 40 either, at least not with the stand-in pools tested here. Pool
 mode applies the standing rule "raise to 40 if infeasible" to pool players only. If it still can't finish 150, it stops
 and says what to change. It never raises the cap past 40 on its own.
@@ -167,11 +167,19 @@ teams, which used to end with "stack weights sum to zero").
 Tests: `tests/test_pool.py` (pool lists and name errors, rank factors, the capacity arithmetic above, the filler
 role-guard test, and a small solve proving at most one non-pool player). Full suite: 92 tests OK.
 
-## 6. Open for Doug
+## 6. Doug's decisions (Oct 19)
 
-1. Pool size / cap (section 3): ~14 WRs at cap 40, or `raise_cap_to = 45`, or `max_filler = 2`.
-2. `rank_boost = 0.05`: OK, more, or off?
-3. Automatic raise to 40 for pool players when 25 is infeasible: keep, or stop and ask (`raise_cap_to = 0`)?
-4. Questionable pool players are held out (standing rule); should a pool listing exempt them, as green did?
-5. Entering: pool mode writes 150 lineups; if he enters them, the 149-lineup files would be the same snippet as for
-   the model (not built for pool mode yet).
+1. **Pool sizes: QB 10, RB 10, WR 14, TE 8, DST 5, cap 40** (option (a) of section 3; the WR 14 size that built
+   150 valid lineups on weeks 4-6). Nothing in the code enforces sizes; this is what Doug sends.
+2. **`rank_boost = 0.05` stays.** Ranking is optional (`ranked = true` only when the lists are in rank order).
+3. **Auto-raise to 40 is fine** (the standing rule). Beyond 40 pool mode stops and Claude asks Doug: never set
+   `raise_cap_to` above 40 or `max_filler` above 1 without his OK.
+4. **Questionable pool players follow the model's rule:** held out unless Doug clears them on Sunday (cleared = taken
+   off `[status] questionable`, as for the model). No pool exemption.
+5. **Week 7 is shadow:** build both sets (model in `weeks/2026-w07/`, pool in `weeks/2026-w07/pool/`), enter the
+   model's lineups, grade both with `analyze_results.py` after the slate.
+
+Defaults already match 2 and 3 (`[pool]` in defaults.toml), so no code changed.
+
+Still open: if Doug ever enters the pool lineups with a free entry, the 149-lineup files would come from the same
+snippet as for the model (not built for pool mode).

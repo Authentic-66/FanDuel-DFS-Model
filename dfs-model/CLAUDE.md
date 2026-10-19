@@ -283,8 +283,10 @@ salary floor, role guard (WR/TE), WR implied-total correction, name fix and alia
 Built on Doug's spec, inside the model. **Deviation he must decide:** his sizes (QB 10, RB 10, WR 10, TE 8, DST 5)
 can't fill 150 lineups at cap 25 (375 fillers needed, 150 allowed) and stalled at 138/138/145 at cap 40 on weeks 4-6
 (stand-in pools); WR 14 at cap 40 built 150 valid lineups every week (also cap 45 or 2 fillers on week 4). Pool mode
-raises pool players to 40 under the standing rule and stops with advice beyond that. Open: pool size / cap,
-rank_boost 0.05, auto-raise, Q exemption for pool players. Normal model proven unchanged (week 6 identical, 150/150).
+raises pool players to 40 under the standing rule and stops with advice beyond that. Normal model proven unchanged
+(week 6 identical, 150/150). **Doug's decisions (Oct 19):** pool sizes QB 10, RB 10, WR 14, TE 8, DST 5 at cap 40;
+rank_boost 0.05 stays (ranking optional); auto-raise to 40 fine, beyond that stop and ask; Q pool players held out
+unless he clears them Sunday (same as the model). **Week 7 is shadow:** build both sets, enter the model's, grade both.
 
 ## Week-8 backlog
 - **Per-position redistribution mode**: RB out = routing by position; WR out = depth split; TE out = old 80% rule or none.
