@@ -52,19 +52,9 @@ to = "HOU"
 new_target_share = 0.15        # Doug's settled read
 first_week_factor = 0.7        # Doug, Oct 19 (was 0.5 on Oct 18 from ~20% of snaps in London) -> 10.5% of HOU targets
 
-# Kaytron Allen (RB): real move, Doug Oct 19: Miami claimed him off waivers from WAS after Achane's injury.
-# PENDING Doug's MIA share; switched off until then (the run stops on a trade entry without new_target_share).
-# Old side: WAS is on bye this week (no WAS players on the slate), so nothing is handed out there, as Doug wants.
-# New side: the code moves TARGETS only (share x factor of MIA's targets, taken from MIA teammates); his carries stay
-# his WAS backup carries (4 a game, 0 targets in 2026), and none of Achane's volume reaches him (his stats are WAS's).
-# For a lead-back read, an [overrides] mean is the existing tool.
-# [[status.trade]]
-# player = "Kaytron Allen"
-# position = "RB"
-# from = "WAS"
-# to = "MIA"
-# new_target_share = ???        # Doug's read
-# first_week_factor = 1.0
+# Kaytron Allen (RB): real move (waiver claim WAS -> MIA after Achane's injury). No trade entry: Doug (Oct 19) wants
+# him in no lineup, so he is red below. WAS is on bye and MIA teammates are only adjusted by a trade entry, so
+# nobody else's projection is affected.
 
 # Doug's projection reads: new mean FanDuel points.
 [overrides]
@@ -80,7 +70,10 @@ stack_allocation = "proportional"   # stack counts follow the weights exactly in
 [prefs]
 starters_only = true
 red_teams = []
-red = []
+red = [
+  "Kaytron Allen",    # MIA RB, Doug Oct 19: not in any lineup (waiver claim from WAS)
+  "Jared Wayne",      # MIA WR, Doug Oct 19 (FanDuel lists him MIA, stats with HOU)
+]
 
 [prefs.yellow]                 # "Player" = lineups he had in the reviewed run
 
@@ -100,6 +93,8 @@ red = []
 extra_receivers = ["Christian McCaffrey"]
 
 [shadow.red_lineups]
+"Kaytron Allen" = 0   # lineups in the preliminary run (both project under 4: never used)
+"Jared Wayne" = 0
 
 [shadow.yellow]
 
