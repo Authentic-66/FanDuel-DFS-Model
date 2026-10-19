@@ -19,6 +19,7 @@ questionable = ["Zay Flowers", "Ray Davis", "Kenyon Sadiq", "Ladd McConkey", "Co
 # green = min max(2x listed, 12) lineups.
 [optimizer]
 mean_weight = 0.4              # as entered: the default became 0.6 in week 6 (keeps the review's re-runs faithful)
+min_salary = 0                 # as entered: the salary floor became the default in week 7
 exclude_questionable = false   # week 4 predates the rule: Q players were pulled one by one via [prefs] red
 
 [prefs]

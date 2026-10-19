@@ -1,7 +1,7 @@
 # Week 6 review (Oct 18, 2026)
 
 One contest, graded from FanDuel's "All Entries" export (`data/2026-w06/raw/135326-281053769.csv`, converted with
-`src/convert_results.py --user gst1999`). No $0.25 export is in `raw/`, so this covers the Pooch Punt only.
+`src/convert_results.py --user gst1999`). Doug entered no other contest this week.
 
 | | Pooch Punt ($0.05) |
 |---|---|
@@ -15,9 +15,8 @@ One contest, graded from FanDuel's "All Entries" export (`data/2026-w06/raw/1353
 against a field average of 110.7 (-6.2). The best, a Drake Maye stack, scored 158.4 and ranked 3,975 (top 0.70%).
 A low-scoring slate: the winner had 190, against 248 in week 5 and 217 in week 4.
 
-**Money: winnings not yet recorded.** Fees $7.45 (149 paid + 1 free). Net = Pooch Punt winnings - $7.45.
-Running total before this week: -$2.39 (week 4 +$2.35, week 5 -$4.74). *Doug: send the Pooch Punt figure (and
-the $0.25 one if you entered) and I'll fill this in.*
+**Money: net -$1.49.** Won $5.96 on $7.45 of fees (149 paid + 1 free; Doug's total, the export carries no prize
+data). Running total since week 4: **-$3.88** (week 4 +$2.35, week 5 -$4.74, week 6 -$1.49).
 
 ## 1. Model lineups vs the field
 
@@ -32,8 +31,8 @@ the $0.25 one if you entered) and I'll fill this in.*
 | Lineups in top 10% | 8 | 3 | n/a |
 | Lineups above field median | 58 of 149 | 29 of 149 | n/a |
 | Winning score | 189.96 | 247.58 | 216.98 |
-| Winnings / net $ | $___ / $___ | $3.11 / -$4.34 (PP) | +$2.35 net |
-| Running total since week 4 | $___ | -$2.39 | +$2.35 |
+| Winnings / net $ | $5.96 / -$1.49 | $3.11 / -$4.34 (PP) | +$2.35 net |
+| Running total since week 4 | -$3.88 | -$2.39 | +$2.35 |
 
 Other counts: 2 in the top 5%, 13 in the top 20%. The model's lineups as built (before Doug's three hand changes)
 averaged 104.1 with the same 8 / 1 top-10% / top-1% counts. Projected lineup average was 122.7; projected and

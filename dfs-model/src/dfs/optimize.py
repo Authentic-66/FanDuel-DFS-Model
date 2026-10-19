@@ -123,7 +123,7 @@ def solve_lineup(df, obj, team, rule, cap, use, forced, prior_lineups, roster, o
                 P += x[d] + x[i] <= 1
     for i in idx:
         if use[i] >= cap[i]:
-            P += x[i] == 0
+            P += x[i] == 0, f'cap{i}'
     for i in forced:
         P += x[i] == 1
     for lp in prior_lineups:
@@ -131,9 +131,32 @@ def solve_lineup(df, obj, team, rule, cap, use, forced, prior_lineups, roster, o
     lev = opt['leverage']
     if lev['enabled'] and lev['max_lineup_own']:
         P += pulp.lpSum(df.Own_proj[i] * x[i] for i in idx) <= lev['max_lineup_own']
-    if P.solve(pulp.PULP_CBC_CMD(msg=0)) != 1:
+    solve = lambda: P.solve(pulp.PULP_CBC_CMD(msg=0)) == 1
+    picked = lambda: [i for i in idx if x[i].value() > 0.5]
+    floor = opt.get('min_salary', 0)
+    if floor:
+        # [optimizer] min_salary: spend at least this much. If no lineup can, players at the standing exposure cap
+        # (not yellow / player_cap limits) may go floor_cap_overflow lineups over it for this lineup only (Doug,
+        # week 7: relief to 28). If that still fails, the lineup is built without the floor.
+        P += pulp.lpSum(df.Salary[i] * x[i] for i in idx) >= floor, 'floor'
+        if solve():
+            return picked()
+        relief = [i for i in idx if cap[i] == opt['exposure_cap'] and cap[i] <= use[i] < cap[i] + opt.get('floor_cap_overflow', 0)]
+        for i in relief:
+            del P.constraints[f'cap{i}']
+        if relief and solve():
+            FLOOR_LOG['relief'] += 1
+            return picked()
+        for i in relief:
+            P += x[i] == 0, f'cap{i}'
+        del P.constraints['floor']
+        FLOOR_LOG['no_floor'] += 1
+    if not solve():
         return None
-    return [i for i in idx if x[i].value() > 0.5]
+    return picked()
+
+
+FLOOR_LOG = {'relief': 0, 'no_floor': 0}   # lineups that needed cap relief / were built without the floor (last run)
 
 
 def leverage_weights(df, weights, lev):
@@ -218,6 +241,7 @@ def build_lineups(df, sims, cfg):
         tight = {t: counts[t] * stack_rule(t, stacks, opt)['receivers'] / max(room[t], 1) for t in counts}
         queue = [t for t in sorted(counts, key=lambda t: -tight[t]) for _ in range(counts[t])]
     use = {i: 0 for i in df.index}
+    FLOOR_LOG.update(relief=0, no_floor=0)
     lineups, draw, tries = [], 0, 0
     w = opt['mean_weight']
     while len(lineups) < n:
@@ -255,6 +279,9 @@ def build_lineups(df, sims, cfg):
         tries = 0
         for i in lp:
             use[i] += 1
+    if opt.get('min_salary'):
+        print(f"salary floor ${opt['min_salary']:,}: {FLOOR_LOG['relief']} lineup(s) used cap relief "
+              f"(up to {opt['exposure_cap'] + opt.get('floor_cap_overflow', 0)}), {FLOOR_LOG['no_floor']} solve(s) without the floor")
     return lineups, use
 
 

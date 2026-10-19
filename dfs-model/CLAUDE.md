@@ -209,13 +209,33 @@ Review run in `weeks/2026-w06/review/` (upload.csv deleted on purpose); sheet `d
 
 ## Week 6 (2026-w06) result — see docs/week6_review.md
 149 model lineups (Doug changed 3 by hand to spend leftover salary, +60.9 pts) + 1 free entry (Doug's own lineup) in
-the Pooch Punt (571,917 entries; no $0.25 export). Model avg 104.5 vs field 110.7; best 158.4 (Maye stack, rank 3,975,
-top 0.70%); 1 in top 1%, 8 in top 10%; winner 189.96. Winnings not yet recorded (running total before week 6 -$2.39).
+the Pooch Punt (571,917 entries; no other contest). Model avg 104.5 vs field 110.7; best 158.4 (Maye stack, rank 3,975,
+top 0.70%); 1 in top 1%, 8 in top 10%; winner 189.96. Won $5.96 on $7.45, net -$1.49; running total since week 4 -$3.88.
 Reads as lineups: red +1.4/lineup, yellow -0.5 (Penix fade wrong; ATL best stack). RB again the gap (Walker). 20+ tier
 +7.8 (n 5; third week of +5-8); WR r -0.02; DST r 0.11; ownership MAE 1.3, mid-priced chalk missed again (Likely 10% vs
 38%). Q exclusion cost nothing (1 rostered slot behind an excluded Q). 14 lineups left $3,000+ (all late in the build,
 22 players at the 25 cap): salary-floor test in the review section 8. Harrison (London): 4 of 32 targets (12.5%) vs
 read 0.15 / applied 0.105, but on 12 snaps of ~59 (Doug, from a game page): keep a factor below 1 in week 7.
+
+## Week 7 prep (Oct 18) — see docs/week7_prep.md
+Adopted on Doug's instruction, both ON in defaults.toml:
+- **Name matching fix** `[model] skip_defense_names = true` (`data.no_offense` in `load_stats`): defensive / specialist
+  stat rows with no attempts, carries or targets are dropped before name matching (Michael Carter II, PHI CB, had
+  matched Michael Carter, TEN RB). Two-way players with touches (Travis Hunter) kept. Weeks 4-6: only Carter (3.5 / 2.6
+  -> 0) and Marcus Jones (0.8 -> 0) really change, never in a lineup; everything else moves <= 0.4 from the shared
+  random stream (proven). `tests/test_names.py`. FanDuel has no gsis id, so matching stays name-based.
+- **Salary floor** `[optimizer] min_salary = 59000`, `floor_cap_overflow = 3`. **Doug approved cap relief to 28 for
+  salary-floor lineups only (week 7).** Relief only for players at the standing 25 cap (not yellow / player_cap), only
+  when a lineup cannot otherwise reach the floor; else the lineup is built without it. Weeks 4-6 pin `min_salary = 0`.
+  Week 6 with the repo version: 104.2 / 6 / 1 / 158.4 (scratch version that also relieved yellow caps: 10 / 2).
+Recommended, not adopted (Doug and Claude decide): WR/TE implied-total term (WR b -0.34, TE -0.27, mean-only; slope
+refit 0.357 = current, keep); history 20+ gap +0.17 -> -0.04, live weeks 4-6 +3.1 -> +2.8. Live level bias +1.5 vs
+history +0.3 is mostly players scoring 0 (9.7% live vs 3.5%: history rows only hold players who played). Ownership:
+Guru / cheap-new-role flags / sharpness do not fix the chalk miss (15%+ MAE 12.2 -> 12.1 at best); record full Guru
+lists weekly. Fallback players with no stats (Phil Mafah, FPPG 9.9 from one game, projected ~10.6, scored 0 x3) are a
+risk if their starter sits. Projection draws share one random stream: per-player seeds would cut test noise.
+`config/2026-w07/week.toml` is a template: HOU is on the main slate (hosts NYG), Harrison trade active with Doug's read
+`new_target_share = 0.15`, `first_week_factor = 0.5` (12 of ~59 snaps in London), copied to `[shadow.trade]`.
 
 ## Week-7 backlog (from docs/week6_prep.md section 11 and 10.2)
 - **Per-position redistribution mode**: RB out = routing by position; WR out = depth split; TE out = old 80% rule or none.

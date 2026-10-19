@@ -1,0 +1,82 @@
+# Week 7 settings (2026-w07). Made Oct 18 from 2026-w06's week.toml with the week-specific parts emptied.
+# Overrides any key in config/defaults.toml. Standing rules come from defaults: starters only, 25-lineup cap, leverage off,
+# and from week 7 the salary floor ($59,000, cap relief to 28 for floor lineups only) and skip_defense_names.
+# Mode carried from week 6 (Doug): RED and YELLOW reads APPLIED ([prefs]); GREEN recorded under [shadow] only.
+# Schedule (nflverse, Oct 18): main slate = Sunday 1:00 / 4:05 / 4:25 ET, likely 10 games: SF@ATL, CIN@BAL, TB@CAR,
+# NYG@HOU, IND@MIN, MIA@NYJ, CLE@TEN, DEN@ARI, GB@DET, LAR@LV. Off the main slate: NE@CHI (Thu), PIT@NO (London 9:30),
+# KC@SEA (SNF), DAL@PHI (MNF). Byes: BUF, JAX, LAC, WAS. Confirm against FanDuel's player list.
+
+# Friday's official game statuses (skill positions). While both lists are empty, FanDuel's own tags apply:
+# O/IR = out, Q/D = questionable, and questionable players are excluded ([optimizer] exclude_questionable).
+# Week-6 conventions: Out and Doubtful -> out, Questionable -> questionable; IR players with real 2026 volume are
+# listed out (Doug, Oct 13); QBs who are out are left to FanDuel's tags (listing a QB out hands his carries away).
+[status]
+out = []
+questionable = []
+
+# Doug's starting-QB calls, team -> name. Default is the QB with the most attempts in the team's last game.
+[status.starting_qb]
+
+# Traded players (see config/2026-w06/week.toml for the full notes).
+# Week 7: Houston is on the main slate, so both sides of the Harrison trade run. Doug's read (Oct 18): settled share
+# 0.15, first_week_factor 0.5 -> 7.5% of Houston's targets this week. In London (week 6) he played 12 of ~59 snaps (~20%)
+# with 4 of 32 targets (12.5%): docs/week6_review.md section 7.
+[[status.trade]]
+player = "Marvin Harrison Jr."
+position = "WR"
+from = "ARI"
+to = "HOU"
+new_target_share = 0.15        # Doug's settled read
+first_week_factor = 0.5        # Doug, Oct 18: ~20% of snaps in his first Houston game
+
+# Doug's projection reads: new mean FanDuel points.
+[overrides]
+
+# Week 6 ran the depth split for WRs only (Doug, Oct 12). Kept for week 7 unless Doug says otherwise.
+[model.injury]
+within_position = "depth_rank"
+depth_rank_positions = ["WR"]
+
+[optimizer]
+stack_allocation = "proportional"   # stack counts follow the weights exactly instead of random draws
+
+[prefs]
+starters_only = true
+red_teams = []
+red = []
+
+[prefs.yellow]                 # "Player" = lineups he had in the reviewed run
+
+[prefs.green]                  # keep empty (green is shadow-only)
+
+[prefs.green_floor]
+
+[prefs.player_cap]
+
+# Record only: NOT applied. Green reads go here; red is applied, so its review-run lineups are recorded under
+# [shadow.red_lineups].
+[shadow]
+reviewed = ""
+red = []
+
+[shadow.red_lineups]
+
+[shadow.yellow]
+
+[shadow.green]
+
+[shadow.green_floor]
+
+# Doug's trade read, recorded so it can be scored by hand after the games (analyze_results.py does not read it).
+[shadow.trade]
+"Marvin Harrison Jr." = { from = "ARI", to = "HOU", new_target_share = 0.15, first_week_factor = 0.5 }
+
+# Stack QB-team weights: weight = round(2 * (implied total - 16)), min 1, from data/2026-w07/lines.csv.
+[stacks.weights]
+
+[stacks.rules]
+
+[contest]
+field_size = 0                 # fill in after the slate (for grading)
+
+[contest.guru]

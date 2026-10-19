@@ -97,4 +97,18 @@ def load_stats(path, cfg, before_week=None):
     if 'opponent_team' in st:
         cols['opp'] = st.opponent_team.replace(fd)           # the defence faced, FanDuel codes (dfs.opponent)
     st = st.assign(**cols)
+    if cfg['model'].get('skip_defense_names', False):
+        st = st[~no_offense(st)]
     return st[~((st.position == 'QB') & (st.attempts < cfg['model']['qb']['min_attempts']))].reset_index(drop=True)
+
+
+OFFENCE = ['QB', 'RB', 'FB', 'WR', 'TE']
+
+
+def no_offense(st):
+    """Rows of players listed at a non-offensive position (defence, specialists) with no attempts, carries or
+    targets in the frame. They cannot be anyone's FanDuel skill player, but they share name keys with skill players
+    (Michael Carter II, PHI CB -> 'michaelcarter' = Michael Carter, TEN RB). Two-way players with offensive volume
+    (Travis Hunter, listed CB) are kept. [model] skip_defense_names."""
+    vol = st[['attempts', 'carries', 'targets']].fillna(0).sum(axis=1).groupby(st.player_id).transform('sum')
+    return ~st.position.isin(OFFENCE) & (vol == 0)

@@ -107,6 +107,7 @@ depth_rank_positions = ["WR"]
 
 [optimizer]
 stack_allocation = "proportional"   # stack counts follow the weights exactly instead of random draws
+min_salary = 0                      # as entered: the salary floor became the default in week 7
 
 # Doug's colour review of the exposure sheet (numbers = that run's lineups out of 150).
 # APPLIED: red = exclude (players, DSTs by full name; whole teams under red_teams); yellow = cap at half the number listed.
