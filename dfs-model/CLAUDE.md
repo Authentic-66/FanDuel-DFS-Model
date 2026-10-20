@@ -258,28 +258,30 @@ flags dropped (he records full Guru lists when he uses it). Built in the second 
   Hibner, Nicholas/Nick Singleton, Mitchell/Mitch Tinsley, Andrew/Drew Ogletree. The guard's no-data warning is the
   place new aliases show up: check it every run.
 
-## Week 7 run checklist (state at end of Oct 18: head d93be88 on origin/main, tree clean)
-`config/2026-w07/week.toml` is a template (Harrison trade active, everything else empty). Defaults now include the
-salary floor, role guard (WR/TE), WR implied-total correction, name fix and aliases. Same flow as week 6:
-1. Inputs arrive in `data/2026-w07/` (Doug's own folder names): FanDuel player list -> `fd_players.csv`, injury report,
-   Guru screens if he uses Guru (full suggestion lists -> `[contest.guru]`). Confirm the main slate against the
-   schedule in week.toml (10 games expected; byes BUF, JAX, LAC, WAS).
-2. `python src/fetch_stats.py --week 2026-w07` first: the stats cache must include week 6 (HOU's London game and
-   Harrison's first Houston game).
-3. `[status]` from Friday's report (Out/Doubtful -> out, Questionable -> questionable, IR players with real volume out,
-   QBs out left to FanDuel tags) and `[status.starting_qb]` calls. Lines -> `data/2026-w07/lines.csv` (Saturday /
-   Sunday morning), `[stacks.weights]` = round(2 x (implied - 16)), min 1.
-4. Harrison: before the run, confirm `first_week_factor = 0.5` with Doug (set Oct 18 from his 12 London snaps).
-5. Run `model.py`, then **read the role-guard warning**: each name is either a player with no 2026 snaps (fine, 0) or a
-   missing nickname alias (add to `[names.aliases]` in defaults.toml and re-run). Doug can override any guarded player.
-6. Review run (`optimize.py --subdir review`) and the exposure sheet with Color column (recipe in "Week 6 preliminary
-   run" item 5; add Routing_bump and RoleGuard); Doug's red -> `[prefs] red` (+ `[shadow.red_lineups]`), yellow ->
-   `[prefs.yellow]`, green -> `[shadow.green]`.
-7. Final `optimize.py` in the main folder, check the floor line it prints (lineups using cap relief), and write the
-   149 files if he has a free entry (`entered_upload_149.csv`, `entered_readable_149.csv`, `entered_exposure.csv`).
-8. After the slate: `convert_results.py`, set `[contest] field_size`, `analyze_results.py`, write
-   `docs/week7_review.md` (week-6 format: model vs field, reads, manual swaps, salary left, calibration, stacks, DST,
-   ownership, Harrison's trade read by hand), ask Doug for winnings (running total -$3.88 after week 6).
+## Week 7 run checklist (state at end of Oct 19: head 79bef65 on origin/main; preliminary done, see below)
+Steps 1-2 and the preliminary parts of 3-6 are DONE (section "Week 7 preliminary run"). Remaining:
+1. Doug's review sheet `data/2026-w07/review_sheet.xlsx` (rebuilt Oct 19 evening; untracked): red -> `[prefs] red`
+   (+ `[shadow.red_lineups]` with the sheet's Lineups; Kaytron Allen and Jared Wayne already red), yellow ->
+   `[prefs.yellow]` with the sheet's Lineups numbers, green -> `[shadow.green]`; Pool = Y / Rank -> `[pool]` lists
+   in week.toml (QB 10, RB 10, WR 14, TE 8, DST 5; `ranked = true` only if he ranked them).
+2. Friday's report -> `[status]` (replace the preliminary FanDuel-tag lists; Out/Doubtful -> out, Questionable ->
+   questionable, IR players with 3+ targets + carries a game out, QBs out left to FanDuel tags) and
+   `[status.starting_qb]` (BAL: Lamar Q, Huntley flagged; TB: Mayfield Q). Re-download `fd_players.csv` if FanDuel
+   updated it. Then Doug's Estime (CLE RB, no 2026 data) and SF override reads, if any.
+3. Saturday / Sunday: replace `data/2026-w07/lines.csv` (PRELIMINARY nflverse lines) and rebuild `[stacks.weights]`
+   = round(2 x (implied - 16)), min 1. Keep `[stacks] extra_receivers = ["Christian McCaffrey"]` (Doug's SF read).
+4. `model.py`, read the role-guard warning (new names = no 2026 snaps or a missing alias) and team-mismatch warnings.
+5. Final `optimize.py --week 2026-w07` (main folder; check the floor line) and `optimize.py --week 2026-w07 --pool`
+   (shadow, `weeks/2026-w07/pool/`; cap 40 for pool players is expected; if it stalls, stop and ask Doug). Write the
+   149 files for the model set if he has a free entry. Enter the model's lineups only.
+6. After the slate: `convert_results.py`, `[contest] field_size`, `analyze_results.py` (grades the pool set too:
+   `pool/grade.csv`), `docs/week7_review.md` (week-6 format + pool vs model, Harrison's trade read and the SF
+   McCaffrey stack read by hand), ask Doug for winnings (running total -$3.88 after week 6).
+Review sheet recipe (builder is a scratch script, not in the repo): rows = every active player with an empty
+`RoleGuard`, sorted by position then Proj; columns Player, Team, Opp, Pos, Salary, Proj, Value_per_1k, Implied_total,
+Routing_bump, Role_vol, Own_proj_%, Lineups (from the prelim/review exposure.csv), Status, In_model_pool (Y or the
+reason: red, questionable, not the starting QB, depth, projects < 4), Color (reds pre-filled), Pool, Rank; tabs
+held_out_Q and notes. Check: Lineups sums to 1,350.
 
 ## Doug's pool mode (Oct 19) — see docs/pool_mode.md
 Built on Doug's spec, inside the model. **Deviation he must decide:** his sizes (QB 10, RB 10, WR 10, TE 8, DST 5)
