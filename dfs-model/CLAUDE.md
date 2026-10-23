@@ -379,7 +379,7 @@ Jones + Jefferson); control mean proj 123.2 -> 122.5, pool 122.5 -> 121.9. **Mod
 mean 121.9, LAR 17, MIN 14. Control unchanged (own --cap 45).
 Practice notes (Wed report, not applied): Irving, Hubbard, Egbuka, Schultz, K. Allen, Montgomery, Waller DNP.
 
-## Week 7 Friday run (Fri Oct 23) — preliminary lines; MODEL SET PENDING Doug
+## Week 7 Friday run (Fri Oct 23) — preliminary lines; all three sets built (see 'Doug's decisions' at the end)
 Doug's Friday statuses in `[status]` (Out/Doubtful out; uncertain Q = questionable, no redistribution; IR-volume list
 kept; 11 off-slate names not listed). New `[status] active` (data.load_slate; `tests/test_status.py`): clears
 FanDuel's O/IR tag for players back from IR (Tank Dell, Jordan Mason, Beaux Collins; Dell and Collins have no 2026
@@ -394,7 +394,14 @@ Jaylin Noel 6.0 (red), and red players hold depth slots, so HOU's top-3 WR = Col
 Scratch: caps 28 / 29 / 30 stall at 142 / 145 / 148, cap 31 builds 150 (Harrison 0); cap 27 builds 150 if Harrison is
 a starter (override 6.1, or red players not holding depth: same lineups, Harrison the only new player, 29). Kyren's
 floor is not the cause (stalls without it) and never binds (30+ lineups). Godwin still yellow cap 1 (1 lineup in pool).
-`weeks/2026-w07/prelim/` still holds Thursday's set until Doug decides.
+`weeks/2026-w07/prelim/` held Thursday's set until Doug decided.
+**Doug's decisions (Oct 23, later):** new `[prefs.starter_override]` TEAM = [names] (`optimize.starters`; test in
+`tests/test_status.py`): named players count as starters on top of the normal depth, red players keep their slots,
+red / Q / min_proj still apply; week 7: `HOU = ["Marvin Harrison Jr."]`. Godwin's yellow cleared. Model cap stays 27.
+Aaron Jones read (leave 14.1 or 15.5) asked back: template left both options; built at 14.1. Built (no uploads),
+all lineups checked against the rules: model `prelim/` 150, mean 119.8, HOU 30 / CIN 19 / SF 16 / DET 16 / LAR 14 /
+MIN 9, Harrison 24, Godwin 28, Kyren 30, Mumpfield 23; control 150, mean 122.3, LAR 19, MIN 11, Kyren 45; pool 150,
+mean 121.9, LAR 18 (Mumpfield + Kyren 15), MIN 15, Kyren / Mumpfield / Godwin 45. Every MIN stack = Murray + Jones + Jefferson.
 
 ## Week-8 backlog
 - **Per-position redistribution mode**: RB out = routing by position; WR out = depth split; TE out = old 80% rule or none.

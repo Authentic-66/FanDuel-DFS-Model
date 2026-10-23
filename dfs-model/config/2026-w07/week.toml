@@ -215,7 +215,7 @@ red = [
 "Wan'Dale Robinson" = 10        # WR TEN, cap 5
 "Josh Downs" = 3                # WR IND, cap 2
 "Courtland Sutton" = 7          # WR DEN, cap 4
-"Chris Godwin Jr." = 2          # WR TB, cap 1
+# "Chris Godwin Jr." yellow cleared (Doug, Oct 23): he replaces Egbuka in his pool
 "Cade Otton" = 6                # TE TB, cap 3
 "Kenyon Sadiq" = 2              # TE NYJ, cap 1
 "Greg Dulcich" = 1              # TE MIA, cap 0
@@ -237,6 +237,12 @@ red = [
 
 [prefs.green_floor]
 "Kyren Williams" = 15       # Doug, Oct 23 (forced read)
+
+# Doug, Oct 23: Harrison counts as a HOU starter (top-3 WR) for the starter filter. Red players keep their depth
+# slots (they play, just not in our lineups); without this Noel (red, 6.0) and Hutchinson (red) push Harrison (5.8)
+# out and the model set stalls at 137 at cap 27.
+[prefs.starter_override]
+HOU = ["Marvin Harrison Jr."]
 
 [prefs.player_cap]
 

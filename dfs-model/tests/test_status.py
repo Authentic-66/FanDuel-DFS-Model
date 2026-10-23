@@ -55,6 +55,12 @@ class StatusTest(unittest.TestCase):
         self.assertEqual(list(optimize.eligible_pool(proj, prefs, opt).Name), ['wr2', 'wr3', 'wr4'])
         opt['exclude_questionable'] = False   # week-4 behaviour: the Q player holds a slot, wr4 is not a starter
         self.assertEqual(list(optimize.eligible_pool(proj, prefs, opt).Name), ['wr1', 'wr2', 'wr3'])
+        prefs['starter_override'] = {'AAA': ['wr4']}   # Doug's starter call: added, nobody loses a slot
+        self.assertEqual(list(optimize.eligible_pool(proj, prefs, opt).Name), ['wr1', 'wr2', 'wr3', 'wr4'])
+        prefs['starter_override'] = {'BBB': ['wr4']}   # wrong team
+        with self.assertRaises(ValueError):
+            optimize.eligible_pool(proj, prefs, opt)
+        del prefs['starter_override']
         prefs['green'] = {'wr1': 5}           # green Q player: eligible and holds his slot
         opt['exclude_questionable'] = True
         self.assertEqual(list(optimize.eligible_pool(proj, prefs, opt).Name), ['wr1', 'wr2', 'wr3'])

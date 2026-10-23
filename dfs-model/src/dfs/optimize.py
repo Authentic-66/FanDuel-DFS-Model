@@ -27,6 +27,14 @@ def starters(proj, prefs, opt):
         ok = (((act.Pos == 'QB') & act.StartingQB) | (act.Pos == 'D')
               | (act.Pos.isin(list(opt['starters'])) & (act.rk <= depth) & ((act.rk == 1) | (act.Proj >= floor)))
               | act.Name.isin(green))
+        # [prefs.starter_override] TEAM = [names]: Doug's call that these count as starters on top of the normal
+        # depth (nobody loses a slot); red / questionable / min_proj still apply in eligible_pool
+        for team, names in prefs.get('starter_override', {}).items():
+            names = [names] if isinstance(names, str) else list(names)
+            bad = [n for n in names if not ((pr.Name == n) & (pr.Team == team)).any()]
+            if bad:
+                raise ValueError(f'[prefs.starter_override] {team}: {bad} not on the {team} slate')
+            ok = ok | ((act.Team == team) & act.Name.isin(names))
         pr = pr[pr.Id.isin(act.Id[ok])]
     return pr
 
