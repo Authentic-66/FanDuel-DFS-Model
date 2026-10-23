@@ -43,6 +43,10 @@ and thinks in those terms: fundamentals model + market/public overlay, calibrati
   New week: copy last week's `week.toml` and edit.
   `[pool]` QB/RB/WR/TE/DST lists (+ `ranked`) = Doug's player pool for pool mode (docs/pool_mode.md); settings
   (`max_filler`, `rank_boost`, `raise_cap_to`) in defaults.toml `[pool]`.
+  Pool fillers use `[optimizer] exposure_cap` (a model cap change rebuilds the pool too).
+  `[grading] extra_sets` = extra lineup folders under `weeks/<week>/` graded beside pool and model in `pool/grade.csv`
+  (week 7: `model_cap45`, the shadow control).
+  Salary-floor relief is `exposure_cap + floor_cap_overflow` (3): at cap 27 players can reach 30, not 28.
 
 ## Pipeline (`src/` scripts are thin CLIs over the `src/dfs/` package; all take `--week`, default `$DFS_WEEK`)
 - `dfs/config.py` — `Week` paths (data/, weeks/, config/, stats cache by season) and config loading.
@@ -59,6 +63,7 @@ and thinks in those terms: fundamentals model + market/public overlay, calibrati
 - `dfs/overrides.py` (`override.py`) — rescale a player's sims to Doug's mean; errors on unknown names; idempotent.
 - `dfs/optimize.py` (`optimize.py`) — sequential MILP (PuLP/CBC), one lineup per sim draw; objective 0.6*mean + 0.4*draw
   (`[optimizer] mean_weight`; 0.4 / 0.6 through week 5).
+  `--subdir <name>` writes to `weeks/<week>/<name>/`; `--cap N` overrides `exposure_cap` for that run only (Oct 22).
   Upload written with the csv module (exact duplicate header).
 - `dfs/ownership.py` — projected field ownership (`Own_proj`, % of lineups): ridge on logit(%Drafted), refit every run
   from all earlier weeks' results (training rows cached in `weeks/<w>/ownership_train.csv`), shifted per position so
@@ -78,6 +83,8 @@ and thinks in those terms: fundamentals model + market/public overlay, calibrati
 ## Doug's standing rules (current; confirm each week)
 - **Starters only**: QB1 (week's starter), RB1, top-3 WR, TE1 per team by projection. Green-listed players always eligible.
 - **Exposure cap 25 lineups** for every player and DST (Doug's choice to limit bust risk; raise to 40 only if infeasible).
+  Week 7: 27 (Doug, Oct 22: his reds / yellows left too few stackable teams; 25 stalled at 147, 26 at 149 once Kyren /
+  Jones became stack receivers). Raise only with Doug's OK, smallest cap that builds 150.
 - Stack per lineup: QB + >=2 of his WR/TE + >=1 bring-back from opponent. No DST facing your own offensive players.
 - Pull questionable players rather than rely on late swap (he enters via CSV and won't hand-edit 150 lineups):
   `[optimizer] exclude_questionable = true` (default; week 4 sets false, it predates the rule). Before Friday's report
@@ -258,7 +265,7 @@ flags dropped (he records full Guru lists when he uses it). Built in the second 
   Hibner, Nicholas/Nick Singleton, Mitchell/Mitch Tinsley, Andrew/Drew Ogletree. The guard's no-data warning is the
   place new aliases show up: check it every run.
 
-## Week 7 run checklist (state at end of Oct 22: colours applied, pool pending Doug; see "Week 7 review applied")
+## Week 7 run checklist (state at end of Oct 22: head 526c837; reads, pool, caps and control set done; see "Week 7 review applied")
 Steps 1-2 and the preliminary parts of 3-6 are DONE (section "Week 7 preliminary run"). Remaining:
 1. DONE Oct 22 for colours (`data/2026-w07/review_sheet_reviewed.xlsx`). Pool lists loaded (ranked). **Doug, Oct 22:** pool cap 45 for week 7
    (shadow test; `[pool] raise_cap_to = 45`), model cap 26, then 27 after the extra receivers (stays
@@ -268,20 +275,28 @@ Steps 1-2 and the preliminary parts of 3-6 are DONE (section "Week 7 preliminary
    `[status.starting_qb]` (BAL: Lamar Q, Huntley flagged; TB: Mayfield Q). Re-download `fd_players.csv` if FanDuel
    updated it. Then Doug's Estime (CLE RB, no 2026 data) and SF override reads, if any.
 3. Saturday / Sunday: replace `data/2026-w07/lines.csv` (PRELIMINARY nflverse lines) and rebuild `[stacks.weights]`
-   = round(2 x (implied - 16)), min 1. Keep `[stacks] extra_receivers = ["Christian McCaffrey"]` (Doug's SF read).
+   = round(2 x (implied - 16)), min 1. Keep `[stacks] extra_receivers = ["Christian McCaffrey", "Kyren Williams",
+   "Aaron Jones Sr."]` (Doug's reads). If Nacua is out, LAR stacks = Kyren + Higbee only (see Oct 22 what-if).
 4. `model.py`, read the role-guard warning (new names = no 2026 snaps or a missing alias) and team-mismatch warnings.
 5. Final `optimize.py --week 2026-w07` (main folder; check the floor line), the control
    `optimize.py --week 2026-w07 --subdir model_cap45 --cap 45` and `optimize.py --week 2026-w07 --pool`
-   (shadow, `weeks/2026-w07/pool/`; cap 40 for pool players is expected; if it stalls, stop and ask Doug). Write the
-   149 files for the model set if he has a free entry. Enter the model's lineups only.
-6. After the slate: `convert_results.py`, `[contest] field_size`, `analyze_results.py` (grades the pool set too:
-   `pool/grade.csv`), `docs/week7_review.md` (week-6 format + pool vs model, Harrison's trade read and the SF
-   McCaffrey stack read by hand), ask Doug for winnings (running total -$3.88 after week 6).
+   (shadow, `weeks/2026-w07/pool/`; pool players auto-raise to 45, Doug's week-7 setting). Model cap is 27: if any set
+   stalls after Friday's statuses, stop and ask Doug (don't raise caps on your own). Drop the PRELIMINARY marks on
+   `exposure_cap`. Write the 149 files for the model set if he has a free entry. Enter the model's lineups only;
+   keep upload.csv in all three folders (grading reads them).
+6. After the slate: `convert_results.py`, `[contest] field_size`, `analyze_results.py` (`pool/grade.csv` grades model
+   cap 27 (entered), model_cap45 (control) and pool cap 45: avg, top-10%, top-1%, best), `docs/week7_review.md`
+   (week-6 format + the three sets, Harrison's trade read and the extra-receiver reads McCaffrey / Kyren / Jones by
+   hand; 106 reds incl. TEN / MIA DSTs and the cap-0 yellows), ask Doug for winnings (running total -$3.88 after week 6).
 Review sheet recipe (builder is a scratch script, not in the repo): rows = every active player with an empty
 `RoleGuard`, sorted by position then Proj; columns Player, Team, Opp, Pos, Salary, Proj, Value_per_1k, Implied_total,
 Routing_bump, Role_vol, Own_proj_%, Lineups (from the prelim/review exposure.csv), Status, In_model_pool (Y or the
 reason: red, questionable, not the starting QB, depth, projects < 4), Color (reds pre-filled), Pool, Rank; tabs
 held_out_Q and notes. Check: Lineups sums to 1,350.
+Reading it back (Oct 22 lesson): count Pool = Y per position after stripping blanks (cleared Excel cells come back as
+" "), compare to the sizes, and before loading list every mismatch (count, unmarked ranks, marked-but-unranked) for
+Doug; he prefers to fix the sheet himself so the file matches what was used. Keep the sheet's notes and his run
+template on the same Pool marker (the sheet said Y, his template said P).
 
 ## Doug's pool mode (Oct 19) — see docs/pool_mode.md
 Built on Doug's spec, inside the model. **Deviation he must decide:** his sizes (QB 10, RB 10, WR 10, TE 8, DST 5)

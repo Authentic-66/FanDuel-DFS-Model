@@ -181,5 +181,11 @@ role-guard test, and a small solve proving at most one non-pool player). Full su
 
 Defaults already match 2 and 3 (`[pool]` in defaults.toml), so no code changed.
 
+**Week 7 (Oct 22):** Doug's real pool (top 10 / 10 / 14 / 8 / 5 by his ranks) stalled at 145 lineups at cap 40;
+Doug allowed `raise_cap_to = 45` for week 7 only (150 built). Raising WRs to 18 or allowing 2 fillers stalled earlier
+(118 / 133) because the capacity check then passes at the standing cap and pool players are never raised (backlog).
+A shadow control set (normal model at cap 45, `optimize.py --subdir model_cap45 --cap 45`) is graded beside the pool
+via `[grading] extra_sets` so the pool's cap advantage can be separated from the pool itself.
+
 Still open: if Doug ever enters the pool lineups with a free entry, the 149-lineup files would come from the same
 snippet as for the model (not built for pool mode).
