@@ -260,8 +260,8 @@ flags dropped (he records full Guru lists when he uses it). Built in the second 
 
 ## Week 7 run checklist (state at end of Oct 22: colours applied, pool pending Doug; see "Week 7 review applied")
 Steps 1-2 and the preliminary parts of 3-6 are DONE (section "Week 7 preliminary run"). Remaining:
-1. DONE Oct 22 for colours (`data/2026-w07/review_sheet_reviewed.xlsx`). Pool lists loaded (ranked). **Pending Doug:** pool cap 45 (stalls
-   at 145 at 40) and the model cap (26 or 40).
+1. DONE Oct 22 for colours (`data/2026-w07/review_sheet_reviewed.xlsx`). Pool lists loaded (ranked). **Doug, Oct 22:** pool cap 45 for week 7
+   (shadow test; `[pool] raise_cap_to = 45`), model cap 26 (stays marked PRELIMINARY until the final run).
 2. Friday's report -> `[status]` (replace the preliminary FanDuel-tag lists; Out/Doubtful -> out, Questionable ->
    questionable, IR players with 3+ targets + carries a game out, QBs out left to FanDuel tags) and
    `[status.starting_qb]` (BAL: Lamar Q, Huntley flagged; TB: Mayfield Q). Re-download `fd_players.csv` if FanDuel
@@ -328,13 +328,17 @@ Stats cache refreshed (the Oct 19 download predated SF@WAS MNF): only SF usage c
 CMC 85% (30.7 pts); none of the three on SF's week-7 practice report (nflverse injuries_2026.csv): no injury.
 **Model set:** stalls at 147 at cap 25 (reads leave too few stackable teams: MIN 0 with Bartholomew red and
 Addison / Hockenson Q, BAL capped by Huntley yellow 6, ARI / TEN / MIA QBs red, NYG Winston cap 0). Cap 26 is the
-smallest that builds 150 (floor relief +3 -> up to 29); relief held at 28 fails at caps 26-28. `[optimizer]
-exposure_cap = 26` in week.toml is PRELIMINARY pending Doug (26 or 40). Prelim in `weeks/2026-w07/prelim/` (upload
+smallest that builds 150 (floor relief +3 -> up to 29); relief held at 28 fails at caps 26-28. **Doug, Oct 22: cap 26 used in week 7 because
+his reds / yellows limited the stackable teams** (`[optimizer] exposure_cap = 26`, marked PRELIMINARY until the final run). Prelim in `weeks/2026-w07/prelim/` (upload
 deleted): 150, mean proj 119.9 (Monday 118.4), salary all $59,000-60,000, 13 stack teams (HOU 28, CIN 19, DET 17, GB 17,
 SF 16, LAR 14, ...), 84 players used. Bijan 25 -> 2, Jefferson 14 -> 1, Murray 9 -> 0.
 **Pool:** in week.toml `[pool]` (ranked) since Oct 22 evening: Doug re-marked the sheet (Irving added, TE 6-8 added)
 and confirmed in chat WR ranks 1-14, DST ranks 1-5 (the sheet still marks 20 WR / 13 DST). CLI run at cap 40 stalls
-at 145, same as the scratch test: cap 45 pending Doug. First marks (superseded) gave QB 17, RB 0, WR 26, TE 12, DST 0; his ranks run QB 1-17, RB 1-19,
+at 145. **Doug: cap 45 for week 7.** Pool set in `weeks/2026-w07/pool/` (upload deleted): 150, mean proj 122.5
+(model 119.9), p90 ceiling 158.1 (154.9), 9 stack teams (HOU 25, SF 24, GB 22, DET 21, CIN 19, CAR 18, LV 13, LAR 6,
+TB 2; MIN 0: Jefferson is Murray's only pool receiver), 148 lineups use a filler (Coker 18, Tucker 16, Gesicki 15),
+72 players (model 84), 22 lineups identical to the model's. Pool heavier on Harrison, A. Jones, Hubbard, McMillan,
+LaPorta, Likely, Egbuka, CLE DST (45 each, model 27-29); lighter on Jeanty, Flowers, DEN DST, Higbee, Dobbins. First marks (superseded) gave QB 17, RB 0, WR 26, TE 12, DST 0; his ranks run QB 1-17, RB 1-19,
 WR 1-18, TE 1-17, DST 1-14 (no 13). Provisional reading (scratch only): top N by rank = QB 10, RB 10, WR 14, TE 8,
 DST 5, all usable. It stalls at 145 at cap 40; builds 150 at cap 45 (mean proj 122.5, 148 lineups use a filler, 9
 stack teams). WR 18 or 2 fillers stall earlier (118 / 133): the capacity check then passes at the standing cap, so pool

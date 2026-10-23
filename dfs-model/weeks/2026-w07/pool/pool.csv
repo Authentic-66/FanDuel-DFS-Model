@@ -1,0 +1,48 @@
+Name,Pos,Rank,Listed,Note,Usable,Proj,Mult,Lineups
+Jared Goff,QB,1,10,,True,21.5,1.05,21
+Joe Burrow,QB,2,10,,True,19.7,1.044,19
+Matthew Stafford,QB,3,10,,True,20.8,1.039,6
+Jordan Love,QB,4,10,,True,18.9,1.033,22
+Brock Purdy,QB,5,10,,True,21.0,1.028,24
+Kirk Cousins,QB,6,10,,True,16.9,1.022,13
+C.J. Stroud,QB,7,10,,True,19.1,1.017,25
+Kyler Murray,QB,8,10,,True,16.6,1.011,0
+Bryce Young,QB,9,10,,True,19.0,1.006,18
+Jalon Daniels,QB,10,10,,True,15.0,1.0,2
+Jahmyr Gibbs,RB,1,10,,True,22.7,1.05,26
+Christian McCaffrey,RB,2,10,,True,19.0,1.044,41
+Bucky Irving,RB,3,10,,True,13.1,1.039,38
+Kyren Williams,RB,4,10,,True,17.7,1.033,32
+Derrick Henry,RB,5,10,,True,18.1,1.028,23
+Bijan Robinson,RB,6,10,,True,18.2,1.022,2
+Jonathan Taylor,RB,7,10,,True,16.7,1.017,7
+Aaron Jones Sr.,RB,8,10,,True,16.2,1.011,45
+Chuba Hubbard,RB,9,10,,True,16.1,1.006,45
+Chase Brown,RB,10,10,,True,14.6,1.0,10
+Puka Nacua,WR,1,14,,True,20.8,1.05,14
+Amon-Ra St. Brown,WR,2,14,,True,17.4,1.046,21
+Ja'Marr Chase,WR,3,14,,True,14.8,1.042,5
+Christian Watson,WR,4,14,,True,16.3,1.038,39
+Tee Higgins,WR,5,14,,True,13.9,1.035,44
+Justin Jefferson,WR,6,14,,True,11.5,1.031,1
+Emeka Egbuka,WR,7,14,,True,10.4,1.027,45
+Tetairoa McMillan,WR,8,14,,True,15.7,1.023,45
+Malik Nabers,WR,9,14,,True,14.2,1.019,8
+Marvin Harrison Jr.,WR,10,14,,True,6.1,1.015,45
+Nico Collins,WR,11,14,,True,13.2,1.012,22
+Matthew Golden,WR,12,14,,True,13.3,1.008,44
+Drake London,WR,13,14,,True,14.1,1.004,26
+Michael Wilson,WR,14,14,,True,12.5,1.0,41
+Brock Bowers,TE,1,8,,True,16.4,1.05,24
+Sam LaPorta,TE,2,8,,True,13.6,1.043,45
+Isaiah Likely,TE,3,8,,True,11.2,1.036,45
+George Kittle,TE,4,8,,True,14.4,1.029,44
+Tucker Kraft,TE,5,8,,True,10.8,1.021,40
+Trey McBride,TE,6,8,,True,15.0,1.014,5
+Harold Fannin Jr.,TE,7,8,,True,7.7,1.007,9
+Dalton Schultz,TE,8,8,,True,8.1,1.0,30
+Cleveland Browns,D,1,5,,True,7.7,1.05,45
+Houston Texans,D,2,5,,True,8.5,1.038,16
+New York Jets,D,3,5,,True,8.3,1.025,32
+Minnesota Vikings,D,4,5,,True,8.0,1.012,33
+San Francisco 49ers,D,5,5,,True,6.1,1.0,15

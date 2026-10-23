@@ -69,7 +69,7 @@ stack_allocation = "proportional"   # stack counts follow the weights exactly in
 # PRELIMINARY, pending Doug (Claude, Oct 22): with Doug's Oct 22 reds / yellows the model stalls at 147 lineups at cap 25
 # (too few stackable teams). Standing rule: raise only if infeasible (to 40 at most). Smallest cap that builds 150 = 26,
 # with the floor relief's usual +3 (players up to 29). Relief held at 28 fails at caps 26-28 (143-145 lineups).
-# Doug's call before the final run: 26 (this) or 40, or loosen reads. Back to 25: delete this line.
+# Doug, Oct 22: cap 26 for week 7 (reads limited the stackable teams); stays PRELIMINARY until the final run.
 exposure_cap = 26
 
 [prefs]
@@ -451,6 +451,7 @@ NYG = 1    # 16.5 @ HOU
 # Lists are in his rank order. Week 7 is shadow: built and graded, not entered (docs/pool_mode.md 6).
 [pool]
 ranked = true
+raise_cap_to = 45   # Doug, Oct 22: week 7 only (shadow test); stalls at 145 lineups at 40
 QB = ["Jared Goff", "Joe Burrow", "Matthew Stafford", "Jordan Love", "Brock Purdy", "Kirk Cousins", "C.J. Stroud",
       "Kyler Murray", "Bryce Young", "Jalon Daniels"]
 RB = ["Jahmyr Gibbs", "Christian McCaffrey", "Bucky Irving", "Kyren Williams", "Derrick Henry", "Bijan Robinson",
