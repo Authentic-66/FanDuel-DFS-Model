@@ -260,9 +260,8 @@ flags dropped (he records full Guru lists when he uses it). Built in the second 
 
 ## Week 7 run checklist (state at end of Oct 22: colours applied, pool pending Doug; see "Week 7 review applied")
 Steps 1-2 and the preliminary parts of 3-6 are DONE (section "Week 7 preliminary run"). Remaining:
-1. DONE Oct 22 for colours (`data/2026-w07/review_sheet_reviewed.xlsx`). **Pending Doug:** which players are the pool
-   (his Pool marks don't match the sizes; see below), the pool cap (stalls at 40), and the model cap (26 or 40).
-   Then `[pool]` lists in week.toml with `ranked = true`.
+1. DONE Oct 22 for colours (`data/2026-w07/review_sheet_reviewed.xlsx`). Pool lists loaded (ranked). **Pending Doug:** pool cap 45 (stalls
+   at 145 at 40) and the model cap (26 or 40).
 2. Friday's report -> `[status]` (replace the preliminary FanDuel-tag lists; Out/Doubtful -> out, Questionable ->
    questionable, IR players with 3+ targets + carries a game out, QBs out left to FanDuel tags) and
    `[status.starting_qb]` (BAL: Lamar Q, Huntley flagged; TB: Mayfield Q). Re-download `fd_players.csv` if FanDuel
@@ -333,7 +332,9 @@ smallest that builds 150 (floor relief +3 -> up to 29); relief held at 28 fails 
 exposure_cap = 26` in week.toml is PRELIMINARY pending Doug (26 or 40). Prelim in `weeks/2026-w07/prelim/` (upload
 deleted): 150, mean proj 119.9 (Monday 118.4), salary all $59,000-60,000, 13 stack teams (HOU 28, CIN 19, DET 17, GB 17,
 SF 16, LAR 14, ...), 84 players used. Bijan 25 -> 2, Jefferson 14 -> 1, Murray 9 -> 0.
-**Pool:** NOT in week.toml. Doug's Pool = Y marks give QB 17, RB 0, WR 26, TE 12, DST 0; his ranks run QB 1-17, RB 1-19,
+**Pool:** in week.toml `[pool]` (ranked) since Oct 22 evening: Doug re-marked the sheet (Irving added, TE 6-8 added)
+and confirmed in chat WR ranks 1-14, DST ranks 1-5 (the sheet still marks 20 WR / 13 DST). CLI run at cap 40 stalls
+at 145, same as the scratch test: cap 45 pending Doug. First marks (superseded) gave QB 17, RB 0, WR 26, TE 12, DST 0; his ranks run QB 1-17, RB 1-19,
 WR 1-18, TE 1-17, DST 1-14 (no 13). Provisional reading (scratch only): top N by rank = QB 10, RB 10, WR 14, TE 8,
 DST 5, all usable. It stalls at 145 at cap 40; builds 150 at cap 45 (mean proj 122.5, 148 lineups use a filler, 9
 stack teams). WR 18 or 2 fillers stall earlier (118 / 133): the capacity check then passes at the standing cap, so pool

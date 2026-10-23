@@ -447,6 +447,21 @@ NYG = 1    # 16.5 @ HOU
 
 [stacks.rules]
 
+# Doug's pool (review_sheet_reviewed.xlsx, Oct 22; Pool = Y, confirmed in chat: WR ranks 1-14, DST ranks 1-5).
+# Lists are in his rank order. Week 7 is shadow: built and graded, not entered (docs/pool_mode.md 6).
+[pool]
+ranked = true
+QB = ["Jared Goff", "Joe Burrow", "Matthew Stafford", "Jordan Love", "Brock Purdy", "Kirk Cousins", "C.J. Stroud",
+      "Kyler Murray", "Bryce Young", "Jalon Daniels"]
+RB = ["Jahmyr Gibbs", "Christian McCaffrey", "Bucky Irving", "Kyren Williams", "Derrick Henry", "Bijan Robinson",
+      "Jonathan Taylor", "Aaron Jones Sr.", "Chuba Hubbard", "Chase Brown"]
+WR = ["Puka Nacua", "Amon-Ra St. Brown", "Ja'Marr Chase", "Christian Watson", "Tee Higgins", "Justin Jefferson",
+      "Emeka Egbuka", "Tetairoa McMillan", "Malik Nabers", "Marvin Harrison Jr.", "Nico Collins", "Matthew Golden",
+      "Drake London", "Michael Wilson"]
+TE = ["Brock Bowers", "Sam LaPorta", "Isaiah Likely", "George Kittle", "Tucker Kraft", "Trey McBride",
+      "Harold Fannin Jr.", "Dalton Schultz"]
+DST = ["Cleveland Browns", "Houston Texans", "New York Jets", "Minnesota Vikings", "San Francisco 49ers"]
+
 [contest]
 field_size = 0                 # fill in after the slate (for grading)
 
