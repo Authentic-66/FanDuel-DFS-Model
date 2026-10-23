@@ -6,20 +6,22 @@
 # NYG@HOU, IND@MIN, MIA@NYJ, CLE@TEN, DEN@ARI, GB@DET, LAR@LV. Off the main slate: NE@CHI (Thu), PIT@NO (London 9:30),
 # KC@SEA (SNF), DAL@PHI (MNF). Byes: BUF, JAX, LAC, WAS. Confirm against FanDuel's player list.
 
-# Friday's official game statuses (skill positions). While both lists are empty, FanDuel's own tags apply:
-# O/IR = out, Q/D = questionable, and questionable players are excluded ([optimizer] exclude_questionable).
-# Week-6 conventions: Out and Doubtful -> out, Questionable -> questionable; IR players with real 2026 volume are
-# listed out (Doug, Oct 13); QBs who are out are left to FanDuel's tags (listing a QB out hands his carries away).
-# PRELIMINARY (Mon Oct 19): mirrors FanDuel's Oct 19 tags (week-6 preliminary convention: O -> out, Q/D -> questionable),
-# plus IR players with 3+ targets + carries a game in 2026 (Doug, Oct 13). QBs on IR (Jaxson Dart) are left to FanDuel's
-# tag. Questionable QBs (Lamar Jackson, Baker Mayfield) are listed so they stay held out: once these lists have entries,
-# FanDuel's Q/D tags are ignored. Replace with Friday's report.
+# FRIDAY (Oct 23): Doug's week-7 statuses from Friday's report. Conventions: Out and Doubtful -> out (Montgomery
+# doubtful -> out), Questionable Doug expects to play -> active (not listed), uncertain Questionable -> questionable
+# (held out, no redistribution). IR players with real 2026 volume stay out (Oct 13 rule) unless Doug says they return.
+# Off the main slate, so not listed: Rashee Rice, Ben Skowronek, Tyrell Shavers, Brashard Smith, Zach Charbonnet,
+# Rico Dowdle, DeVonta Smith, Dallas Goedert, George Pickens, Saquon Barkley, DJ Moore.
+# Active Q per Doug (expected to play): Baker Mayfield, Jaylen Wright, Caleb Douglas, Adonai Mitchell, T.J. Hockenson
+# (all red, so still in no lineup). Quinshon Judkins is not on the report: plays (red; no Estime read needed).
+# If Puka Nacua is ruled OUT before Sunday: move him from questionable to out (his targets route to Mumpfield etc.).
 [status]
 out = [
-  "Davante Adams", "Deebo Samuel Sr.",                                   # FanDuel O
-  # IR with real 2026 volume (targets + carries a game)
+  # Friday's report (Doug, Oct 23)
+  "Jeremiyah Love", "Brian Robinson Jr.", "Tyler Warren", "Emeka Egbuka", "Anthony Gould", "Deebo Samuel Sr.",
+  "David Montgomery",                                                    # doubtful -> out
+  "Davante Adams",                                                       # FanDuel O (hamstring), Oct 19
+  # IR with real 2026 volume (targets + carries a game); Jordan Mason returned (see active)
   "De'Von Achane",                                                       # MIA 15.3
-  "Jordan Mason",                                                        # MIN 15.0
   "Jonah Coleman", "Pat Bryant",                                         # DEN 6.5, 3.2
   "Jonathon Brooks", "Xavier Legette",                                   # CAR 6.0, 3.0
   "Ronnie Rivers", "Terrance Ferguson",                                  # LAR 6.0, 4.0
@@ -29,16 +31,18 @@ out = [
   "Jack Bech",                                                           # LV 3.0
   "Demarcus Robinson",                                                   # SF 3.0
 ]
-questionable = [
-  "Adonai Mitchell",                                                     # FanDuel D
-  "Lamar Jackson", "Baker Mayfield",                                     # QBs
-  "Mike Evans", "Breece Hall", "Quinshon Judkins", "David Montgomery", "Jeremiyah Love", "Jordan Addison",
-  "Rashod Bateman", "Tyler Warren", "Caleb Douglas", "T.J. Hockenson", "Darnell Mooney", "AJ Dillon", "Ashton Dulin",
-  "Theo Johnson", "Anthony Gould", "Tyler Badie", "Sean Tucker", "Colbie Young", "Justin Joly", "Matt Hibner",
+questionable = [   # Doug, Oct 23: uncertain, held out, no redistribution
+  "Puka Nacua", "Lamar Jackson",                                         # Lamar: Doug decides Sunday
+  "Breece Hall", "Calvin Ridley", "Mike Evans", "Jaylen Waddle", "Mike Washington Jr.", "Tyjae Spears",
 ]
+# Back from IR (Doug, Oct 23): active, no redistribution. FanDuel's Oct 19 list still tags them IR; this clears it.
+active = ["Tank Dell", "Jordan Mason", "Beaux Collins"]
 
 # Doug's starting-QB calls, team -> name. Default is the QB with the most attempts in the team's last game.
 [status.starting_qb]
+# Doug, Oct 23: Mayfield active (Q, expected to play); last game's attempts would make Jalon Daniels the starter.
+# Mayfield is red, so TB is not stacked. BAL: Huntley by default (most attempts last game); Lamar decided Sunday.
+TB = "Baker Mayfield"
 
 # Traded players (see config/2026-w06/week.toml for the full notes).
 # Week 7: Houston is on the main slate, so both sides of the Harrison trade run. Doug's read: settled share 0.15,
@@ -149,7 +153,7 @@ red = [
   "Ted Hurst III",             # WR TB, 4 lineups, usable
   "Jordan Addison",            # WR MIN, 0 lineups, questionable (held out)
   "Jaylin Noel",               # WR HOU, 0 lineups, depth (not a starter)
-  "Konata Mumpfield",          # WR LAR, 6 lineups, usable
+  # "Konata Mumpfield" red cleared (Doug, Oct 23): LAR WR2 with Nacua held out, Stafford stack receiver
   "Adonai Mitchell",           # WR NYJ, 0 lineups, questionable (held out)
   "Mitch Tinsley",             # WR CIN, 5 lineups, usable
   "Ja'Kobi Lane",              # WR BAL, 10 lineups, usable
@@ -225,9 +229,14 @@ red = [
 "Green Bay Packers" = 0         # DST GB, cap 0
 "Atlanta Falcons" = 0           # DST ATL, cap 0
 
-[prefs.green]                  # keep empty (green is shadow-only)
+[prefs.green]                  # green is shadow-only, EXCEPT Doug's forced read below (week 7 only)
+# Doug, Oct 23: "I want him in our lineups": minimum 15 lineups in the model set. Overrides green-is-shadow for him
+# this week only; graded as "green (applied)" on Monday, apart from the shadow greens. Listed 0 so the floor below
+# sets the minimum (the floor is max(2 x listed, floor): his prelim 25 would force 27). Moved out of [shadow.green].
+"Kyren Williams" = 0
 
 [prefs.green_floor]
+"Kyren Williams" = 15       # Doug, Oct 23 (forced read)
 
 [prefs.player_cap]
 
@@ -311,7 +320,6 @@ extra_receivers = ["Christian McCaffrey", "Kyren Williams", "Aaron Jones Sr."]
 "Ted Hurst III" = 4
 "Jordan Addison" = 0
 "Jaylin Noel" = 0
-"Konata Mumpfield" = 6
 "Adonai Mitchell" = 0
 "Mitch Tinsley" = 5
 "Ja'Kobi Lane" = 10
@@ -365,7 +373,6 @@ extra_receivers = ["Christian McCaffrey", "Kyren Williams", "Aaron Jones Sr."]
 "Bijan Robinson" = 25
 "Christian McCaffrey" = 25
 "Derrick Henry" = 25
-"Kyren Williams" = 25
 "Jonathan Taylor" = 25
 "Aaron Jones Sr." = 25
 "Chuba Hubbard" = 25
@@ -459,16 +466,18 @@ QB = ["Jared Goff", "Joe Burrow", "Matthew Stafford", "Jordan Love", "Brock Purd
       "Kyler Murray", "Bryce Young", "Jalon Daniels"]
 RB = ["Jahmyr Gibbs", "Christian McCaffrey", "Bucky Irving", "Kyren Williams", "Derrick Henry", "Bijan Robinson",
       "Jonathan Taylor", "Aaron Jones Sr.", "Chuba Hubbard", "Chase Brown"]
+# Doug, Oct 23: Chris Godwin Jr. replaces Emeka Egbuka (out) at his rank; Konata Mumpfield added (Stafford's stack
+# receiver with Nacua held out; no rank given, placed last = 15).
 WR = ["Puka Nacua", "Amon-Ra St. Brown", "Ja'Marr Chase", "Christian Watson", "Tee Higgins", "Justin Jefferson",
-      "Emeka Egbuka", "Tetairoa McMillan", "Malik Nabers", "Marvin Harrison Jr.", "Nico Collins", "Matthew Golden",
-      "Drake London", "Michael Wilson"]
+      "Chris Godwin Jr.", "Tetairoa McMillan", "Malik Nabers", "Marvin Harrison Jr.", "Nico Collins", "Matthew Golden",
+      "Drake London", "Michael Wilson", "Konata Mumpfield"]
 TE = ["Brock Bowers", "Sam LaPorta", "Isaiah Likely", "George Kittle", "Tucker Kraft", "Trey McBride",
       "Harold Fannin Jr.", "Dalton Schultz"]
 DST = ["Cleveland Browns", "Houston Texans", "New York Jets", "Minnesota Vikings", "San Francisco 49ers"]
 
 # Doug, Oct 22: shadow control set = the normal model at cap 45 (same reds, yellows, floor), not entered:
 #   python src/optimize.py --week 2026-w07 --subdir model_cap45 --cap 45
-# Monday's analyze_results.py grades model (cap 26, entered), model_cap45 (control) and pool (cap 45) in pool/grade.csv.
+# Monday's analyze_results.py grades model (cap 27, entered), model_cap45 (control) and pool (cap 45) in pool/grade.csv.
 [grading]
 extra_sets = ["model_cap45"]
 

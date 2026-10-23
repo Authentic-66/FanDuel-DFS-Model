@@ -29,6 +29,14 @@ class StatusTest(unittest.TestCase):
         fd = data.load_slate(slate(), {'out': ['A X'], 'questionable': []}).set_index('Nickname')
         self.assertEqual(list(fd.Inj), ['O', '', 'O', 'IR', ''])
 
+    def test_active_clears_fd_tags(self):
+        fd = data.load_slate(slate(), {'out': ['A X'], 'questionable': [], 'active': ['D X', 'C X']}).set_index('Nickname')
+        self.assertEqual(list(fd.Inj), ['O', '', '', '', ''])
+        with self.assertRaises(ValueError):   # unknown name
+            data.load_slate(slate(), {'out': ['A X'], 'questionable': [], 'active': ['Nobody']})
+        with self.assertRaises(ValueError):   # listed twice
+            data.load_slate(slate(), {'out': ['A X'], 'questionable': [], 'active': ['A X']})
+
     def test_exclude_questionable(self):
         proj = pd.DataFrame(dict(Id=['1', '2', '3'], Name=['q', 'g', 'h'], Pos='WR', Team='AAA', Inj=['Q', 'Q', ''],
                                  Proj=10.0, StartingQB=False))

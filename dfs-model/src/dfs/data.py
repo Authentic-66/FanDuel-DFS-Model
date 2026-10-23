@@ -24,6 +24,14 @@ def load_slate(path, status):
     fd['Full'] = fd['First Name'] + ' ' + fd['Last Name']
     fd['Key'] = fd.Nickname.map(norm_name)
     named = lambda names: fd.Full.isin(names) | fd.Nickname.isin(names)
+    # [status] active: players back from IR (or wrongly tagged O) before FanDuel's list catches up; clears the tag
+    back = status.get('active', [])
+    if back:
+        unknown = sorted(set(back) - set(fd.Full) - set(fd.Nickname))
+        clash = sorted(set(back) & (set(status['out']) | set(status['questionable'])))
+        if unknown or clash:
+            raise ValueError(f'[status] active: not on the slate {unknown}; also listed out / questionable {clash}')
+        fd.loc[named(back), 'Inj'] = ''
     fd.loc[named(status['out']), 'Inj'] = 'O'
     fd.loc[named(status['questionable']), 'Inj'] = 'Q'
     for t in trades(fd, status).itertuples():   # a traded player plays for (and stacks with) his new team
