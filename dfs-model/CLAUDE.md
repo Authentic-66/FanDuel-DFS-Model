@@ -261,7 +261,8 @@ flags dropped (he records full Guru lists when he uses it). Built in the second 
 ## Week 7 run checklist (state at end of Oct 22: colours applied, pool pending Doug; see "Week 7 review applied")
 Steps 1-2 and the preliminary parts of 3-6 are DONE (section "Week 7 preliminary run"). Remaining:
 1. DONE Oct 22 for colours (`data/2026-w07/review_sheet_reviewed.xlsx`). Pool lists loaded (ranked). **Doug, Oct 22:** pool cap 45 for week 7
-   (shadow test; `[pool] raise_cap_to = 45`), model cap 26 (stays marked PRELIMINARY until the final run).
+   (shadow test; `[pool] raise_cap_to = 45`), model cap 26, then 27 after the extra receivers (stays
+   marked PRELIMINARY until the final run).
 2. Friday's report (check Nacua, hurt in practice Oct 22; Adams already out) -> `[status]` (replace the preliminary FanDuel-tag lists; Out/Doubtful -> out, Questionable ->
    questionable, IR players with 3+ targets + carries a game out, QBs out left to FanDuel tags) and
    `[status.starting_qb]` (BAL: Lamar Q, Huntley flagged; TB: Mayfield Q). Re-download `fd_players.csv` if FanDuel
@@ -348,7 +349,7 @@ mode never raises pool players to 40 (gap: raise is triggered by the arithmetic 
 entered: `optimize.py --week 2026-w07 --subdir model_cap45 --cap 45` (`--cap` = this run only, new Oct 22; without it
 the prelim reproduces byte-identical). `[grading] extra_sets = ["model_cap45"]` in week.toml: `analyze.pool_report`
 grades it beside pool and model in `pool/grade.csv` (`tests/test_grading_sets.py`). Monday grades all three: model
-cap 26 (entered), model cap 45 (control), pool cap 45.
+cap 27 (entered), model cap 45 (control), pool cap 45.
 Davante Adams (LAR): FanDuel O (hamstring), not IR; in `[status] out`, volume routed (Nacua +1.6, Higbee +1.5,
 Mumpfield +1.9). **Nacua: Doug says hurt in practice Oct 22 -> check Friday's report.** Not on nflverse's LAR report
 yet. If out (scratch what-if): Kyren 17.7 -> 18.2, Higbee 10.3 -> 11.2, Corum 9.1 -> 9.5, Mumpfield 6.1 -> 8.1 (red),
@@ -358,7 +359,9 @@ would have no usable WR (Mumpfield red) and Stafford stacks = Higbee + an extra-
 (also under `[shadow]`). Control and pool rebuilt: LAR 18 -> 17 / 6 -> 19 stacks, MIN 0 -> 10 / 0 -> 14 (all Murray +
 Jones + Jefferson); control mean proj 123.2 -> 122.5, pool 122.5 -> 121.9. **Model at cap 26 now stalls at 149**
 (reshuffle; no team left for the last lineup); cap 27 builds 150 (scratch preview: mean 119.7, LAR 18, MIN 9).
-`weeks/2026-w07/prelim/` is still the earlier cap-26 build WITHOUT the new receivers, pending Doug's cap call.
+**Doug: cap 27** (`exposure_cap = 27`, still PRELIMINARY until the final run; relief to 30). Prelim rebuilt = the preview
+(150, mean 119.7, HOU 29, LAR 18, CIN 17, DET 16, SF 14, GB 13, MIN 9, ...). Pool rebuilt (fillers now cap 27): 150,
+mean 121.9, LAR 17, MIN 14. Control unchanged (own --cap 45).
 Practice notes (Wed report, not applied): Irving, Hubbard, Egbuka, Schultz, K. Allen, Montgomery, Waller DNP.
 
 ## Week-8 backlog

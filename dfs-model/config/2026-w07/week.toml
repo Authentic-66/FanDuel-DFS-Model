@@ -70,7 +70,8 @@ stack_allocation = "proportional"   # stack counts follow the weights exactly in
 # (too few stackable teams). Standing rule: raise only if infeasible (to 40 at most). Smallest cap that builds 150 = 26,
 # with the floor relief's usual +3 (players up to 29). Relief held at 28 fails at caps 26-28 (143-145 lineups).
 # Doug, Oct 22: cap 26 for week 7 (reads limited the stackable teams); stays PRELIMINARY until the final run.
-exposure_cap = 26
+# Doug, Oct 22 (later): cap 27 after Kyren Williams / Aaron Jones became stack receivers (cap 26 then stalled at 149).
+exposure_cap = 27
 
 [prefs]
 starters_only = true

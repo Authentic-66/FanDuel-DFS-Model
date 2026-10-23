@@ -1,48 +1,48 @@
 Name,Pos,Rank,Listed,Note,Usable,Proj,Mult,Lineups
 Jared Goff,QB,1,10,,True,21.5,1.05,21
 Joe Burrow,QB,2,10,,True,19.7,1.044,15
-Matthew Stafford,QB,3,10,,True,20.8,1.039,19
+Matthew Stafford,QB,3,10,,True,20.8,1.039,17
 Jordan Love,QB,4,10,,True,18.9,1.033,17
 Brock Purdy,QB,5,10,,True,21.0,1.028,20
 Kirk Cousins,QB,6,10,,True,16.9,1.022,9
-C.J. Stroud,QB,7,10,,True,19.1,1.017,19
+C.J. Stroud,QB,7,10,,True,19.1,1.017,20
 Kyler Murray,QB,8,10,,True,16.6,1.011,14
-Bryce Young,QB,9,10,,True,19.0,1.006,14
+Bryce Young,QB,9,10,,True,19.0,1.006,15
 Jalon Daniels,QB,10,10,,True,15.0,1.0,2
-Jahmyr Gibbs,RB,1,10,,True,22.7,1.05,16
-Christian McCaffrey,RB,2,10,,True,19.0,1.044,39
+Jahmyr Gibbs,RB,1,10,,True,22.7,1.05,15
+Christian McCaffrey,RB,2,10,,True,19.0,1.044,38
 Bucky Irving,RB,3,10,,True,13.1,1.039,36
-Kyren Williams,RB,4,10,,True,17.7,1.033,44
+Kyren Williams,RB,4,10,,True,17.7,1.033,45
 Derrick Henry,RB,5,10,,True,18.1,1.028,24
-Bijan Robinson,RB,6,10,,True,18.2,1.022,3
-Jonathan Taylor,RB,7,10,,True,16.7,1.017,11
+Bijan Robinson,RB,6,10,,True,18.2,1.022,2
+Jonathan Taylor,RB,7,10,,True,16.7,1.017,12
 Aaron Jones Sr.,RB,8,10,,True,16.2,1.011,45
 Chuba Hubbard,RB,9,10,,True,16.1,1.006,45
-Chase Brown,RB,10,10,,True,14.6,1.0,7
-Puka Nacua,WR,1,14,,True,20.8,1.05,17
-Amon-Ra St. Brown,WR,2,14,,True,17.4,1.046,22
+Chase Brown,RB,10,10,,True,14.6,1.0,9
+Puka Nacua,WR,1,14,,True,20.8,1.05,18
+Amon-Ra St. Brown,WR,2,14,,True,17.4,1.046,23
 Ja'Marr Chase,WR,3,14,,True,14.8,1.042,2
-Christian Watson,WR,4,14,,True,16.3,1.038,42
-Tee Higgins,WR,5,14,,True,13.9,1.035,37
+Christian Watson,WR,4,14,,True,16.3,1.038,40
+Tee Higgins,WR,5,14,,True,13.9,1.035,35
 Justin Jefferson,WR,6,14,,True,11.5,1.031,14
 Emeka Egbuka,WR,7,14,,True,10.4,1.027,45
-Tetairoa McMillan,WR,8,14,,True,15.7,1.023,41
-Malik Nabers,WR,9,14,,True,14.2,1.019,7
+Tetairoa McMillan,WR,8,14,,True,15.7,1.023,44
+Malik Nabers,WR,9,14,,True,14.2,1.019,6
 Marvin Harrison Jr.,WR,10,14,,True,6.1,1.015,45
-Nico Collins,WR,11,14,,True,13.2,1.012,18
+Nico Collins,WR,11,14,,True,13.2,1.012,17
 Matthew Golden,WR,12,14,,True,13.3,1.008,45
-Drake London,WR,13,14,,True,14.1,1.004,25
-Michael Wilson,WR,14,14,,True,12.5,1.0,36
-Brock Bowers,TE,1,8,,True,16.4,1.05,21
+Drake London,WR,13,14,,True,14.1,1.004,26
+Michael Wilson,WR,14,14,,True,12.5,1.0,37
+Brock Bowers,TE,1,8,,True,16.4,1.05,20
 Sam LaPorta,TE,2,8,,True,13.6,1.043,45
-Isaiah Likely,TE,3,8,,True,11.2,1.036,41
-George Kittle,TE,4,8,,True,14.4,1.029,40
-Tucker Kraft,TE,5,8,,True,10.8,1.021,43
-Trey McBride,TE,6,8,,True,15.0,1.014,5
-Harold Fannin Jr.,TE,7,8,,True,7.7,1.007,17
-Dalton Schultz,TE,8,8,,True,8.1,1.0,31
+Isaiah Likely,TE,3,8,,True,11.2,1.036,44
+George Kittle,TE,4,8,,True,14.4,1.029,42
+Tucker Kraft,TE,5,8,,True,10.8,1.021,39
+Trey McBride,TE,6,8,,True,15.0,1.014,6
+Harold Fannin Jr.,TE,7,8,,True,7.7,1.007,14
+Dalton Schultz,TE,8,8,,True,8.1,1.0,32
 Cleveland Browns,D,1,5,,True,7.7,1.05,45
 Houston Texans,D,2,5,,True,8.5,1.038,16
-New York Jets,D,3,5,,True,8.3,1.025,36
-Minnesota Vikings,D,4,5,,True,8.0,1.012,31
-San Francisco 49ers,D,5,5,,True,6.1,1.0,14
+New York Jets,D,3,5,,True,8.3,1.025,32
+Minnesota Vikings,D,4,5,,True,8.0,1.012,34
+San Francisco 49ers,D,5,5,,True,6.1,1.0,15
