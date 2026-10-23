@@ -258,12 +258,11 @@ flags dropped (he records full Guru lists when he uses it). Built in the second 
   Hibner, Nicholas/Nick Singleton, Mitchell/Mitch Tinsley, Andrew/Drew Ogletree. The guard's no-data warning is the
   place new aliases show up: check it every run.
 
-## Week 7 run checklist (state at end of Oct 19: head 79bef65 on origin/main; preliminary done, see below)
+## Week 7 run checklist (state at end of Oct 22: colours applied, pool pending Doug; see "Week 7 review applied")
 Steps 1-2 and the preliminary parts of 3-6 are DONE (section "Week 7 preliminary run"). Remaining:
-1. Doug's review sheet `data/2026-w07/review_sheet.xlsx` (rebuilt Oct 19 evening; untracked): red -> `[prefs] red`
-   (+ `[shadow.red_lineups]` with the sheet's Lineups; Kaytron Allen and Jared Wayne already red), yellow ->
-   `[prefs.yellow]` with the sheet's Lineups numbers, green -> `[shadow.green]`; Pool = Y / Rank -> `[pool]` lists
-   in week.toml (QB 10, RB 10, WR 14, TE 8, DST 5; `ranked = true` only if he ranked them).
+1. DONE Oct 22 for colours (`data/2026-w07/review_sheet_reviewed.xlsx`). **Pending Doug:** which players are the pool
+   (his Pool marks don't match the sizes; see below), the pool cap (stalls at 40), and the model cap (26 or 40).
+   Then `[pool]` lists in week.toml with `ranked = true`.
 2. Friday's report -> `[status]` (replace the preliminary FanDuel-tag lists; Out/Doubtful -> out, Questionable ->
    questionable, IR players with 3+ targets + carries a game out, QBs out left to FanDuel tags) and
    `[status.starting_qb]` (BAL: Lamar Q, Huntley flagged; TB: Mayfield Q). Re-download `fd_players.csv` if FanDuel
@@ -319,6 +318,28 @@ training rows never negative, so weeks 4-6 fits unchanged). Found:
 Next: Doug's sheet (Color -> [prefs] / [shadow]; Pool / Rank -> [pool]), Friday status, Saturday / Sunday lines,
 then final model run, `optimize.py` (main folder) and `optimize.py --pool` (shadow), 149 files if free entry.
 
+## Week 7 review applied (Thu Oct 22) — inputs only
+Doug's sheet `data/2026-w07/review_sheet_reviewed.xlsx` (untracked; `review_sheet.xlsx` left as built). All 201 names
+match proj.csv. Colours: 106 red -> `[prefs] red` (+ `[shadow.red_lineups]`; 28 of them were in 161 prelim slots, incl.
+TEN DST 25, MIA DST 24, Ja'Kobi Lane 10, Bartholomew 9, Skattebo 8, Tate 8), 36 yellow -> `[prefs.yellow]` with the
+sheet's Lineups (8 of them had 0-1 lineups, so cap round(0.5 x) = 0: Winston, Dulcich, CIN / GB / ATL DST, and depth
+RBs Harvey, B. Robinson, Tracy), 59 green -> `[shadow.green]`. Red QBs Lamar and Mayfield stay out even if cleared Friday.
+Stats cache refreshed (the Oct 19 download predated SF@WAS MNF): only SF usage changed (McCaffrey 18.2 -> 19.0, Kittle
+13.8 -> 14.4, Purdy 21.2 -> 21.0); everyone else <= 0.1 (random-stream noise). MNF: Purdy 100% of snaps, Kittle 89%,
+CMC 85% (30.7 pts); none of the three on SF's week-7 practice report (nflverse injuries_2026.csv): no injury.
+**Model set:** stalls at 147 at cap 25 (reads leave too few stackable teams: MIN 0 with Bartholomew red and
+Addison / Hockenson Q, BAL capped by Huntley yellow 6, ARI / TEN / MIA QBs red, NYG Winston cap 0). Cap 26 is the
+smallest that builds 150 (floor relief +3 -> up to 29); relief held at 28 fails at caps 26-28. `[optimizer]
+exposure_cap = 26` in week.toml is PRELIMINARY pending Doug (26 or 40). Prelim in `weeks/2026-w07/prelim/` (upload
+deleted): 150, mean proj 119.9 (Monday 118.4), salary all $59,000-60,000, 13 stack teams (HOU 28, CIN 19, DET 17, GB 17,
+SF 16, LAR 14, ...), 84 players used. Bijan 25 -> 2, Jefferson 14 -> 1, Murray 9 -> 0.
+**Pool:** NOT in week.toml. Doug's Pool = Y marks give QB 17, RB 0, WR 26, TE 12, DST 0; his ranks run QB 1-17, RB 1-19,
+WR 1-18, TE 1-17, DST 1-14 (no 13). Provisional reading (scratch only): top N by rank = QB 10, RB 10, WR 14, TE 8,
+DST 5, all usable. It stalls at 145 at cap 40; builds 150 at cap 45 (mean proj 122.5, 148 lineups use a filler, 9
+stack teams). WR 18 or 2 fillers stall earlier (118 / 133): the capacity check then passes at the standing cap, so pool
+mode never raises pool players to 40 (gap: raise is triggered by the arithmetic check only, not by a stall).
+Practice notes (Wed report, not applied): Irving, Hubbard, Egbuka, Schultz, K. Allen, Montgomery, Waller DNP.
+
 ## Week-8 backlog
 - **Per-position redistribution mode**: RB out = routing by position; WR out = depth split; TE out = old 80% rule or none.
   Basis: the section 11.2 accuracy table (players moved 1+: RB out 6.65 routing vs 6.70 old; WR out 6.53 depth vs 6.77 pro
@@ -334,6 +355,7 @@ then final model run, `optimize.py` (main folder) and `optimize.py --pool` (shad
 - **Harrison trade, Arizona side**: full volume handed out although ARI's week-6 game already lacked him (small double
   count); remove the trade entry after ~3 Houston games.
 - 149-lineup script (still an inline snippet each week).
+- Pool mode: raise pool players to `raise_cap_to` on a stall too, not only when the capacity arithmetic fails (week 7).
 
 ## History refits (Oct 12) — see docs/phase2_history.md
 `fetch_stats.py --seasons 2020-2025 --history` puts player stats, team stats and schedules with Vegas lines in

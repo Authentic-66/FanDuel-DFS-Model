@@ -66,16 +66,163 @@ depth_rank_positions = ["WR"]
 
 [optimizer]
 stack_allocation = "proportional"   # stack counts follow the weights exactly instead of random draws
+# PRELIMINARY, pending Doug (Claude, Oct 22): with Doug's Oct 22 reds / yellows the model stalls at 147 lineups at cap 25
+# (too few stackable teams). Standing rule: raise only if infeasible (to 40 at most). Smallest cap that builds 150 = 26,
+# with the floor relief's usual +3 (players up to 29). Relief held at 28 fails at caps 26-28 (143-145 lineups).
+# Doug's call before the final run: 26 (this) or 40, or loosen reads. Back to 25: delete this line.
+exposure_cap = 26
 
 [prefs]
 starters_only = true
 red_teams = []
 red = [
-  "Kaytron Allen",    # MIA RB, Doug Oct 19: not in any lineup (waiver claim from WAS)
-  "Jared Wayne",      # MIA WR, Doug Oct 19 (FanDuel lists him MIA, stats with HOU)
+  # Doug Oct 19
+  "Kaytron Allen",    # MIA RB, not in any lineup (waiver claim from WAS)
+  "Jared Wayne",      # MIA WR (FanDuel lists him MIA, stats with HOU)
+  # Doug, review_sheet_reviewed.xlsx (Oct 22): Pos Team, prelim lineups, In_model_pool
+  "Jacoby Brissett",           # QB ARI, 4 lineups, usable
+  "Malik Willis",              # QB MIA, 1 lineups, usable
+  "Cam Ward",                  # QB TEN, 3 lineups, usable
+  "Lamar Jackson",             # QB BAL, 0 lineups, questionable (held out)
+  "Baker Mayfield",            # QB TB, 0 lineups, questionable (held out)
+  "J.J. McCarthy",             # QB NYG, 0 lineups, not the starting QB
+  "Cooper Rush",               # QB ATL, 0 lineups, not the starting QB
+  "Jack Strand",               # QB ATL, 0 lineups, not the starting QB
+  "Carson Wentz",              # QB MIN, 0 lineups, not the starting QB
+  "Cam Skattebo",              # RB NYG, 8 lineups, usable
+  "Quinshon Judkins",          # RB CLE, 0 lineups, questionable (held out)
+  "Breece Hall",               # RB NYJ, 0 lineups, questionable (held out)
+  "Blake Corum",               # RB LAR, 0 lineups, depth (not a starter)
+  "MarShawn Lloyd",            # RB GB, 0 lineups, depth (not a starter)
+  "Jawhar Jordan",             # RB HOU, 0 lineups, depth (not a starter)
+  "Jeremiyah Love",            # RB ARI, 0 lineups, questionable (held out)
+  "David Montgomery",          # RB HOU, 0 lineups, questionable (held out)
+  "Kenny Gainwell",            # RB TB, 0 lineups, depth (not a starter)
+  "Samaje Perine",             # RB CIN, 0 lineups, depth (not a starter)
+  "Bam Knight",                # RB ARI, 0 lineups, depth (not a starter)
+  "Justice Hill",              # RB BAL, 0 lineups, depth (not a starter)
+  "Tyjae Spears",              # RB TEN, 0 lineups, depth (not a starter)
+  "Kaelon Black",              # RB SF, 0 lineups, depth (not a starter)
+  "Mike Washington Jr.",       # RB LV, 0 lineups, depth (not a starter)
+  "Devin Singletary",          # RB NYG, 0 lineups, depth (not a starter)
+  "Jaleel McLaughlin",         # RB CLE, 0 lineups, usable
+  "Jaylen Wright",             # RB MIA, 0 lineups, depth (not a starter)
+  "DJ Herman",                 # RB MIA, 0 lineups, depth (not a starter)
+  "Kyle Juszczyk",             # RB SF, 0 lineups, depth (not a starter)
+  "Kaleb Johnson",             # RB GB, 0 lineups, depth (not a starter)
+  "Najee Harris",              # RB NYG, 0 lineups, depth (not a starter)
+  "Seth McGowan",              # RB IND, 0 lineups, depth (not a starter)
+  "Sione Vaki",                # RB DET, 0 lineups, depth (not a starter)
+  "Sean Tucker",               # RB TB, 0 lineups, questionable (held out)
+  "Isaiah Davis",              # RB NYJ, 0 lineups, depth (not a starter)
+  "AJ Dillon",                 # RB CAR, 0 lineups, questionable (held out)
+  "Tyler Badie",               # RB DEN, 0 lineups, questionable (held out)
+  "Nick Singleton",            # RB TEN, 0 lineups, depth (not a starter)
+  "DeeJay Dallas",             # RB MIN, 0 lineups, depth (not a starter)
+  "Demond Claiborne",          # RB MIN, 0 lineups, depth (not a starter)
+  "Jordan James",              # RB SF, 0 lineups, depth (not a starter)
+  "Dare Ogunbowale",           # RB HOU, 0 lineups, depth (not a starter)
+  "Michael Burton",            # RB CLE, 0 lineups, depth (not a starter)
+  "Dylan Laube",               # RB LV, 0 lineups, depth (not a starter)
+  "Patrick Ricard",            # RB NYG, 0 lineups, depth (not a starter)
+  "Trevor Etienne",            # RB CAR, 0 lineups, depth (not a starter)
+  "Adam Prentice",             # RB DEN, 0 lineups, depth (not a starter)
+  "Kalel Mullings",            # RB TEN, 0 lineups, depth (not a starter)
+  "Kene Nwangwu",              # RB NYJ, 0 lineups, depth (not a starter)
+  "Tahj Brooks",               # RB CIN, 0 lineups, depth (not a starter)
+  "Rasheen Ali",               # RB BAL, 0 lineups, depth (not a starter)
+  "Julius Chestnut",           # RB TEN, 0 lineups, depth (not a starter)
+  "Jacob Saylors",             # RB DET, 0 lineups, depth (not a starter)
+  "Anthony Tyus III",          # RB CAR, 0 lineups, depth (not a starter)
+  "Josh Williams",             # RB TB, 0 lineups, depth (not a starter)
+  "Dean Connors",              # RB LAR, 0 lineups, depth (not a starter)
+  "Max Bredeson",              # RB MIN, 0 lineups, depth (not a starter)
+  "Mike Evans",                # WR SF, 0 lineups, questionable (held out)
+  "Carnell Tate",              # WR TEN, 8 lineups, usable
+  "Malik Washington",          # WR MIA, 6 lineups, usable
+  "Kendrick Bourne",           # WR ARI, 1 lineups, usable
+  "Reggie Virgil",             # WR ARI, 4 lineups, usable
+  "KC Concepcion Jr.",         # WR CLE, 5 lineups, usable
+  "Omar Cooper Jr.",           # WR NYJ, 6 lineups, usable
+  "Xavier Hutchinson",         # WR HOU, 6 lineups, usable
+  "Ted Hurst III",             # WR TB, 4 lineups, usable
+  "Jordan Addison",            # WR MIN, 0 lineups, questionable (held out)
+  "Jaylin Noel",               # WR HOU, 0 lineups, depth (not a starter)
+  "Konata Mumpfield",          # WR LAR, 6 lineups, usable
+  "Adonai Mitchell",           # WR NYJ, 0 lineups, questionable (held out)
+  "Mitch Tinsley",             # WR CIN, 5 lineups, usable
+  "Ja'Kobi Lane",              # WR BAL, 10 lineups, usable
+  "Jahan Dotson",              # WR ATL, 6 lineups, usable
+  "Jerry Jeudy",               # WR CLE, 0 lineups, usable
+  "Caleb Douglas",             # WR MIA, 0 lineups, questionable (held out)
+  "Isaac TeSlaa",              # WR DET, 1 lineups, usable
+  "Malachi Fields",            # WR NYG, 0 lineups, usable
+  "Dohnte Meyers",             # WR CIN, 0 lineups, depth (not a starter)
+  "John Metchie III",          # WR CAR, 0 lineups, usable
+  "Kayshon Boutte",            # WR HOU, 0 lineups, depth (not a starter)
+  "Jalen Nailor",              # WR LV, 2 lineups, usable
+  "Kevin Coleman Jr.",         # WR MIA, 1 lineups, usable
+  "Rashod Bateman",            # WR BAL, 0 lineups, questionable (held out)
+  "Savion Williams",           # WR GB, 3 lineups, usable
+  "Laquon Treadwell",          # WR IND, 0 lineups, usable
+  "Isaiah Bond",               # WR CLE, 0 lineups, depth (not a starter)
+  "Chris Bell",                # WR MIA, 0 lineups, projects < 4
+  "Tim Patrick",               # WR NYJ, 0 lineups, projects < 4
+  "Darnell Mooney",            # WR NYG, 0 lineups, questionable (held out)
+  "Ashton Dulin",              # WR IND, 0 lineups, questionable (held out)
+  "Michael Mayer",             # TE LV, 0 lineups, depth (not a starter)
+  "Tyler Warren",              # TE IND, 0 lineups, questionable (held out)
+  "Will Mallory",              # TE IND, 4 lineups, usable
+  "T.J. Hockenson",            # TE MIN, 0 lineups, questionable (held out)
+  "Tommy Tremble",             # TE CAR, 0 lineups, depth (not a starter)
+  "Mason Taylor",              # TE NYJ, 0 lineups, depth (not a starter)
+  "Gavin Bartholomew",         # TE MIN, 9 lineups, usable
+  "Erick All Jr.",             # TE CIN, 0 lineups, depth (not a starter)
+  "Tennessee Titans",          # DST TEN, 25 lineups, usable
+  "Los Angeles Rams",          # DST LAR, 3 lineups, usable
+  "Miami Dolphins",            # DST MIA, 24 lineups, usable
+  "Indianapolis Colts",        # DST IND, 2 lineups, usable
+  "Baltimore Ravens",          # DST BAL, 2 lineups, usable
+  "Las Vegas Raiders",         # DST LV, 2 lineups, usable
 ]
 
-[prefs.yellow]                 # "Player" = lineups he had in the reviewed run
+[prefs.yellow]                 # "Player" = lineups he had in the reviewed run (prelim); cap = round(0.5 x)
+"Tyler Huntley" = 13            # QB BAL, cap 6
+"Deshaun Watson" = 5            # QB CLE, cap 2
+"Bo Nix" = 9                    # QB DEN, cap 4
+"Michael Penix Jr." = 8         # QB ATL, cap 4
+"Jalon Daniels" = 5             # QB TB, cap 2
+"Geno Smith" = 6                # QB NYJ, cap 3
+"Daniel Jones" = 2              # QB IND, cap 1
+"Jameis Winston" = 1            # QB NYG, cap 0
+"Pierre Strong Jr." = 25        # RB GB, cap 12
+"RJ Harvey" = 0                 # RB DEN, cap 0, depth (not a starter)
+"Ollie Gordon II" = 15          # RB MIA, cap 8
+"Tony Pollard" = 8              # RB TEN, cap 4
+"Woody Marks" = 3               # RB HOU, cap 2
+"Brian Robinson Jr." = 0        # RB ATL, cap 0, depth (not a starter)
+"Tyler Allgeier" = 2            # RB ARI, cap 1
+"Tyrone Tracy Jr." = 0          # RB NYG, cap 0, depth (not a starter)
+"Jameson Williams" = 14         # WR DET, cap 7
+"Keenan Allen" = 11             # WR IND, cap 6
+"Jaylen Waddle" = 9             # WR DEN, cap 4
+"Denzel Boston" = 11            # WR CLE, cap 6
+"Wan'Dale Robinson" = 10        # WR TEN, cap 5
+"Josh Downs" = 3                # WR IND, cap 2
+"Courtland Sutton" = 7          # WR DEN, cap 4
+"Chris Godwin Jr." = 2          # WR TB, cap 1
+"Cade Otton" = 6                # TE TB, cap 3
+"Kenyon Sadiq" = 2              # TE NYJ, cap 1
+"Greg Dulcich" = 1              # TE MIA, cap 0
+"Evan Engram" = 6               # TE DEN, cap 3
+"Carolina Panthers" = 11        # DST CAR, cap 6
+"Arizona Cardinals" = 8         # DST ARI, cap 4
+"Tampa Bay Buccaneers" = 2      # DST TB, cap 1
+"Detroit Lions" = 6             # DST DET, cap 3
+"New York Giants" = 3           # DST NYG, cap 2
+"Cincinnati Bengals" = 1        # DST CIN, cap 0
+"Green Bay Packers" = 0         # DST GB, cap 0
+"Atlanta Falcons" = 0           # DST ATL, cap 0
 
 [prefs.green]                  # keep empty (green is shadow-only)
 
@@ -86,19 +233,182 @@ red = [
 # Record only: NOT applied. Green reads go here; red is applied, so its review-run lineups are recorded under
 # [shadow.red_lineups].
 [shadow]
-reviewed = ""
+reviewed = "data/2026-w07/review_sheet_reviewed.xlsx"   # Doug, Oct 22
 red = []
 
 # Doug's SF stack read (applied in [stacks] extra_receivers), recorded so it can be graded by hand after the games.
 extra_receivers = ["Christian McCaffrey"]
 
-[shadow.red_lineups]
-"Kaytron Allen" = 0   # lineups in the preliminary run (both project under 4: never used)
+[shadow.red_lineups]           # lineups each red player had in the prelim run (red is applied, so recorded here)
+"Jacoby Brissett" = 4
+"Malik Willis" = 1
+"Cam Ward" = 3
+"Lamar Jackson" = 0
+"Baker Mayfield" = 0
+"J.J. McCarthy" = 0
+"Cooper Rush" = 0
+"Jack Strand" = 0
+"Carson Wentz" = 0
+"Cam Skattebo" = 8
+"Quinshon Judkins" = 0
+"Breece Hall" = 0
+"Blake Corum" = 0
+"MarShawn Lloyd" = 0
+"Jawhar Jordan" = 0
+"Jeremiyah Love" = 0
+"David Montgomery" = 0
+"Kenny Gainwell" = 0
+"Samaje Perine" = 0
+"Bam Knight" = 0
+"Justice Hill" = 0
+"Tyjae Spears" = 0
+"Kaelon Black" = 0
+"Mike Washington Jr." = 0
+"Devin Singletary" = 0
+"Jaleel McLaughlin" = 0
+"Jaylen Wright" = 0
+"DJ Herman" = 0
+"Kyle Juszczyk" = 0
+"Kaleb Johnson" = 0
+"Najee Harris" = 0
+"Seth McGowan" = 0
+"Sione Vaki" = 0
+"Sean Tucker" = 0
+"Isaiah Davis" = 0
+"AJ Dillon" = 0
+"Tyler Badie" = 0
+"Kaytron Allen" = 0
+"Nick Singleton" = 0
+"DeeJay Dallas" = 0
+"Demond Claiborne" = 0
+"Jordan James" = 0
+"Dare Ogunbowale" = 0
+"Michael Burton" = 0
+"Dylan Laube" = 0
+"Patrick Ricard" = 0
+"Trevor Etienne" = 0
+"Adam Prentice" = 0
+"Kalel Mullings" = 0
+"Kene Nwangwu" = 0
+"Tahj Brooks" = 0
+"Rasheen Ali" = 0
+"Julius Chestnut" = 0
+"Jacob Saylors" = 0
+"Anthony Tyus III" = 0
+"Josh Williams" = 0
+"Dean Connors" = 0
+"Max Bredeson" = 0
+"Mike Evans" = 0
+"Carnell Tate" = 8
+"Malik Washington" = 6
+"Kendrick Bourne" = 1
+"Reggie Virgil" = 4
+"KC Concepcion Jr." = 5
+"Omar Cooper Jr." = 6
+"Xavier Hutchinson" = 6
+"Ted Hurst III" = 4
+"Jordan Addison" = 0
+"Jaylin Noel" = 0
+"Konata Mumpfield" = 6
+"Adonai Mitchell" = 0
+"Mitch Tinsley" = 5
+"Ja'Kobi Lane" = 10
+"Jahan Dotson" = 6
+"Jerry Jeudy" = 0
+"Caleb Douglas" = 0
+"Isaac TeSlaa" = 1
+"Malachi Fields" = 0
+"Dohnte Meyers" = 0
+"John Metchie III" = 0
+"Kayshon Boutte" = 0
+"Jalen Nailor" = 2
+"Kevin Coleman Jr." = 1
+"Rashod Bateman" = 0
+"Savion Williams" = 3
+"Laquon Treadwell" = 0
+"Isaiah Bond" = 0
+"Chris Bell" = 0
+"Tim Patrick" = 0
 "Jared Wayne" = 0
+"Darnell Mooney" = 0
+"Ashton Dulin" = 0
+"Michael Mayer" = 0
+"Tyler Warren" = 0
+"Will Mallory" = 4
+"T.J. Hockenson" = 0
+"Tommy Tremble" = 0
+"Mason Taylor" = 0
+"Gavin Bartholomew" = 9
+"Erick All Jr." = 0
+"Tennessee Titans" = 25
+"Los Angeles Rams" = 3
+"Miami Dolphins" = 24
+"Indianapolis Colts" = 2
+"Baltimore Ravens" = 2
+"Las Vegas Raiders" = 2
 
 [shadow.yellow]
 
-[shadow.green]
+[shadow.green]                 # "Player" = lineups he had in the prelim run (record only; green is shadow)
+"Jared Goff" = 14
+"Brock Purdy" = 13
+"Matthew Stafford" = 11
+"Joe Burrow" = 10
+"C.J. Stroud" = 11
+"Bryce Young" = 9
+"Jordan Love" = 10
+"Kirk Cousins" = 6
+"Kyler Murray" = 9
+"Jahmyr Gibbs" = 25
+"Bijan Robinson" = 25
+"Christian McCaffrey" = 25
+"Derrick Henry" = 25
+"Kyren Williams" = 25
+"Jonathan Taylor" = 25
+"Aaron Jones Sr." = 25
+"Chuba Hubbard" = 25
+"Ashton Jeanty" = 25
+"Chase Brown" = 25
+"Bucky Irving" = 10
+"J.K. Dobbins" = 14
+"Braelon Allen" = 4
+"Puka Nacua" = 25
+"Amon-Ra St. Brown" = 25
+"Christian Watson" = 25
+"Tetairoa McMillan" = 25
+"Zay Flowers" = 25
+"Ja'Marr Chase" = 18
+"Malik Nabers" = 20
+"Drake London" = 25
+"Tee Higgins" = 25
+"Matthew Golden" = 22
+"Nico Collins" = 16
+"Garrett Wilson" = 18
+"Jalen Coker" = 25
+"Michael Wilson" = 21
+"Justin Jefferson" = 14
+"Tre Tucker" = 15
+"Emeka Egbuka" = 12
+"Marvin Harrison Jr." = 2
+"Brock Bowers" = 25
+"Trey McBride" = 22
+"George Kittle" = 25
+"Sam LaPorta" = 25
+"Isaiah Likely" = 9
+"Tucker Kraft" = 16
+"Tyler Higbee" = 22
+"Dalton Schultz" = 8
+"Harold Fannin Jr." = 6
+"Mark Andrews" = 6
+"Mike Gesicki" = 4
+"Kyle Pitts Sr." = 12
+"Darren Waller" = 4
+"Houston Texans" = 15
+"New York Jets" = 10
+"Minnesota Vikings" = 16
+"Cleveland Browns" = 10
+"Denver Broncos" = 9
+"San Francisco 49ers" = 1
 
 [shadow.green_floor]
 
