@@ -463,6 +463,12 @@ TE = ["Brock Bowers", "Sam LaPorta", "Isaiah Likely", "George Kittle", "Tucker K
       "Harold Fannin Jr.", "Dalton Schultz"]
 DST = ["Cleveland Browns", "Houston Texans", "New York Jets", "Minnesota Vikings", "San Francisco 49ers"]
 
+# Doug, Oct 22: shadow control set = the normal model at cap 45 (same reds, yellows, floor), not entered:
+#   python src/optimize.py --week 2026-w07 --subdir model_cap45 --cap 45
+# Monday's analyze_results.py grades model (cap 26, entered), model_cap45 (control) and pool (cap 45) in pool/grade.csv.
+[grading]
+extra_sets = ["model_cap45"]
+
 [contest]
 field_size = 0                 # fill in after the slate (for grading)
 

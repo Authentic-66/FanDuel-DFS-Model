@@ -154,6 +154,7 @@ def pool_report(week, cfg, folder='pool'):
     entered (results_my_entries.csv), all scored on actual points: lineups, avg, top-10% / top-1% counts, best and
     best rank (when [contest] field_size and the field files exist), and how many of each set were entered.
     folder: weeks/<week>/<folder>/ (e.g. 'pool/test' for optimize.py --pool --subdir test).
+    [grading] extra_sets in week.toml: more folders under weeks/<week>/ graded alongside (shadow control sets).
     Returns None when the week has no pool lineups."""
     import os
     from . import optimize, pool
@@ -165,6 +166,12 @@ def pool_report(week, cfg, folder='pool'):
     sets = {'pool': optimize.read_upload(path)[1]}
     if os.path.exists(os.path.join(week.out, 'upload.csv')):
         sets['model'] = optimize.read_upload(os.path.join(week.out, 'upload.csv'))[1]
+    for name in cfg.get('grading', {}).get('extra_sets', []):   # e.g. week 7's shadow control set model_cap45
+        extra = os.path.join(week.out, name, 'upload.csv')
+        if os.path.exists(extra):
+            sets[name] = optimize.read_upload(extra)[1]
+        else:
+            print(f'grading: [grading] extra_sets lists {name} but weeks/{week.name}/{name}/upload.csv is missing')
     sets['entered'] = ent
     n_field = cfg['contest'].get('field_size', 0)
     top_path, q_path = os.path.join(week.data, 'results_top2000.csv'), os.path.join(week.data, 'results_field_quantiles.csv')

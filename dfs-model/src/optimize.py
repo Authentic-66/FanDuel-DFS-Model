@@ -1,6 +1,8 @@
 """Build stacked GPP lineups -> weeks/<week>/upload.csv, readable.csv, projections.csv, exposure.csv
 (+ stacks.csv: our stack shares vs the field's projected QB ownership, when Own_proj is available).
 --subdir writes them to weeks/<week>/<subdir>/ instead, leaving the main files alone (e.g. to compare settings).
+--cap N overrides [optimizer] exposure_cap for this run only (e.g. week 7's shadow control set:
+--subdir model_cap45 --cap 45).
 --pool builds Doug's pool lineups from [pool] in week.toml instead (docs/pool_mode.md) and writes them to
 weeks/<week>/pool/ (or pool/<subdir>/), plus pool.csv: every listed player, his rank, status and lineups."""
 import os
@@ -10,7 +12,11 @@ import pandas as pd
 from dfs import config, optimize as opt, ownership, pool, project
 
 week, cfg, args = config.cli(__doc__, [(('--subdir',), dict(default='', help='write outputs to weeks/<week>/<subdir>/')),
-                                       (('--pool',), dict(action='store_true', help="Doug's pool lineups -> weeks/<week>/pool/"))])
+                                       (('--pool',), dict(action='store_true', help="Doug's pool lineups -> weeks/<week>/pool/")),
+                                       (('--cap',), dict(type=int, default=0, help='exposure cap for this run (default: config)'))])
+if args.cap:
+    print(f"exposure cap {args.cap} for this run (config: {cfg['optimizer']['exposure_cap']})")
+    cfg['optimizer']['exposure_cap'] = args.cap
 if args.pool:
     if not pool.is_on(cfg):
         raise SystemExit('--pool: no [pool] lists in config/%s/week.toml' % week.name)

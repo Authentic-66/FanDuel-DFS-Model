@@ -262,14 +262,15 @@ flags dropped (he records full Guru lists when he uses it). Built in the second 
 Steps 1-2 and the preliminary parts of 3-6 are DONE (section "Week 7 preliminary run"). Remaining:
 1. DONE Oct 22 for colours (`data/2026-w07/review_sheet_reviewed.xlsx`). Pool lists loaded (ranked). **Doug, Oct 22:** pool cap 45 for week 7
    (shadow test; `[pool] raise_cap_to = 45`), model cap 26 (stays marked PRELIMINARY until the final run).
-2. Friday's report -> `[status]` (replace the preliminary FanDuel-tag lists; Out/Doubtful -> out, Questionable ->
+2. Friday's report (check Nacua, hurt in practice Oct 22; Adams already out) -> `[status]` (replace the preliminary FanDuel-tag lists; Out/Doubtful -> out, Questionable ->
    questionable, IR players with 3+ targets + carries a game out, QBs out left to FanDuel tags) and
    `[status.starting_qb]` (BAL: Lamar Q, Huntley flagged; TB: Mayfield Q). Re-download `fd_players.csv` if FanDuel
    updated it. Then Doug's Estime (CLE RB, no 2026 data) and SF override reads, if any.
 3. Saturday / Sunday: replace `data/2026-w07/lines.csv` (PRELIMINARY nflverse lines) and rebuild `[stacks.weights]`
    = round(2 x (implied - 16)), min 1. Keep `[stacks] extra_receivers = ["Christian McCaffrey"]` (Doug's SF read).
 4. `model.py`, read the role-guard warning (new names = no 2026 snaps or a missing alias) and team-mismatch warnings.
-5. Final `optimize.py --week 2026-w07` (main folder; check the floor line) and `optimize.py --week 2026-w07 --pool`
+5. Final `optimize.py --week 2026-w07` (main folder; check the floor line), the control
+   `optimize.py --week 2026-w07 --subdir model_cap45 --cap 45` and `optimize.py --week 2026-w07 --pool`
    (shadow, `weeks/2026-w07/pool/`; cap 40 for pool players is expected; if it stalls, stop and ask Doug). Write the
    149 files for the model set if he has a free entry. Enter the model's lineups only.
 6. After the slate: `convert_results.py`, `[contest] field_size`, `analyze_results.py` (grades the pool set too:
@@ -343,6 +344,16 @@ WR 1-18, TE 1-17, DST 1-14 (no 13). Provisional reading (scratch only): top N by
 DST 5, all usable. It stalls at 145 at cap 40; builds 150 at cap 45 (mean proj 122.5, 148 lineups use a filler, 9
 stack teams). WR 18 or 2 fillers stall earlier (118 / 133): the capacity check then passes at the standing cap, so pool
 mode never raises pool players to 40 (gap: raise is triggered by the arithmetic check only, not by a stall).
+**Shadow control set (Doug, Oct 22):** the normal model at cap 45 (same reds, yellows, floor; relief to 48), not
+entered: `optimize.py --week 2026-w07 --subdir model_cap45 --cap 45` (`--cap` = this run only, new Oct 22; without it
+the prelim reproduces byte-identical). `[grading] extra_sets = ["model_cap45"]` in week.toml: `analyze.pool_report`
+grades it beside pool and model in `pool/grade.csv` (`tests/test_grading_sets.py`). Monday grades all three: model
+cap 26 (entered), model cap 45 (control), pool cap 45.
+Davante Adams (LAR): FanDuel O (hamstring), not IR; in `[status] out`, volume routed (Nacua +1.6, Higbee +1.5,
+Mumpfield +1.9). **Nacua: Doug says hurt in practice Oct 22 -> check Friday's report.** Not on nflverse's LAR report
+yet. If out (scratch what-if): Kyren 17.7 -> 18.2, Higbee 10.3 -> 11.2, Corum 9.1 -> 9.5, Mumpfield 6.1 -> 8.1 (red),
+Stafford 20.8 -> 20.7; the rest of his targets go to WRs the role guard zeroes (Atwell, Whittington, Bachman), so LAR
+would have no usable WR (Mumpfield red) and Stafford stacks = Higbee + an extra-receiver RB.
 Practice notes (Wed report, not applied): Irving, Hubbard, Egbuka, Schultz, K. Allen, Montgomery, Waller DNP.
 
 ## Week-8 backlog
