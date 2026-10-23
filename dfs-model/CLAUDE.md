@@ -398,7 +398,7 @@ floor is not the cause (stalls without it) and never binds (30+ lineups). Godwin
 **Doug's decisions (Oct 23, later):** new `[prefs.starter_override]` TEAM = [names] (`optimize.starters`; test in
 `tests/test_status.py`): named players count as starters on top of the normal depth, red players keep their slots,
 red / Q / min_proj still apply; week 7: `HOU = ["Marvin Harrison Jr."]`. Godwin's yellow cleared. Model cap stays 27.
-Aaron Jones read (leave 14.1 or 15.5) asked back: template left both options; built at 14.1. Built (no uploads),
+Aaron Jones: Doug left him at 14.1 (no read). Doug has a free entry in week 7: write the 149 files on the final run. Built (no uploads),
 all lineups checked against the rules: model `prelim/` 150, mean 119.8, HOU 30 / CIN 19 / SF 16 / DET 16 / LAR 14 /
 MIN 9, Harrison 24, Godwin 28, Kyren 30, Mumpfield 23; control 150, mean 122.3, LAR 19, MIN 11, Kyren 45; pool 150,
 mean 121.9, LAR 18 (Mumpfield + Kyren 15), MIN 15, Kyren / Mumpfield / Godwin 45. Every MIN stack = Murray + Jones + Jefferson.
