@@ -354,6 +354,11 @@ Mumpfield +1.9). **Nacua: Doug says hurt in practice Oct 22 -> check Friday's re
 yet. If out (scratch what-if): Kyren 17.7 -> 18.2, Higbee 10.3 -> 11.2, Corum 9.1 -> 9.5, Mumpfield 6.1 -> 8.1 (red),
 Stafford 20.8 -> 20.7; the rest of his targets go to WRs the role guard zeroes (Atwell, Whittington, Bachman), so LAR
 would have no usable WR (Mumpfield red) and Stafford stacks = Higbee + an extra-receiver RB.
+**Extra receivers (Doug, Oct 22):** Kyren Williams (LAR) and Aaron Jones Sr. (MIN) added to `[stacks] extra_receivers`
+(also under `[shadow]`). Control and pool rebuilt: LAR 18 -> 17 / 6 -> 19 stacks, MIN 0 -> 10 / 0 -> 14 (all Murray +
+Jones + Jefferson); control mean proj 123.2 -> 122.5, pool 122.5 -> 121.9. **Model at cap 26 now stalls at 149**
+(reshuffle; no team left for the last lineup); cap 27 builds 150 (scratch preview: mean 119.7, LAR 18, MIN 9).
+`weeks/2026-w07/prelim/` is still the earlier cap-26 build WITHOUT the new receivers, pending Doug's cap call.
 Practice notes (Wed report, not applied): Irving, Hubbard, Egbuka, Schultz, K. Allen, Montgomery, Waller DNP.
 
 ## Week-8 backlog

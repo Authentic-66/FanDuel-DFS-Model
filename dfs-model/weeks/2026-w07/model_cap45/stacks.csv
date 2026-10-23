@@ -1,7 +1,7 @@
 Team,Our_share_pct,Field_QB_own,Top_receivers,Receiver_own,Chalk,Leverage
 DET,9.1,11.82,"Amon-Ra St. Brown 19%, Sam LaPorta 9%",28.3,CHALK,0.77
 SF,8.7,10.49,"Christian McCaffrey 21%, George Kittle 11%",31.4,CHALK,0.83
-LAR,7.6,9.03,"Puka Nacua 32%, Tyler Higbee 5%",36.4,,0.84
+LAR,7.6,9.03,"Puka Nacua 32%, Kyren Williams 18%",49.6,,0.84
 CIN,6.4,7.7,"Ja'Marr Chase 11%, Tee Higgins 10%",20.6,,0.83
 CAR,6.1,7.41,"Tetairoa McMillan 15%, Jalen Coker 10%",24.2,,0.82
 GB,6.8,6.88,"Christian Watson 18%, Matthew Golden 11%",28.8,,0.99
@@ -10,7 +10,7 @@ LV,4.2,4.79,"Brock Bowers 15%, Tre Tucker 5%",20.3,,0.88
 BAL,8.3,4.42,"Zay Flowers 14%, Mark Andrews 2%",16.6,,1.88
 ATL,5.3,3.2,"Drake London 10%, Kyle Pitts Sr. 2%",11.9,,1.66
 CLE,3.0,2.98,"Denzel Boston 4%, Harold Fannin Jr. 2%",5.9,,1.01
-MIN,6.1,2.93,Justin Jefferson 6%,6.5,,2.08
+MIN,6.1,2.93,"Aaron Jones Sr. 17%, Justin Jefferson 6%",23.5,,2.08
 DEN,6.1,2.69,"Jaylen Waddle 4%, Courtland Sutton 2%",6.6,,2.27
 NYJ,4.2,2.35,"Garrett Wilson 8%, Kenyon Sadiq 1%",9.3,,1.79
 TB,3.4,2.18,"Emeka Egbuka 4%, Chris Godwin Jr. 2%",6.2,,1.56
