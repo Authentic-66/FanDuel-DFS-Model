@@ -265,24 +265,24 @@ flags dropped (he records full Guru lists when he uses it). Built in the second 
   Hibner, Nicholas/Nick Singleton, Mitchell/Mitch Tinsley, Andrew/Drew Ogletree. The guard's no-data warning is the
   place new aliases show up: check it every run.
 
-## Week 7 run checklist (state at end of Fri Oct 23: head 48e0026; Friday statuses in, all three sets built on preliminary lines; see "Week 7 Friday run")
+## Week 7 run checklist (state at Sun Oct 25: head 9b16164; steps 1-5 DONE, entered 149; see "Week 7 final run". Next: step 6 after the slate)
 Steps 1-2 and the preliminary parts of 3-6 are DONE (section "Week 7 preliminary run"). Remaining:
 1. DONE Oct 22 for colours (`data/2026-w07/review_sheet_reviewed.xlsx`). Pool lists loaded (ranked). **Doug, Oct 22:** pool cap 45 for week 7
    (shadow test; `[pool] raise_cap_to = 45`), model cap 26, then 27 after the extra receivers (stays
    marked PRELIMINARY until the final run).
 2. DONE Oct 23 (see "Week 7 Friday run"): statuses, `[status] active`, TB = Mayfield, Harrison starter override,
-   Mumpfield red and Godwin yellow cleared, Kyren forced min 15, Jones left at 14.1, no Estime / SF reads. Still open
-   for Sunday: **Lamar** (Doug decides; if he plays, Huntley's 6 lineups are dead: move Lamar out of questionable,
+   Mumpfield red and Godwin yellow cleared, Kyren forced min 15, Jones left at 14.1, no Estime / SF reads. Sunday (DONE Oct 25: Lamar OUT, left Q so
+   BAL kept as built with Huntley; Nacua Q, kept excluded): **Lamar** (Doug decides; if he plays, Huntley's 6 lineups are dead: move Lamar out of questionable,
    set `[status.starting_qb] BAL`), **Nacua** (if ruled OUT, move him from questionable to out and rerun model.py).
    Was: Friday's report (check Nacua, hurt in practice Oct 22; Adams already out) -> `[status]` (replace the preliminary FanDuel-tag lists; Out/Doubtful -> out, Questionable ->
    questionable, IR players with 3+ targets + carries a game out, QBs out left to FanDuel tags) and
    `[status.starting_qb]` (BAL: Lamar Q, Huntley flagged; TB: Mayfield Q). Re-download `fd_players.csv` if FanDuel
    updated it. Then Doug's Estime (CLE RB, no 2026 data) and SF override reads, if any.
-3. Saturday / Sunday: replace `data/2026-w07/lines.csv` (PRELIMINARY nflverse lines) and rebuild `[stacks.weights]`
+3. DONE Oct 25. Saturday / Sunday: replace `data/2026-w07/lines.csv` (PRELIMINARY nflverse lines) and rebuild `[stacks.weights]`
    = round(2 x (implied - 16)), min 1. Keep `[stacks] extra_receivers = ["Christian McCaffrey", "Kyren Williams",
    "Aaron Jones Sr."]` (Doug's reads). Mumpfield is no longer red (Doug, Oct 23): LAR stacks use Kyren / Higbee / Mumpfield.
-4. `model.py`, read the role-guard warning (new names = no 2026 snaps or a missing alias) and team-mismatch warnings.
-5. Final `optimize.py --week 2026-w07` (main folder; check the floor line), the control
+4. DONE Oct 25. `model.py`, read the role-guard warning (new names = no 2026 snaps or a missing alias) and team-mismatch warnings.
+5. DONE Oct 25 (PRELIMINARY comments on `exposure_cap` still in week.toml; cap 27 is final). Final `optimize.py --week 2026-w07` (main folder; check the floor line), the control
    `optimize.py --week 2026-w07 --subdir model_cap45 --cap 45` and `optimize.py --week 2026-w07 --pool`
    (shadow, `weeks/2026-w07/pool/`; pool players auto-raise to 45, Doug's week-7 setting). Model cap is 27: if any set
    stalls after Friday's statuses, stop and ask Doug (don't raise caps on your own). Drop the PRELIMINARY marks on
