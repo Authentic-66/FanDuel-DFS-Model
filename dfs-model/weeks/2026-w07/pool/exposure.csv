@@ -1,74 +1,76 @@
 Player,Pos,Team,Salary,Proj,Routing_bump,Status,Pool,Lineups,Exposure_%,Own_proj_%,Exp_minus_Own,Review
-Tetairoa McMillan,WR,CAR,7100,15.7,0.6,,8,45,30.0,15.01,15.0,
-Matthew Golden,WR,GB,6700,13.4,0.6,,12,45,30.0,11.24,18.8,
-Konata Mumpfield,WR,LAR,4900,6.0,1.8,,15,45,30.0,2.14,27.9,
-Sam LaPorta,TE,DET,5700,13.7,0.0,,2,45,30.0,9.35,20.6,
-Isaiah Likely,TE,NYG,5500,11.1,0.0,,3,45,30.0,5.38,24.6,
-Aaron Jones Sr.,RB,MIN,5900,14.1,0.0,,8,45,30.0,6.54,23.5,
-Kyren Williams,RB,LAR,7900,17.7,0.7,,4,45,30.0,15.8,14.2,Green (more)
-Cleveland Browns,D,CLE,4600,7.7,0.0,,1,45,30.0,6.45,23.6,
-Chris Godwin Jr.,WR,TB,5300,8.8,1.7,,7,45,30.0,3.61,26.4,
-George Kittle,TE,SF,6500,14.5,0.9,,4,44,29.3,10.97,18.3,
-Christian McCaffrey,RB,SF,8700,19.0,0.7,,2,41,27.3,18.24,9.1,
-Chuba Hubbard,RB,CAR,7100,16.1,1.4,,9,41,27.3,15.47,11.8,
-Christian Watson,WR,GB,7400,16.4,0.5,,4,40,26.7,18.91,7.8,
-Tucker Kraft,TE,GB,5500,10.8,0.2,,5,40,26.7,4.53,22.2,
-New York Jets,D,NYJ,4900,8.3,0.0,,3,37,24.7,7.53,17.2,
-Tee Higgins,WR,CIN,7000,13.9,0.0,,5,36,24.0,9.94,14.1,
-Michael Wilson,WR,ARI,6400,12.5,0.8,,14,34,22.7,7.14,15.6,
-Jahmyr Gibbs,RB,DET,9800,22.7,0.0,,1,29,19.3,34.93,-15.6,
-Minnesota Vikings,D,MIN,4800,8.0,0.0,,4,26,17.3,9.18,8.1,
-Dalton Schultz,TE,HOU,5300,8.2,-1.0,,8,25,16.7,2.58,14.1,
-Amon-Ra St. Brown,WR,DET,9000,17.5,0.0,,2,25,16.7,19.91,-3.2,
-Marvin Harrison Jr.,WR,HOU,5500,5.8,-0.6,,10,24,16.0,1.6,14.4,
-Bijan Robinson,RB,ATL,9400,22.2,4.0,,6,23,15.3,39.92,-24.6,
-Tre Tucker,WR,LV,6000,10.5,0.3,,filler,22,14.7,5.36,9.3,
-Houston Texans,D,HOU,5000,8.5,0.0,,2,22,14.7,8.13,6.6,
-Jared Goff,QB,DET,8000,21.5,0.0,,1,22,14.7,11.84,2.9,
-Bucky Irving,RB,TB,7200,13.5,0.5,,3,22,14.7,6.09,8.6,
-Nico Collins,WR,HOU,7700,13.2,-1.7,,11,21,14.0,8.65,5.4,
-Brock Purdy,QB,SF,8500,21.1,0.0,,5,21,14.0,10.55,3.4,
-Brock Bowers,TE,LV,8000,16.3,0.1,,1,19,12.7,15.08,-2.4,
-Matthew Stafford,QB,LAR,7700,20.8,0.0,,3,18,12.0,8.99,3.0,
-Derrick Henry,RB,BAL,9000,18.1,0.0,,5,18,12.0,15.01,-3.0,
-C.J. Stroud,QB,HOU,7500,19.2,0.0,,7,18,12.0,6.84,5.2,
-Jordan Love,QB,GB,7600,18.9,0.0,,4,16,10.7,6.85,3.8,
-Joe Burrow,QB,CIN,8300,19.7,0.0,,2,15,10.0,7.71,2.3,
-Bryce Young,QB,CAR,7800,18.9,0.0,,9,15,10.0,7.28,2.7,
-Drake London,WR,ATL,7800,13.9,0.0,,13,15,10.0,9.87,0.1,
-Justin Jefferson,WR,MIN,8400,11.6,0.0,,6,15,10.0,6.79,3.2,
-Kyler Murray,QB,MIN,7300,16.5,0.0,,8,15,10.0,2.88,7.1,
-Jonathan Taylor,RB,IND,8500,16.9,0.3,,7,15,10.0,11.63,-1.6,
-Jalen Coker,WR,CAR,6200,13.0,0.7,,filler,14,9.3,9.75,-0.4,
-Pierre Strong Jr.,RB,GB,4000,11.1,0.0,,filler,12,8.0,3.27,4.7,Yellow (less)
-Mike Gesicki,TE,CIN,5200,7.7,0.0,,filler,11,7.3,2.88,4.4,
-Kirk Cousins,QB,LV,6800,17.0,0.0,,6,10,6.7,4.82,1.9,
-Malik Nabers,WR,NYG,7900,14.1,0.0,,9,9,6.0,9.63,-3.6,
-Trey McBride,TE,ARI,7200,14.9,0.5,,6,9,6.0,10.55,-4.6,
-Darren Waller,TE,CAR,5300,7.6,0.2,,filler,8,5.3,2.27,3.0,
-San Francisco 49ers,D,SF,4700,6.1,0.0,,5,7,4.7,5.81,-1.1,
-J.K. Dobbins,RB,DEN,6100,11.6,1.2,,filler,7,4.7,4.44,0.3,
-Jameson Williams,WR,DET,6300,10.8,0.0,,filler,7,4.7,5.65,-1.0,Yellow (less)
-Ja'Marr Chase,WR,CIN,8800,14.9,0.0,,3,6,4.0,11.54,-7.5,
-Tyler Higbee,TE,LAR,4900,10.3,1.5,,filler,6,4.0,4.91,-0.9,
-Keenan Allen,WR,IND,5900,10.1,0.6,,filler,6,4.0,4.3,-0.3,Yellow (less)
-Kyle Pitts Sr.,TE,ATL,5300,7.5,0.0,,filler,6,4.0,2.23,1.8,
-Chase Brown,RB,CIN,7800,14.7,0.0,,10,5,3.3,6.34,-3.0,
-Harold Fannin Jr.,TE,CLE,5400,7.8,0.0,,7,5,3.3,2.16,1.1,
-Denzel Boston,WR,CLE,5700,9.7,0.0,,filler,5,3.3,3.89,-0.6,Yellow (less)
-Wan'Dale Robinson,WR,TEN,5200,9.1,0.0,,filler,5,3.3,3.02,0.3,Yellow (less)
-Tony Pollard,RB,TEN,5600,9.7,0.0,,filler,4,2.7,2.1,0.6,Yellow (less)
-Arizona Cardinals,D,ARI,3400,5.3,0.0,,filler,4,2.7,3.45,-0.8,Yellow (less)
-Carolina Panthers,D,CAR,4100,6.8,0.0,,filler,3,2.0,5.91,-3.9,Yellow (less)
-Ollie Gordon II,RB,MIA,6000,10.7,3.2,,filler,3,2.0,5.12,-3.1,Yellow (less)
-Ashton Jeanty,RB,LV,7400,14.8,0.0,,filler,3,2.0,7.43,-5.4,
-Detroit Lions,D,DET,3700,5.2,0.0,,filler,3,2.0,4.08,-2.1,Yellow (less)
-Mark Andrews,TE,BAL,5200,7.6,0.0,,filler,3,2.0,2.26,-0.3,
-Courtland Sutton,WR,DEN,5800,7.7,0.5,,filler,2,1.3,2.49,-1.2,Yellow (less)
-Woody Marks,RB,HOU,6200,12.4,2.8,,filler,2,1.3,6.46,-5.2,Yellow (less)
-Denver Broncos,D,DEN,4500,7.3,0.0,,filler,2,1.3,6.96,-5.7,
-Josh Downs,WR,IND,6100,8.6,0.5,,filler,2,1.3,3.06,-1.8,Yellow (less)
-Tyler Allgeier,RB,ARI,5700,11.4,4.4,,filler,1,0.7,5.28,-4.6,Yellow (less)
-Tampa Bay Buccaneers,D,TB,3300,5.3,0.0,,filler,1,0.7,3.79,-3.1,Yellow (less)
-Zay Flowers,WR,BAL,7800,15.4,0.0,,filler,0,0.0,14.67,-14.7,
-Garrett Wilson,WR,NYJ,7300,13.1,0.0,,filler,0,0.0,8.14,-8.1,
+Chris Godwin Jr.,WR,TB,5300,8.8,1.7,,7,45,30.0,3.66,26.3,
+Aaron Jones Sr.,RB,MIN,5900,14.3,0.0,,8,45,30.0,6.71,23.3,
+Konata Mumpfield,WR,LAR,4900,6.1,1.9,,15,45,30.0,2.2,27.8,
+Cleveland Browns,D,CLE,4600,8.2,0.0,,1,45,30.0,6.95,23.0,
+Isaiah Likely,TE,NYG,5500,11.0,0.0,,3,45,30.0,5.24,24.8,
+Sam LaPorta,TE,DET,5700,14.2,0.0,,2,45,30.0,10.53,19.5,
+Tetairoa McMillan,WR,CAR,7100,15.7,0.7,,8,45,30.0,15.03,15.0,
+Kyren Williams,RB,LAR,7900,17.8,0.7,,4,44,29.3,16.01,13.3,Green (more)
+Chuba Hubbard,RB,CAR,7100,16.1,1.5,,9,44,29.3,15.37,13.9,
+Tucker Kraft,TE,GB,5500,11.3,0.2,,5,43,28.7,5.05,23.6,
+Matthew Golden,WR,GB,6700,13.5,0.6,,12,42,28.0,11.82,16.2,
+Christian Watson,WR,GB,7400,16.5,0.5,,4,39,26.0,19.73,6.3,
+Tee Higgins,WR,CIN,7000,13.9,0.0,,5,38,25.3,9.76,15.5,
+George Kittle,TE,SF,6500,14.1,0.7,,4,36,24.0,10.04,14.0,
+Minnesota Vikings,D,MIN,4800,8.1,0.0,,4,35,23.3,9.3,14.0,
+Christian McCaffrey,RB,SF,8700,18.7,0.6,,2,34,22.7,17.31,5.4,
+New York Jets,D,NYJ,4900,8.0,0.0,,3,32,21.3,7.03,14.3,
+Amon-Ra St. Brown,WR,DET,9000,17.5,0.0,,2,29,19.3,20.62,-1.3,
+Michael Wilson,WR,ARI,6400,12.4,0.9,,14,29,19.3,6.96,12.3,
+Jahmyr Gibbs,RB,DET,9800,23.3,0.0,,1,28,18.7,37.93,-19.2,
+Brock Bowers,TE,LV,8000,16.5,0.1,,1,28,18.7,15.66,3.0,
+Marvin Harrison Jr.,WR,HOU,5500,5.7,-0.6,,10,28,18.7,1.59,17.1,
+Jared Goff,QB,DET,8000,22.1,0.0,,1,24,16.0,13.29,2.7,
+Bucky Irving,RB,TB,7200,13.7,0.5,,3,21,14.0,6.26,7.7,
+Dalton Schultz,TE,HOU,5300,8.2,-1.0,,8,20,13.3,2.59,10.7,
+Derrick Henry,RB,BAL,9000,16.8,0.0,,5,19,12.7,11.49,1.2,
+Jonathan Taylor,RB,IND,8500,16.8,0.2,,7,18,12.0,11.33,0.7,
+Tre Tucker,WR,LV,6000,10.6,0.4,,filler,18,12.0,5.56,6.4,
+Drake London,WR,ATL,7800,14.0,0.1,,13,18,12.0,10.21,1.8,
+C.J. Stroud,QB,HOU,7500,19.2,0.0,,7,18,12.0,6.88,5.1,
+Matthew Stafford,QB,LAR,7700,20.7,0.0,,3,18,12.0,8.9,3.1,
+Brock Purdy,QB,SF,8500,20.7,0.0,,5,18,12.0,9.86,2.1,
+Jordan Love,QB,GB,7600,19.3,0.0,,4,17,11.3,7.49,3.8,
+Houston Texans,D,HOU,5000,8.6,0.0,,2,17,11.3,8.19,3.1,
+Bijan Robinson,RB,ATL,9400,22.6,4.1,,6,16,10.7,41.56,-30.9,
+Joe Burrow,QB,CIN,8300,19.8,0.0,,2,16,10.7,7.59,3.1,
+Nico Collins,WR,HOU,7700,13.2,-1.7,,11,15,10.0,8.74,1.3,
+Kyler Murray,QB,MIN,7300,16.6,0.0,,8,14,9.3,2.92,6.4,
+Justin Jefferson,WR,MIN,8400,11.6,0.0,,6,14,9.3,6.84,2.5,
+Bryce Young,QB,CAR,7800,18.8,0.0,,9,14,9.3,7.15,2.2,
+Trey McBride,TE,ARI,7200,14.9,0.6,,6,14,9.3,10.3,-1.0,
+Jalen Coker,WR,CAR,6200,12.8,0.7,,filler,13,8.7,9.5,-0.8,
+Mike Gesicki,TE,CIN,5200,7.8,0.0,,filler,12,8.0,2.81,5.2,
+Pierre Strong Jr.,RB,GB,4000,11.3,0.0,,filler,12,8.0,3.53,4.5,Yellow (less)
+Kirk Cousins,QB,LV,6800,17.3,0.0,,6,11,7.3,5.16,2.1,
+Malik Nabers,WR,NYG,7900,14.1,0.0,,9,9,6.0,9.59,-3.6,
+Tyler Higbee,TE,LAR,4900,10.3,1.5,,filler,9,6.0,4.87,1.1,
+San Francisco 49ers,D,SF,4700,5.8,0.0,,5,9,6.0,5.32,0.7,
+Ja'Marr Chase,WR,CIN,8800,14.8,0.0,,3,8,5.3,11.18,-5.9,
+Ashton Jeanty,RB,LV,7400,15.1,0.0,,filler,8,5.3,7.92,-2.6,
+Darren Waller,TE,CAR,5300,7.6,0.2,,filler,8,5.3,2.24,3.1,
+Harold Fannin Jr.,TE,CLE,5400,7.7,0.0,,7,7,4.7,2.06,2.6,
+Jameson Williams,WR,DET,6300,11.0,0.0,,filler,7,4.7,6.06,-1.4,Yellow (less)
+Ollie Gordon II,RB,MIA,6000,11.0,3.3,,filler,7,4.7,5.47,-0.8,Yellow (less)
+Keenan Allen,WR,IND,5900,10.1,0.6,,filler,6,4.0,4.28,-0.3,Yellow (less)
+Chase Brown,RB,CIN,7800,14.6,0.0,,10,5,3.3,6.11,-2.8,
+Wan'Dale Robinson,WR,TEN,5200,9.0,0.0,,filler,5,3.3,2.87,0.4,Yellow (less)
+Denzel Boston,WR,CLE,5700,9.7,0.0,,filler,5,3.3,3.88,-0.6,Yellow (less)
+Arizona Cardinals,D,ARI,3400,5.5,0.0,,filler,4,2.7,3.53,-0.8,Yellow (less)
+Tony Pollard,RB,TEN,5600,9.3,0.0,,filler,4,2.7,1.88,0.8,Yellow (less)
+Mark Andrews,TE,BAL,5200,6.9,0.0,,filler,4,2.7,1.77,0.9,
+Carolina Panthers,D,CAR,4100,6.7,0.0,,filler,4,2.7,5.74,-3.0,Yellow (less)
+J.K. Dobbins,RB,DEN,6100,11.5,1.2,,filler,4,2.7,4.29,-1.6,
+Zay Flowers,WR,BAL,7800,15.1,0.0,,filler,3,2.0,12.97,-11.0,
+Woody Marks,RB,HOU,6200,12.4,2.7,,filler,2,1.3,6.44,-5.1,Yellow (less)
+Denver Broncos,D,DEN,4500,7.5,0.0,,filler,2,1.3,7.09,-5.8,
+Josh Downs,WR,IND,6100,8.5,0.5,,filler,2,1.3,3.02,-1.7,Yellow (less)
+Garrett Wilson,WR,NYJ,7300,13.0,0.0,,filler,1,0.7,8.1,-7.4,
+Tyler Allgeier,RB,ARI,5700,11.3,4.3,,filler,1,0.7,5.1,-4.4,Yellow (less)
+Courtland Sutton,WR,DEN,5800,7.8,0.5,,filler,1,0.7,2.52,-1.8,Yellow (less)
+Kyle Pitts Sr.,TE,ATL,5300,7.6,0.0,,filler,1,0.7,2.3,-1.6,
+Cade Otton,TE,TB,4900,6.6,0.6,,filler,1,0.7,1.75,-1.0,Yellow (less)
+Tampa Bay Buccaneers,D,TB,3300,5.4,0.0,,filler,1,0.7,3.85,-3.2,Yellow (less)
+Detroit Lions,D,DET,3700,4.7,0.0,,filler,1,0.7,3.78,-3.1,Yellow (less)
+Cincinnati Bengals,D,CIN,4000,6.3,0.0,,filler,0,0.0,5.83,-5.8,Yellow (less)

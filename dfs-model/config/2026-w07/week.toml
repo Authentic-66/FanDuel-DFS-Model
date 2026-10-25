@@ -439,28 +439,28 @@ extra_receivers = ["Christian McCaffrey", "Kyren Williams", "Aaron Jones Sr."]
 extra_receivers = ["Christian McCaffrey", "Kyren Williams", "Aaron Jones Sr."]
 
 # Stack QB-team weights: weight = round(2 * (implied total - 16)), min 1, from data/2026-w07/lines.csv.
-# PRELIMINARY (Oct 19, nflverse schedule lines): rebuild from Saturday / Sunday lines.
+# FINAL (Sun Oct 25, nflverse lines after Lamar ruled out).
 [stacks.weights]
-DET = 24   # 27.8 vs GB
-SF = 23    # 27.5 @ ATL
-BAL = 22   # 27.0 vs CIN
-HOU = 20   # 26.0 vs NYG
+DET = 27   # 29.5 vs GB
+SF = 21    # 26.5 @ ATL
+HOU = 21   # 26.2 vs NYG
+GB = 20    # 26.0 @ DET
 LAR = 20   # 26.0 @ LV
-GB = 18    # 24.8 @ DET
-CIN = 17   # 24.5 @ BAL
-DEN = 16   # 24.0 @ ARI
-CAR = 16   # 24.0 vs TB
-MIN = 16   # 23.8 vs IND
-ATL = 14   # 23.0 vs SF
+CIN = 18   # 24.8 @ BAL
+ATL = 16   # 24.0 vs SF
+MIN = 16   # 24.0 vs IND
+CAR = 16   # 23.8 vs TB
+DEN = 15   # 23.5 @ ARI
+LV = 13    # 22.5 vs LAR
+BAL = 12   # 21.8 vs CIN
 NYJ = 11   # 21.5 vs MIA
-LV = 11    # 21.5 vs LAR
-TB = 9     # 20.5 @ CAR
-CLE = 8    # 20.0 @ TEN
-ARI = 7    # 19.5 vs DEN
-TEN = 5    # 18.5 vs CLE
-IND = 4    # 17.8 @ MIN
-MIA = 2    # 17.0 @ NYJ
-NYG = 1    # 16.5 @ HOU
+TB = 10    # 20.8 @ CAR
+CLE = 7    # 19.5 @ TEN
+ARI = 6    # 19.0 vs DEN
+MIA = 4    # 18.0 @ NYJ
+IND = 3    # 17.5 @ MIN
+TEN = 2    # 17.0 vs CLE
+NYG = 1    # 16.2 @ HOU
 
 [stacks.rules]
 

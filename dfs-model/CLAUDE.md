@@ -408,6 +408,14 @@ all lineups checked against the rules: model `prelim/` 150, mean 119.8, HOU 30 /
 MIN 9, Harrison 24, Godwin 28, Kyren 30, Mumpfield 23; control 150, mean 122.3, LAR 19, MIN 11, Kyren 45; pool 150,
 mean 121.9, LAR 18 (Mumpfield + Kyren 15), MIN 15, Kyren / Mumpfield / Godwin 45. Every MIN stack = Murray + Jones + Jefferson.
 
+## Week 7 final run (Sun Oct 25, done 11:31) — entered: entered_upload_149.csv (free entry confirmed)
+Doug: Lamar OUT, BAL kept as built (Lamar left in `[status] questionable`, so no redistribution; Huntley starts by
+default, 6 lineups). Nacua Q, expected to play: kept excluded, no redistribution. nflverse lines refreshed (all 10
+games moved; CIN@BAL now CIN -3, 46.5: BAL 27.0 -> 21.8, weight 22 -> 12; DET 29.5, weight 27); `lines.csv` marked
+FINAL, `[stacks.weights]` rebuilt (round half up). Model cap 27: 150, mean 120.4; 149 file drops lineup 145 (103.7),
+checked: header, 149 unique, salary 59,000-60,000, no red / OUT / Q / FanDuel O-IR players. Max exposure 30 = cap 27
++ salary-floor relief 3. Control (cap 45) 150, mean 122.8; pool (cap 45) 150, mean 122.2. Next: checklist step 6.
+
 ## Week-8 backlog
 - **Per-position redistribution mode**: RB out = routing by position; WR out = depth split; TE out = old 80% rule or none.
   Basis: the section 11.2 accuracy table (players moved 1+: RB out 6.65 routing vs 6.70 old; WR out 6.53 depth vs 6.77 pro
