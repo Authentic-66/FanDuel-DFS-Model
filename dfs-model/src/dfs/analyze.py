@@ -136,7 +136,12 @@ def reads_lineups(week, cfg, proj, sims):
     for colour, source, label, prefs in [('', '', 'as entered', cfg['prefs'])] + read_variants(cfg):
         c = dict(cfg, prefs=prefs)
         df = optimize.eligible_pool(proj, prefs, c['optimizer'])
-        lineups, _ = optimize.build_lineups(df, sims, c)
+        try:
+            lineups, _ = optimize.build_lineups(df, sims, c)
+        except (RuntimeError, ValueError, IndexError) as e:   # one read that cannot build must not lose the others
+            print(f'reads_lineups: {label} did not build: {e}')
+            rows.append(dict(run=label, colour=colour, source=source, lineups=0, error=str(e)))
+            continue
         pts = np.array([act.reindex(df.Id[lp]).fillna(0).sum() for lp in lineups])
         r = dict(run=label, colour=colour, source=source, lineups=len(lineups), avg=pts.mean(), best=pts.max())
         if ranked:

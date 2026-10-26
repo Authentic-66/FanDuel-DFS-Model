@@ -68,9 +68,11 @@ first_week_factor = 0.7        # Doug, Oct 19 (was 0.5 on Oct 18 from ~20% of sn
 [model.injury]
 within_position = "depth_rank"
 depth_rank_positions = ["WR"]
+trade_old_team = "full"   # as entered: Harrison's ARI volume handed out in full (present_share became the default Oct 26)
 
 [optimizer]
 stack_allocation = "proportional"   # stack counts follow the weights exactly instead of random draws
+floor_cap_overflow = 3              # as entered: salary-floor cap relief +3 (the default became +1 on Oct 26)
 # PRELIMINARY, pending Doug (Claude, Oct 22): with Doug's Oct 22 reds / yellows the model stalls at 147 lineups at cap 25
 # (too few stackable teams). Standing rule: raise only if infeasible (to 40 at most). Smallest cap that builds 150 = 26,
 # with the floor relief's usual +3 (players up to 29). Relief held at 28 fails at caps 26-28 (143-145 lineups).

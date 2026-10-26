@@ -137,7 +137,13 @@ within_position = "pro_rata"       # how the same-position part is divided (rout
                                    #   and tested Oct 12 2026, NOT adopted, Doug and Claude decide
 depth_rank_positions = ["WR", "RB", "TE"]   # with "depth_rank": the positions of the OUT player it applies to
                                    # (e.g. ["WR"] = depth split when a WR is out, pro rata when an RB or TE is)
-questionable_inactive_prob = 0.25
+questionable_inactive_prob = 0.25 # share of draws in which a player marked Q (held out of lineups anyway) scores 0
+questionable_routing = false       # true: in the draws where an RB / WR / TE marked Q sits, his volume goes to his
+                                   # teammates, routed like an OUT player's (built Oct 26, docs/week8_prep.md section 3;
+                                   # NOT adopted: Doug and Claude decide). Test value questionable_inactive_prob = 0.45
+trade_old_team = "present_share"   # [[status.trade]], old team: "present_share" = his volume goes to old teammates like an
+                                   # OUT player's under absent_mode present_share, fading as they play games without him
+                                   # (Doug, Oct 26: fixes the ARI double count); "full" = in full every week (weeks 6-7)
 absent_mode = "present_share"      # OUT players who already missed games (Oct 12 2026, docs/week6_prep.md):
                                    # "present_share" = hand out their volume for the share of each teammate's usage
                                    #   sample (current games + prior pseudo-games) they played in; fades as they stay out
@@ -237,8 +243,10 @@ stack_allocation = "random"  # "random": one weighted team draw per lineup; "pro
 reserve_required = false     # true: other stacks leave room on a player a green QB's stack rule requires (see week 5)
 min_salary = 59000           # salary floor (Doug, week 7; docs/week6_review.md 8.1). 0 = off. Lineups that cannot reach
                              # it get cap relief below; if that fails too, the lineup is built without the floor
-floor_cap_overflow = 3       # cap relief for floor lineups only: players at exposure_cap may go to cap + 3 = 28.
-                             # Doug approved cap relief to 28 for salary-floor lineups only (week 7). Not yellow/player_cap
+floor_cap_overflow = 1       # cap relief for floor lineups only: players at exposure_cap may go to cap + 1.
+                             # Not yellow/player_cap. Week 7 used +3 (21 players above cap 27, 12 at 30); Doug, Oct 26: +1
+flex_te_max_share = 0        # at most this share of lineups with a TE in the FLEX (0 = off). Built Oct 26
+                             # (docs/week8_prep.md section 2); week 7 had 78%. NOT adopted: Doug and Claude decide
 
 [optimizer.starters]         # depth kept per team when prefs.starters_only (QB = week's starter)
 RB = 1

@@ -137,20 +137,26 @@ def redistribute_out(agg, out_players, active_fd, share, st=None, mode='skip', r
     return extra['tgt'], extra['car']
 
 
-def trade_volume(agg, trades, active_fd, share, routing=None):
+def trade_volume(agg, trades, active_fd, share, routing=None, st=None, old_team='full'):
     """Volume changes for [[status.trade]] players (rows from data.trades; active_fd already lists them on the new
     team). Returns ({key: extra targets/g}, {key: extra carries/g}) to add to redistribute_out's.
-    Old team: handled like a player ruled out for the first time: his per-game targets and carries go to his old
-    teammates (`share` pro rata, or by position with `routing`, as in redistribute_out), in full, however many games
-    he has already missed.
+    Old team: his per-game targets and carries go to his old teammates (`share` pro rata, or by position with
+    `routing`, as in redistribute_out). old_team ([model.injury] trade_old_team):
+      "full" = in full, however many games he has already missed (through week 7: a small double count, because the
+          old teammates' recent games already lacked him);
+      "present_share" = like an OUT player under absent_mode "present_share" (needs `st`): each old teammate's gain is
+          scaled by the share of his sample the traded player was still there for, so it fades game by game.
     New team (only if he is active): he gets share * factor of the team's targets per game, taken from his new
     teammates in proportion to their own targets, so the team total is unchanged. His carries stay his own."""
     xt, xc = {}, {}
     for t in trades.itertuples():
         if t.Key not in agg.index:
             raise ValueError(f'[[status.trade]] {t.Name}: no stats this season or last, nothing to move')
+        if old_team not in ('full', 'present_share'):
+            raise ValueError(f'[model.injury] trade_old_team must be "full" or "present_share", not {old_team!r}')
+        fade = old_team == 'present_share' and st is not None
         old_t, old_c = redistribute_out(agg, pd.DataFrame([dict(Key=t.Key, Team=t.From, Position=t.Pos)]), active_fd,
-                                        share, routing=routing)
+                                        share, st if fade else None, 'present_share' if fade else 'skip', routing)
         for extra, gained in ((xt, old_t), (xc, old_c)):
             for k, v in gained.items():
                 extra[k] = extra.get(k, 0) + v

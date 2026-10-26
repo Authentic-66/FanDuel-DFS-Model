@@ -43,17 +43,19 @@ def build(week, cfg, agg=None, st=None):
                                     st if absent_mode == 'present_share' or inj.get('skip_already_absent', True) else None,
                                     absent_mode, routing)
     moved = data.trades(fd_all, cfg['status'])
-    for extra, gained in zip((xt, xc), usage.trade_volume(agg, moved, fd, inj['redistribute_share'], routing)):
+    for extra, gained in zip((xt, xc), usage.trade_volume(agg, moved, fd, inj['redistribute_share'], routing, st,
+                                                          inj.get('trade_old_team', 'full'))):
         for k, v in gained.items():
             extra[k] = extra.get(k, 0) + v
     for name, fd_team, stat_team in usage.team_mismatches(agg, fd, moved):
         print(f'WARNING: FanDuel lists {name} on {fd_team}, his stats are with {stat_team}: if he was traded, add a '
               f'[[status.trade]] entry (as-is he keeps his {stat_team} volume and no teammate is adjusted)')
+    q_sits, q_gain = questionable_routes(fd, agg, st, inj, routing, m['seed'], n)
     tf = sim.team_factors(rng, lines, m['correlation'], n)
     league_dst = fd[fd.Position == 'D'].FPPG.mean()
 
     role = role_volume(st)                       # [model.role_guard]: 2026 targets + carries per game, before routing
-    rows, sims, unrouted = [], [], {}
+    rows, sims, unrouted, q_bump = [], [], {}, {}
     for r in fd.itertuples():
         t, k, pos = r.Team, r.Key, r.Position
         fallback = False
@@ -64,6 +66,15 @@ def build(week, cfg, agg=None, st=None):
         elif k in agg.index:
             before = rng.bit_generator.state
             pts = sim.sim_skill(rng, agg.loc[k], pos, scale, f, xt.get(k, 0), xc.get(k, 0), m, sc, n)
+            base = pts
+            for q, (gt, gc) in q_gain.items():  # [model.injury] questionable_routing: the draws where Q player q sits
+                if k in gt or k in gc:          # get his volume (same noise, on a copy of the generator)
+                    twin = np.random.default_rng()
+                    twin.bit_generator.state = before
+                    more = sim.sim_skill(twin, agg.loc[k], pos, scale, f, xt.get(k, 0) + gt.get(k, 0),
+                                         xc.get(k, 0) + gc.get(k, 0), m, sc, n)
+                    pts = pts + q_sits[q] * (more - base)
+                    q_bump[len(sims)] = q_bump.get(len(sims), 0) + (q_sits[q] * (more - base)).mean()
             if xt.get(k, 0) or xc.get(k, 0):    # report only (RoutingBump): the same player without the redistributed
                 twin = np.random.default_rng()  # volume, on a copy of the generator so the main draws are untouched
                 twin.bit_generator.state = before
@@ -72,7 +83,10 @@ def build(week, cfg, agg=None, st=None):
             pts = sim.sim_fallback(rng, r.FPPG, scale, f, m, n)
             fallback = True
         if r.Inj == 'Q':
-            pts = pts * (rng.random(n) > m['injury']['questionable_inactive_prob'])
+            plays = rng.random(n) > m['injury']['questionable_inactive_prob']
+            if k in q_sits:                     # routed Q player: sits in exactly the draws his teammates gain
+                plays = ~q_sits[k]
+            pts = pts * plays
         sims.append(pts)
         rows.append(dict(Id=r.Id, Name=r.Nickname, Pos=pos, Team=t, Opp=opp, Salary=r.Salary, Inj=r.Inj,
                          ImpliedTeamTotal=round(implied, 1), GameTotal=round(implied + lines.implied[opp], 1),
@@ -87,6 +101,8 @@ def build(week, cfg, agg=None, st=None):
             raise ValueError(f'[status.starting_qb] {team}: {name!r} is not an active {team} QB on the slate')
         proj.loc[qbs, 'StartingQB'] = proj.Name[qbs] == name
     proj['RoutingBump'] = routing_bump(proj, unrouted, m)
+    if q_gain:      # report only: raw points each player gains from questionable teammates sitting (before calibration)
+        proj['QBump'] = np.round([q_bump.get(i, 0.0) for i in range(len(proj))], 1)
     sims = np.array(sims)
     proj['RoleGuard'] = role_guard(proj, sims, m.get('role_guard', {}), cfg.get('overrides', {}))
     sims = adjust(proj, sims, lines, m)
@@ -101,6 +117,27 @@ def build(week, cfg, agg=None, st=None):
     proj[stats.columns] = stats
     order = proj.Proj.sort_values(ascending=False, kind='stable').index
     return proj.loc[order].drop(columns='Key').reset_index(drop=True), sims[order]
+
+
+def questionable_routes(fd, agg, st, inj, routing, seed, n):
+    """[model.injury] questionable_routing: each active RB / WR / TE marked Q sits in a fixed questionable_inactive_prob
+    share of the draws, and in exactly those draws his teammates get his volume, routed as if he were ruled out
+    (position routing, depth split and absent_mode as configured; redistribute_share where no rule applies). The sit
+    draws come from their own generator, so no other player's draws move. Returns ({key: sit mask}, {key: (extra
+    targets, extra carries)}); both empty when off."""
+    if not inj.get('questionable_routing'):
+        return {}, {}
+    p = inj['questionable_inactive_prob']
+    q = fd[(fd.Inj == 'Q') & fd.Position.isin(['RB', 'WR', 'TE']) & fd.Key.isin(agg.index)]
+    qrng = np.random.default_rng([seed, 2])
+    sits, gain = {}, {}
+    mode = inj.get('absent_mode', 'skip')
+    for r in q.sort_values('Key').itertuples():
+        sits[r.Key] = qrng.random(n) < p
+        gain[r.Key] = usage.redistribute_out(agg, q[q.Key == r.Key], fd, inj['redistribute_share'],
+                                             st if mode == 'present_share' or inj.get('skip_already_absent', True) else None,
+                                             mode, routing)
+    return sits, gain
 
 
 def role_volume(st):

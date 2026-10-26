@@ -86,7 +86,16 @@ def exposure_limits(df, prefs, opt):
 
 
 def assign_forced(df, need, n, rnd):
-    """Spread each green player's required lineups over random lineup slots; green QBs get disjoint slots."""
+    """Spread each green player's required lineups over random lineup slots; green QBs get disjoint slots.
+    Green QBs can need more lineups than there are (week 7's 57 shadow greens: 185 QB lineups of 150). Then every QB's
+    need is scaled down in proportion (largest remainder) so the QBs fill exactly n, with a warning."""
+    need = dict(need)
+    qbs = {i: k for i, k in need.items() if df.Pos[i] == 'QB'}
+    if sum(qbs.values()) > n:
+        scaled = allocate_stacks(qbs, n)
+        print(f'WARNING: green QBs need {sum(qbs.values())} forced lineups of {n}; each scaled down in proportion: '
+              + ', '.join(f'{df.Name[i]} {qbs[i]} -> {scaled[i]}' for i in qbs))
+        need.update(scaled)
     force = {k: set() for k in range(n)}
     qslots = list(range(n))
     rnd.shuffle(qslots)
@@ -116,9 +125,9 @@ def receivers(df, stacks):
     return df.Pos.isin(['WR', 'TE']) | (named & (df.Pos == 'RB'))
 
 
-def solve_lineup(df, obj, team, rule, cap, use, forced, prior_lineups, roster, opt, outside=None):
+def solve_lineup(df, obj, team, rule, cap, use, forced, prior_lineups, roster, opt, outside=None, te_flex=True):
     """One lineup (df indices) or None if infeasible. outside = (indices, max) for pool mode: at most max players
-    from those indices (the non-pool fillers)."""
+    from those indices (the non-pool fillers). te_flex = False: no TE in the FLEX (exactly the TE slot's count)."""
     import pulp
     idx = df.index
     pos = lambda p: [i for i in idx if df.Pos[i] == p]
@@ -132,6 +141,8 @@ def solve_lineup(df, obj, team, rule, cap, use, forced, prior_lineups, roster, o
     for p, c in counts.items():
         P += pulp.lpSum(x[i] for i in pos(p)) == c if p in ('QB', 'D') else pulp.lpSum(x[i] for i in pos(p)) >= c
     P += pulp.lpSum(x[i] for p in roster['flex'] for i in pos(p)) == counts[roster['flex']].sum() + (slots == 'FLEX').sum()
+    if not te_flex:
+        P += pulp.lpSum(x[i] for i in pos('TE')) == counts['TE']
     for t in df.Team.unique():
         P += pulp.lpSum(x[i] for i in idx if df.Team[i] == t and df.Pos[i] != 'D') <= roster['max_per_team']
     # stack: this team's QB + receivers (+ required players) + bring-back from the opponent
@@ -282,6 +293,10 @@ def build_lineups(df, sims, cfg, pool_mode=None):
         tight = {t: counts[t] * stack_rule(t, stacks, opt)['receivers'] / max(room[t], 1) for t in counts}
         queue = [t for t in sorted(counts, key=lambda t: -tight[t]) for _ in range(counts[t])]
     use = {i: 0 for i in df.index}
+    # [optimizer] flex_te_max_share (0 = off): at most this share of lineups with a TE in the FLEX, spread through the
+    # build (lineup k may add one only while the count stays within share x k), so no group of stacks takes them all
+    te_share = opt.get('flex_te_max_share', 0) or 0
+    te_flex_used = 0
     FLOOR_LOG.update(relief=0, no_floor=0)
     lineups, draw, tries = [], 0, 0
     w = opt['mean_weight']
@@ -303,7 +318,9 @@ def build_lineups(df, sims, cfg, pool_mode=None):
             team = rnd.choice(pool) if pool else rnd.choices(teams, tw)[0]
         obj = (w * df.Proj.values + (1 - w) * sims[df.row.values, draw % sims.shape[1]]) * mult - penalty
         caps = reserved_caps(df, cap, force, slot, team, stacks, opt, queue) if opt.get('reserve_required') else cap
-        lp = solve_lineup(df, obj, team, stack_rule(team, stacks, opt), caps, use, F, lineups, cfg['roster'], opt, outside)
+        te_ok = not te_share or te_flex_used + 1 <= te_share * (slot + 1) + 1e-9
+        lp = solve_lineup(df, obj, team, stack_rule(team, stacks, opt), caps, use, F, lineups, cfg['roster'], opt, outside,
+                          te_ok)
         if lp is None:
             if tries > 20 * opt['drop_force_after']:   # e.g. a [optimizer.leverage] max_lineup_own nothing can meet
                 raise RuntimeError(f'no feasible lineup for slot {slot + 1} after {tries} tries; stacks built so far: '
@@ -321,6 +338,7 @@ def build_lineups(df, sims, cfg, pool_mode=None):
         if queue is not None and team in queue:
             queue.remove(team)
         lineups.append(lp)
+        te_flex_used += sum(df.Pos[i] == 'TE' for i in lp) > 1
         tries = 0
         for i in lp:
             use[i] += 1

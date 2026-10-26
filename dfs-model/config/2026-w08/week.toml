@@ -1,0 +1,101 @@
+# Week 8 settings (2026-w08). TEMPLATE made Oct 26 from 2026-w07's week.toml with the week-specific parts emptied.
+# Overrides any key in config/defaults.toml. Standing rules come from defaults: starters only, 25-lineup cap, leverage off,
+# salary floor $59,000 with cap relief +1 (Doug, Oct 26; +3 in week 7), role guard, WR implied-total correction, Harrison's
+# old team (ARI) by present share (Doug, Oct 26: fixes the double count). docs/week8_prep.md.
+# READS MODE FROM WEEK 8 (Doug, Oct 26): RED applied ([prefs] red); YELLOW and GREEN shadow-only ([shadow.yellow],
+# [shadow.green]). Weeks 4-7 as lineups: red +3.0 (with yellow, wk 4) / +1.4 / +1.4 / -1.6; yellow +0.6 / -0.5 / -4.8;
+# green +1.3 / -1.7 / none / +0.3 (shadow, boost mode). docs/week8_prep.md section 5.
+# Schedule (nflverse games.csv, Oct 26). Main slate = Sunday 1:00 / 4:05 / 4:25 ET, likely 11 games / 22 teams:
+#   BAL@BUF, TEN@CIN, ARI@DAL, MIN@DET, IND@JAX, LV@NYJ, CLE@PIT, ATL@TB, LAC@LAR, KC@DEN, NE@MIA.
+# Off the main slate: CAR@GB (Thu), PHI@WAS (SNF), CHI@SEA (MNF). Byes: HOU, NO, NYG, SF.
+# So Houston (Harrison) and Green Bay (Josh Jacobs) are NOT on the main slate. Confirm against FanDuel's player list.
+# Player list: download fd_players.csv when it is out, again Friday and Sunday morning, and diff each against the last
+# (python src/diff_players.py <old> <new>): report added / removed players and tag changes to Doug.
+
+[status]
+out = []
+questionable = []
+active = []
+
+[status.starting_qb]
+
+# Traded players. Houston is on bye in week 8, so Harrison is not on the slate: only the Arizona side runs, now by
+# present share (his old teammates' gain fades with each ARI game played without him; defaults.toml
+# [model.injury] trade_old_team). Doug, Oct 26: share 0.15, factor 0.9 (13.3% of HOU targets over his two HOU games;
+# 21% of snaps in week 7). Used from the first slate Houston is on (week 9). `position` routes his ARI volume by
+# position while he is off the slate. Remove the entry after ~3 Houston games.
+[[status.trade]]
+player = "Marvin Harrison Jr."
+position = "WR"
+from = "ARI"
+to = "HOU"
+new_target_share = 0.15        # Doug, Oct 26
+first_week_factor = 0.9        # Doug, Oct 26 (0.7 in week 7)
+
+# Doug's projection reads: new mean FanDuel points.
+[overrides]
+# Josh Jacobs (GB): back from the exempt list, one game of 2026 data. Flag him for Doug's read if he is on the main
+# slate (GB plays Thursday, so normally not).
+
+# Depth split for WRs only (Doug, Oct 12), kept.
+[model.injury]
+within_position = "depth_rank"
+depth_rank_positions = ["WR"]
+
+[optimizer]
+stack_allocation = "proportional"   # stack counts follow the weights exactly instead of random draws
+
+[prefs]
+starters_only = true
+red_teams = []
+red = []
+
+[prefs.yellow]                 # empty from week 8: yellow is shadow-only (Doug, Oct 26); his yellows go to [shadow.yellow]
+
+[prefs.green]                  # empty: green is shadow-only
+
+[prefs.green_floor]
+
+[prefs.starter_override]
+
+[prefs.player_cap]
+
+# Record only: NOT applied. Yellow and green go here; red is applied, so its review-run lineups go under
+# [shadow.red_lineups].
+[shadow]
+reviewed = ""
+red = []
+
+[shadow.red_lineups]
+
+[shadow.yellow]                # "Player" = lineups he had in the reviewed run (record only from week 8)
+
+[shadow.green]                 # "Player" = lineups he had in the reviewed run (record only)
+
+[shadow.green_floor]
+
+[shadow.trade]
+"Marvin Harrison Jr." = { from = "ARI", to = "HOU", new_target_share = 0.15, first_week_factor = 0.9 }   # Doug, Oct 26
+
+# Doug's stack reads (named RBs counted as stack receivers for their own QB). Week 7 had McCaffrey (SF, on bye in
+# week 8), Kyren Williams (LAR) and Aaron Jones Sr. (MIN): ask Doug whether Kyren / Jones carry over.
+[stacks]
+extra_receivers = []
+
+# Stack QB-team weights: weight = round(2 * (implied total - 16)), min 1, from data/2026-w08/lines.csv (to build).
+[stacks.weights]
+
+[stacks.rules]
+
+# Doug's pool: PENDING Doug (Oct 26: keep it two more weeks, or stop). If kept, lists from his sheet as in week 7.
+[pool]
+
+# Shadow control set (Doug, Oct 26: keep running): the normal model at cap 45, not entered:
+#   python src/optimize.py --week 2026-w08 --subdir model_cap45 --cap 45
+[grading]
+extra_sets = ["model_cap45"]
+
+[contest]
+field_size = 0                 # from the results export after the slate
+
+[contest.guru]

@@ -19,11 +19,10 @@ a field average of 103.3 (-2.2). The best, a Burrow stack, scored 151.4 and rank
 the top 10%. The yellows took about 5 points a lineup off us and the reds about 1.6 (section 3). This was the first
 week Doug's reads were wrong on balance.
 
-**Money: Pooch Punt net +$0.73.** Won **$8.18** on $7.45 of fees (149 paid + 1 free). The entry history adds up to
-$8.18, not the $8.08 in the run note: 63 x $0.10, 9 x $0.12, 2 x $0.15, 2 x $0.25. Running total since week 4:
-**-$3.15** (week 4 +$2.35, week 5 -$4.74, week 6 -$1.49, week 7 +$0.73).
-**To confirm:** the entry history also has **two $0.25 Hail Mary entries** (110.12 and 76.92, $0 won; one scored the free
-entry's 110.12, so it is probably the same lineup). If they count, week 7 is +$0.23 after $0.50 more in fees, and the running total is -$3.65.
+**Money: week 7 net +$0.23** (confirmed by Doug, Oct 26). Won **$8.18** in the Pooch Punt on $7.45 of fees (149 paid
++ 1 free): 63 x $0.10, 9 x $0.12, 2 x $0.15, 2 x $0.25. Plus **two $0.25 Hail Mary
+entries** (110.12 and 76.92, $0 won; one is probably the free entry's lineup): $0.50 more in fees. Pooch Punt alone
++$0.73. Running total since week 4: **-$3.65** (week 4 +$2.35, week 5 -$4.74, week 6 -$1.49, week 7 +$0.23).
 
 ## 1. Model lineups vs the field
 
@@ -38,8 +37,8 @@ entry's 110.12, so it is probably the same lineup). If they count, week 7 is +$0
 | Lineups in top 10% | 11 | 8 | 3 | n/a |
 | Lineups above field median | 77 of 149 | 58 of 149 | 29 of 149 | n/a |
 | Winning score | 228.78 | 189.96 | 247.58 | 216.98 |
-| Winnings / net $ | $8.18 / +$0.73 | $5.96 / -$1.49 | $3.11 / -$4.34 (PP) | +$2.35 net |
-| Running total since week 4 | -$3.15 | -$3.88 | -$2.39 | +$2.35 |
+| Winnings / net $ | $8.18 / +$0.23 (PP +$0.73, HM -$0.50) | $5.96 / -$1.49 | $3.11 / -$4.34 (PP) | +$2.35 net |
+| Running total since week 4 | -$3.65 | -$3.88 | -$2.39 | +$2.35 |
 
 Other counts: 4 in the top 5%. Projected lineup average 120.5. **Projected and actual lineup scores correlated
 -0.23**: the lineups the model liked most did worst (week 6: 0.00, week 5: 0.43). The free entry (Doug's
