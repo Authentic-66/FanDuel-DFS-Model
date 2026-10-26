@@ -1,0 +1,5 @@
+set,lineups,avg,best,entered,top_10pct,top_1pct,best_rank
+pool,150,96.1,148.9,2,4,0,15169
+model,150,100.9,151.4,149,11,0,12132
+model_cap45,150,98.0,157.8,35,8,1,5291
+entered,150,101.1,151.4,150,11,0,12132

@@ -265,7 +265,7 @@ flags dropped (he records full Guru lists when he uses it). Built in the second 
   Hibner, Nicholas/Nick Singleton, Mitchell/Mitch Tinsley, Andrew/Drew Ogletree. The guard's no-data warning is the
   place new aliases show up: check it every run.
 
-## Week 7 run checklist (state at Sun Oct 25: head 9b16164; steps 1-5 DONE, entered 149; see "Week 7 final run". Next: step 6 after the slate)
+## Week 7 run checklist (ALL DONE: step 6 graded Oct 26, docs/week7_review.md; see "Week 7 (2026-w07) result")
 Steps 1-2 and the preliminary parts of 3-6 are DONE (section "Week 7 preliminary run"). Remaining:
 1. DONE Oct 22 for colours (`data/2026-w07/review_sheet_reviewed.xlsx`). Pool lists loaded (ranked). **Doug, Oct 22:** pool cap 45 for week 7
    (shadow test; `[pool] raise_cap_to = 45`), model cap 26, then 27 after the extra receivers (stays
@@ -416,6 +416,23 @@ FINAL, `[stacks.weights]` rebuilt (round half up). Model cap 27: 150, mean 120.4
 checked: header, 149 unique, salary 59,000-60,000, no red / OUT / Q / FanDuel O-IR players. Max exposure 30 = cap 27
 + salary-floor relief 3. Control (cap 45) 150, mean 122.8; pool (cap 45) 150, mean 122.2. Next: checklist step 6.
 
+## Week 7 (2026-w07) result — see docs/week7_review.md
+149 model lineups (cap 27, as built) + 1 free entry (Doug's own) in the Pooch Punt (550,210 entries). Model avg 101.1
+vs field 103.3; best 151.4 (Burrow stack, rank 9,356); 0 in top 1%, 11 in top 10%; winner 228.78; cash line ~102 (76
+of 150 cashed). Won $8.18 (entry history; Doug's note said $8.08) on $7.45: net +$0.73, running total -$3.15. Two $0.25
+Hail Mary entries ($0 won) also in the history: ask Doug whether they count (-$3.65 if so).
+Four sets (exact ranks): model 101.1 / 11 / 0 / 151.4; control cap 45 98.0 / 8 / 1 / 157.8; pool cap 45 96.1 / 4 / 0 /
+148.9; free entry 110.1. Pool vs control -1.9, cap 45 vs 27 -2.9 (better best). Projected vs actual lineup r -0.23.
+Reads as lineups (scratch re-runs; analyze_results.py crashed on the shadow-green floor run, 185 forced QB lineups):
+red -1.6, yellow -4.8 (QB yellows Nix / Smith / Watson / Penix all 20+; Pollard 38.0 capped at 4), Kyren min -0.8 (never
+bound), shadow greens (boost mode) +0.3, McCaffrey receiver -0.3, Mumpfield -0.8 / -0.6 (pool), Godwin -1.3 / -2.5 (pool).
+Harrison: 4 of 28 targets (14.3%) on 13 snaps (21%); two HOU games 13.3%. RB -10.8 vs field; TE in flex 78%.
+**Josh Jacobs missing**: `fd_players.csv` was the Oct 19 file, never refreshed; Strong (12 lineups) scored 0. Q held
+out without redistribution: Hall / Spears sat, B. Allen 19.4 and Pollard 38.0. Floor: no $3k+ lineups, but 21 players
+above cap 27 (12 at 30). Role guard: 179 of 216 zeroed players scored 0, no real miss. WR correction neutral. 20+ tier
++4.7; beat-p90 9.8%; DST r -0.09; ownership MAE 1.5, chalk missed again (Golden 12% vs 40%, Coker 10% vs 36%).
+Week-8 list in the review, section 6.
+
 ## Week-8 backlog
 - **Per-position redistribution mode**: RB out = routing by position; WR out = depth split; TE out = old 80% rule or none.
   Basis: the section 11.2 accuracy table (players moved 1+: RB out 6.65 routing vs 6.70 old; WR out 6.53 depth vs 6.77 pro
@@ -432,6 +449,9 @@ checked: header, 149 unique, salary 59,000-60,000, no red / OUT / Q / FanDuel O-
   count); remove the trade entry after ~3 Houston games.
 - 149-lineup script (still an inline snippet each week).
 - Pool mode: raise pool players to `raise_cap_to` on a stall too, not only when the capacity arithmetic fails (week 7).
+- From the week-7 review (section 6, in its order): player-file refresh check (Friday + Sunday), Jacobs read, Harrison
+  factor, ARI side via present_share, Q volume routed in the zeroed sims, QB yellows, TE-in-flex re-test, cap relief
+  size, control / pool sets, `assign_forced` QB overflow fix.
 
 ## History refits (Oct 12) — see docs/phase2_history.md
 `fetch_stats.py --seasons 2020-2025 --history` puts player stats, team stats and schedules with Vegas lines in

@@ -1,0 +1,12 @@
+set,run,lineups,avg,top10,top1,best,best_rank,same_as_built,read_effect
+model cap 27,as entered,150,100.9,11,0,151.38,9356,150,
+model cap 27,red removed,150,102.54,17,0,151.18,9514,1,-1.64
+model cap 27,yellow removed,150,105.67,23,2,162.58,3040,10,-4.77
+model cap 27,Kyren minimum removed,150,101.67,8,2,161.98,3217,52,-0.77
+model cap 27,shadow greens added (boost mode),150,101.22,14,3,168.78,1562,15,0.32
+model cap 27,McCaffrey not a stack receiver,150,101.24,17,1,156.98,5425,18,-0.34
+model cap 27,Mumpfield red,150,101.66,10,1,161.98,3217,39,-0.76
+model cap 27,Godwin yellow (cap 1),150,102.16,15,1,179.08,471,63,-1.26
+pool cap 45,pool as built,150,96.14,4,0,148.86,11721,150,
+pool cap 45,pool: Egbuka slot empty (no Godwin),150,98.65,6,0,148.86,11721,84,-2.51
+pool cap 45,pool: no Mumpfield,150,96.78,5,0,148.86,11721,51,-0.64

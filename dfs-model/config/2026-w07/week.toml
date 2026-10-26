@@ -489,6 +489,6 @@ DST = ["Cleveland Browns", "Houston Texans", "New York Jets", "Minnesota Vikings
 extra_sets = ["model_cap45"]
 
 [contest]
-field_size = 0                 # fill in after the slate (for grading)
+field_size = 550210            # Pooch Punt, from the results export (Oct 26)
 
 [contest.guru]
