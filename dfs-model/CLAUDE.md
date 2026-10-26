@@ -46,7 +46,7 @@ and thinks in those terms: fundamentals model + market/public overlay, calibrati
   Pool fillers use `[optimizer] exposure_cap` (a model cap change rebuilds the pool too).
   `[grading] extra_sets` = extra lineup folders under `weeks/<week>/` graded beside pool and model in `pool/grade.csv`
   (week 7: `model_cap45`, the shadow control).
-  Salary-floor relief is `exposure_cap + floor_cap_overflow`: +1 from week 8 (Doug, Oct 26); week 7 used +3 (pinned in its
+  Salary-floor relief is `exposure_cap + floor_cap_overflow`: +2 from week 8 (Doug, Oct 26); week 7 used +3 (pinned in its
   week.toml), so at cap 27 players reached 30.
 
 ## Pipeline (`src/` scripts are thin CLIs over the `src/dfs/` package; all take `--week`, default `$DFS_WEEK`)
@@ -96,7 +96,12 @@ and thinks in those terms: fundamentals model + market/public overlay, calibrati
   eligible players, so backups move up (green exempt).
 - If he has a free entry, upload 149 (drop lowest projected) and use the free entry separately.
 - From week 7: role guard on (WR/TE only), WR implied-total correction on, $59K salary floor with cap relief for
-  capped players only: +3 in week 7, **+1 from week 8** (Doug, Oct 26).
+  capped players only: +3 in week 7, **+2 from week 8** (Doug, Oct 26). Test (weeks 4-7, avg / top-10% / top-1% / best,
+  +3 vs +2 vs +1): **week 4 114.6 / 16 / 3 / 191.8 -> 113.1 / 12 / 1 / 164.0 -> 112.4 / 11 / 1 / 164.0** (the cost: the
+  191.8 lineup and two top-1% lineups lost); week 5 level; week 6 103.9 / 103.8 / 103.2; week 7 at cap 27 100.9 /
+  101.6 / stalls at 147. +2 builds 150 every week.
+- **Questionable routing ON from week 8** (Doug, Oct 26): `[model.injury] questionable_routing = true`,
+  `questionable_inactive_prob = 0.45` (weeks 4-7 pinned off / 0.25). Q players are still held out of lineups.
 - Weekly review loop: he color-codes `exposure.csv` in Excel — **red = exclude, yellow = less (cap at ~half current),
   green = more (min = max(2x current, 12))**. Two shades of green both mean "more". Lists live in `config/<week>/week.toml`
   `[prefs]`.
@@ -444,9 +449,9 @@ Doug's eight items. Done and ON: floor relief +1 (`floor_cap_overflow = 1`; week
 old team by present share (`[model.injury] trade_old_team = "present_share"`, ARI double count, weeks 6-7 pinned
 "full"); reads mode (red applied, yellow + green shadow); Harrison 0.15 / 0.9 in `config/2026-w08/week.toml`;
 `assign_forced` scales forced green QBs to fit (week-7 crash) and `reads_lineups` survives a failed run;
-`src/diff_players.py`. Built and OFF (Doug decides): `[optimizer] flex_te_max_share` (TE-in-FLEX cap) and
-`[model.injury] questionable_routing` (a Q player's volume to teammates in the draws he sits; test value
-`questionable_inactive_prob = 0.45`: Doug's Q lists sat 12 of 26, history Q + DNP 45%, all Q 24%). Tapered TE spread
+`src/diff_players.py`. Built and OFF: `[optimizer] flex_te_max_share` (TE-in-FLEX cap). Built and ON (Doug, Oct 26):
+`[model.injury] questionable_routing` at `questionable_inactive_prob = 0.45` (a Q player's volume to teammates in the
+draws he sits; Doug's Q lists sat 12 of 26, history Q + DNP 45%, all Q 24%). Tapered TE spread
 tested (config only), not adopted. Lineup tests weeks 4-7 (`weeks/2026-w07/backtest_week8_prep.csv`): TE taper
 -0.7 / +0.5 / -0.2 / +0.2, FLEX mix unchanged; TE cap 35% -1.1 / 0.0 / -0.4 / week 7 infeasible at cap 27 (builds at 29);
 Q routing -0.1 / 0 / -0.2 / -0.2 with top-10% +3 / 0 / +1 / 0, top-1% +1 in week 4 (recommended at 0.45); relief +1
@@ -454,8 +459,9 @@ Q routing -0.1 / 0 / -0.2 / -0.2 with top-10% +3 / 0 / +1 / 0, top-1% +1 in week
 Week 7's 78% TE-in-FLEX was mostly the RB / WR yellows: with yellows off it is 56%.
 **Week 8 schedule:** byes HOU, NO, NYG, SF; CAR@GB Thursday; likely main slate 11 games / 22 teams (BAL@BUF,
 TEN@CIN, ARI@DAL, MIN@DET, IND@JAX, LV@NYJ, CLE@PIT, ATL@TB, LAC@LAR, KC@DEN, NE@MIA). Harrison (HOU) and Jacobs (GB)
-are not on it. Open with Doug: pool kept 2 more weeks or stopped (his note left both); Q routing on or off; extra
-receivers (Kyren, Jones) carried over or not.
+are not on it. **Doug's decisions (Oct 26):** pool kept for weeks 8-9 (shadow), then reviewed; Q routing ON at 0.45;
+no extra receivers carried over (he adds them per week); cap relief +2 (not +1). Harrison 0.15 / 0.9 and Jacobs' read
+wait for week 9. **Week 9: McCaffrey left week 7 injured (SF bye in week 8): check his status before the week-9 run.**
 
 ## Week 8 run checklist (2026-w08)
 1. FanDuel player list: download when the slate opens (`data/2026-w08/fd_players.csv`); **re-download Friday and
@@ -466,9 +472,9 @@ receivers (Kyren, Jones) carried over or not.
    IR players with 3+ targets + carries a game; `model.py`, read the role-guard and team-mismatch warnings; prelim
    optimizer run in `weeks/2026-w08/prelim/`; review sheet (recipe in the week-7 checklist). Check the FLEX mix.
 3. Doug's sheet: red -> `[prefs] red` (+ `[shadow.red_lineups]`), **yellow -> `[shadow.yellow]`**, green ->
-   `[shadow.green]`. Pool lists only if Doug keeps the pool. Jacobs: flag for a read if he is on the slate.
+   `[shadow.green]`, Pool / Rank -> `[pool]` (pool kept weeks 8-9). Extra receivers only if Doug names them.
 4. Friday statuses, Sunday lines (FINAL), final `optimize.py --week 2026-w08`, control `--subdir model_cap45 --cap 45`,
-   pool if kept; 149 files if Doug has a free entry. Cap 25 (standing); if a set stalls, stop and ask Doug.
+   `optimize.py --week 2026-w08 --pool`; 149 files if Doug has a free entry. Cap 25 (standing); if a set stalls, stop and ask Doug.
 5. After the slate: `convert_results.py`, `[contest] field_size`, `analyze_results.py`, `docs/week8_review.md`,
    ask Doug for winnings (running total -$3.65 after week 7).
 
@@ -488,8 +494,10 @@ receivers (Kyren, Jones) carried over or not.
 - 149-lineup script (still an inline snippet each week).
 - Pool mode: raise pool players to `raise_cap_to` on a stall too, not only when the capacity arithmetic fails (week 7).
 - From the week-7 review (section 6): DONE Oct 26 (docs/week8_prep.md): player-file refresh check, Harrison factor,
-  ARI side via present_share, Q routing (built, off), yellows to shadow, TE-in-FLEX test, relief +1, control kept,
-  `assign_forced` fix. Open: Jacobs read (week 9: GB plays Thursday in week 8), pool decision.
+  ARI side via present_share, Q routing (on), yellows to shadow, TE-in-FLEX test (cap off), relief +2, control and pool
+  kept, `assign_forced` fix.
+- **Week 9:** McCaffrey's status (left week 7 injured; SF bye in week 8); Jacobs' read (two games of data by then);
+  Harrison 0.15 / 0.9 applies (HOU back on the slate, if it is); pool review after week 9.
 
 ## History refits (Oct 12) — see docs/phase2_history.md
 `fetch_stats.py --seasons 2020-2025 --history` puts player stats, team stats and schedules with Vegas lines in

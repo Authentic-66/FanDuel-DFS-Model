@@ -172,6 +172,10 @@ DEF = { options = ["Minnesota Vikings", "Pittsburgh Steelers", "Tucker Kraft"], 
 TE = { options = ["Tucker Kraft", "Luther Burden III", "Tre' Harris"], picked = "Tucker Kraft" }
 WR3 = { options = ["Luther Burden III", "Michael Wilson", "Malik Washington"], picked = "Michael Wilson" }
 
+[model.injury]
+questionable_routing = false     # as entered: questionable routing became the default Oct 26 (week 8)
+questionable_inactive_prob = 0.25 # as entered (0.45 from week 8)
+
 [model.role_guard]
 enabled = false                # as entered: the role guard became the default in week 7
 

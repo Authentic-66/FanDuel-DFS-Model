@@ -105,6 +105,8 @@ first_week_factor = 0.7        # first game in the offence: 0.15 x 0.7 = 10.5% o
 within_position = "depth_rank"
 depth_rank_positions = ["WR"]
 trade_old_team = "full"   # as entered: Harrison's ARI volume handed out in full (present_share became the default Oct 26)
+questionable_routing = false     # as entered: questionable routing became the default Oct 26 (week 8)
+questionable_inactive_prob = 0.25 # as entered (0.45 from week 8)
 
 [optimizer]
 stack_allocation = "proportional"   # stack counts follow the weights exactly instead of random draws

@@ -1,17 +1,26 @@
 # Week 8 prep (Oct 26, 2026)
 
+**Doug's decisions (Oct 26, after this write-up):**
+1. Pool kept for weeks 8-9 (shadow), then reviewed.
+2. Questionable routing **ON at 0.45** (default from week 8; weeks 4-7 pinned off at 0.25).
+3. Extra stack receivers: none carried over; Doug adds them per week.
+4. Cap relief **+2**, not +1 (default; week 7 pinned at +3). Tested below (section 4).
+5. Week 9: McCaffrey left week 7 injured (SF bye in week 8); check his status before the week-9 run.
+
+Harrison 0.15 / 0.9 and Jacobs' read wait for week 9.
+
 Doug's eight week-8 changes, in his order. Each line says what was done and whether anything still needs his call.
 
 | # | Change | Status |
 |---|---|---|
 | 1 | Re-download the FanDuel player list Friday and Sunday morning; report changes | **Done.** In the CLAUDE.md checklist; new `src/diff_players.py` |
 | 2 | TE in the FLEX: (a) tapered TE spread, (b) a cap on TE-in-FLEX share | Built and tested, **both OFF**. Recommendation: adopt neither yet (section 2) |
-| 3 | Questionable players: pass part of their work to the backups | Built and tested, **OFF**. Recommendation: adopt at 45% (section 3); Doug decides |
-| 4 | Salary-floor cap relief +3 → +1 | **Done** (default). Weeks 4-6 build 150; **week 7 at cap 27 does not** (147). See section 4 |
+| 3 | Questionable players: pass part of their work to the backups | Built and tested. **ON at 45%** (Doug, Oct 26) |
+| 4 | Salary-floor cap relief +3 → +1 | +1 stalls week 7 at 147, so **Doug chose +2** (default). +2 builds 150 every week (section 4) |
 | 5 | Reads: red applied; yellow and green shadow-only | **Done.** In CLAUDE.md and the week-8 config, with the week 4-7 numbers |
 | 6 | Harrison 0.15 / 0.9; fix the ARI double count; flag Jacobs | **Done.** Note: **Houston has a bye and Green Bay plays Thursday in week 8** |
 | 7 | Fix the grading crash | **Done.** Forced green QBs are scaled to fit; one read that cannot build no longer stops the rest |
-| 8 | Keep the cap-45 control; pool kept or stopped | Control kept. **Pool: your note still reads "[keep 2 more weeks / stop]". Which one?** |
+| 8 | Keep the cap-45 control; pool kept or stopped | Control kept. **Pool kept for weeks 8-9** (Doug, Oct 26), then reviewed |
 
 Archived weeks are unchanged. Weeks 4-7 were rebuilt with the old code and with the new code, and the draws are
 identical (max difference 0.0). Weeks 6 and 7 pin the old settings (`trade_old_team = "full"`; week 7 also
@@ -167,7 +176,19 @@ does not** (147). Week 7 with +1 builds if:
 So with week 8's rules a stall is less likely than in week 7. If one happens, the standing rule applies: stop and ask
 Doug (cap +1 first, or relief +2).
 
-**Cost to flag:** +1 lowered the average in week 4 (-2.2, top-10% 16 → 11, top-1% 3 → 1) and week 6 (-0.7), and was
+**Relief +2 (Doug's choice, Oct 26), same test:**
+
+| Week | +3 | +2 | +1 |
+|---|---|---|---|
+| 4 | 114.6 / 16 / 3 / 191.8 | 113.1 / 12 / 1 / 164.0 | 112.4 / 11 / 1 / 164.0 |
+| 5 | 113.9 / 7 / 0 / 179.0 | 113.9 / 7 / 0 / 179.0 | 113.8 / 7 / 0 / 179.0 |
+| 6 | 103.9 / 6 / 1 / 158.9 | 103.8 / 7 / 1 / 158.9 | 103.2 / 5 / 1 / 158.9 |
+| 7 (cap 27) | 100.9 / 11 / 0 / 151.4 | 101.6 / 13 / 0 / 151.4 | stalls at 147 |
+
++2 builds 150 every week. Week 4 is still the cost: it loses the 191.8 lineup (rank 144) and two top-1% lineups at
+both +2 and +1. Weeks 5-6 are level at +2, and week 7 is better.
+
+**Cost to flag (+1):** +1 lowered the average in week 4 (-2.2, top-10% 16 → 11, top-1% 3 → 1) and week 6 (-0.7), and was
 level in week 5. Holding players to cap + 1 shifts lineups onto lower-projected fill-ins. It is Doug's call and is in
 place. He may want to weigh week 4 before week 8's final run.
 
@@ -241,10 +262,11 @@ lineup** (boost mode was +0.3). Week 7's committed `reads_lineups.csv` (the scra
 
 | Setting | Was | Now | Doug's item |
 |---|---|---|---|
-| `[optimizer] floor_cap_overflow` | 3 | **1** | 4 |
+| `[optimizer] floor_cap_overflow` | 3 | **2** (Doug's final call) | 4 |
 | `[model.injury] trade_old_team` | (full) | **"present_share"** | 6 |
 | `[optimizer] flex_te_max_share` | n/a | 0 (off) | 2, not adopted |
-| `[model.injury] questionable_routing` | n/a | false (off) | 3, not adopted |
+| `[model.injury] questionable_routing` | n/a | **true** (Doug, Oct 26) | 3 |
+| `[model.injury] questionable_inactive_prob` | 0.25 | **0.45** | 3 |
 
 ## Files
 
