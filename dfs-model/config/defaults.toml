@@ -80,6 +80,8 @@ rec_td = { mean = 0.045, k = 30 }
 
 [model.qb]
 min_attempts = 15          # drop QB game rows below this (cameos) from the stats entirely
+cameo_rule = "backup_only" # Doug, Oct 27: a low-attempt row is a cameo only if a teammate QB threw more in that game
+                           # (a sole QB is still the starter: Mayfield TB week 7). "any" = old rule (all rows < 15)
 prior_attempts = 33        # one pseudo-game of attempts
 att_sd = 0.12
 yds_sd = 0.15

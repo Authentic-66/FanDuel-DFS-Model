@@ -463,6 +463,25 @@ are not on it. **Doug's decisions (Oct 26):** pool kept for weeks 8-9 (shadow), 
 no extra receivers carried over (he adds them per week); cap relief +2 (not +1). Harrison 0.15 / 0.9 and Jacobs' read
 wait for week 9. **Week 9: McCaffrey left week 7 injured (SF bye in week 8): check his status before the week-9 run.**
 
+## Week 8 preliminary run (Tue Oct 27) — inputs only; checklist steps 1-2 DONE
+Slate confirmed: 11 games / 22 teams as planned (552 players, `fd_players.csv` downloaded Oct 27 18:50; keep it as the
+base for Friday's diff). Stats cache through week 7 (all 28 teams incl. MNF). `lines.csv` = nflverse lines Oct 27 23:56
+UTC (**PRELIMINARY**); `[stacks.weights]` DAL 29, BUF 26, CIN 25, JAC 24 ... TEN / CLE 4. `[status]` = FanDuel tags
+(Kattus O; 25 Q incl. QBs Lamar and Carson Beck) + 13 IR players with 3+ targets + carries a game (Achane 15.3, Adams
+8.2, ...). Prelim in `weeks/2026-w08/prelim/` (upload deleted): 150 at cap 25, no cap relief, mean proj 118.7, all
+rules checked, FLEX RB 73 / WR 37 / TE 40, 22 stack teams (DAL 14 ... CLE 2). Review sheet `data/2026-w08/review_sheet.xlsx`
+(220 rows, Lineups sum 1,350; builder is a scratch script). Largest routing bump: Ollie Gordon II +4.3 (Achane out).
+Role-guard no-data list: Buechele, Gabriel, Browning, Josh Johnson (backup QBs), Estime, Hodgins, Shedrick Jackson,
+Patterson: no missing aliases.
+**Doug's decisions (Oct 27):** TB = Mayfield (`[status.starting_qb]`; 14.9, all 8 TB stacks). **Cameo rule fixed**
+(`[model.qb] cameo_rule = "backup_only"`, `data.cameo`, `tests/test_cameo.py`): a QB row under `min_attempts` is
+dropped only when a teammate QB threw more in that game (Mayfield was TB's only QB in week 7, 11 attempts, so the old
+rule made Daniels the starter). Weeks 4-7: no 2026 row and no starter changes; 2025 prior rows change for ~7 QBs
+(Lamar, Darnold, Love, Mariota, Dart, McCarthy, Huntley), so weeks 4-7 pin `cameo_rule = "any"` to re-run as entered.
+Week 8: only Mayfield / Daniels and **Huntley 18.0 -> 16.0** (2025 wk 16: he and Lamar tied at 10 attempts, so both
+rows count under the rule as written; the rest within 0.2, stream noise). Prelim and sheet rebuilt: 150, mean 118.7,
+FLEX RB 75 / WR 37 / TE 38. Allen / Wayne: Doug marks them on the sheet if he wants them out. BAL / Lamar: after Friday.
+
 ## Week 8 run checklist (2026-w08)
 1. FanDuel player list: download when the slate opens (`data/2026-w08/fd_players.csv`); **re-download Friday and
    Sunday morning**, keep the earlier file, run `python src/diff_players.py <earlier> <new>` and report added /
