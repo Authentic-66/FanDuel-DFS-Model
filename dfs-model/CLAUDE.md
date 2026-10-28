@@ -478,9 +478,9 @@ Patterson: no missing aliases.
 dropped only when a teammate QB threw more in that game (Mayfield was TB's only QB in week 7, 11 attempts, so the old
 rule made Daniels the starter). Weeks 4-7: no 2026 row and no starter changes; 2025 prior rows change for ~7 QBs
 (Lamar, Darnold, Love, Mariota, Dart, McCarthy, Huntley), so weeks 4-7 pin `cameo_rule = "any"` to re-run as entered.
-Week 8: only Mayfield / Daniels and **Huntley 18.0 -> 16.0** (2025 wk 16: he and Lamar tied at 10 attempts, so both
-rows count under the rule as written; the rest within 0.2, stream noise). Prelim and sheet rebuilt: 150, mean 118.7,
-FLEX RB 75 / WR 37 / TE 38. Allen / Wayne: Doug marks them on the sheet if he wants them out. BAL / Lamar: after Friday.
+**Ties (Doug, Oct 27, later): a tie for the team's most attempts (under 15) is a cameo for both QBs** (2025 wk 16
+Lamar / Huntley 10 each; without it Huntley fell 18.0 -> 16.0). Week 8 vs the old rule: only Mayfield / Daniels
+change (rest within 0.2, stream noise). Prelim and sheet rebuilt: 150, mean 118.6, FLEX RB 74 / WR 37 / TE 39. Allen / Wayne: Doug marks them on the sheet if he wants them out. BAL / Lamar: after Friday.
 
 ## Week 8 run checklist (2026-w08)
 1. FanDuel player list: download when the slate opens (`data/2026-w08/fd_players.csv`); **re-download Friday and

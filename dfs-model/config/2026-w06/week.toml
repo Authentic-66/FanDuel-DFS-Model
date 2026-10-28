@@ -210,6 +210,6 @@ enabled = false                # as entered: the role guard became the default i
 enabled = false                # as entered: the WR implied-total correction became the default in week 7
 
 # Oct 27: cameo rule changed to "backup_only" from week 8 (Doug). Pinned to the old rule so this week re-runs as entered
-# (starters unchanged either way; 2025 prior rows for a few QBs differ).
+# (starters unchanged either way; 2025 prior rows for a few QBs differ; ties are cameos from week 8).
 [model.qb]
 cameo_rule = "any"

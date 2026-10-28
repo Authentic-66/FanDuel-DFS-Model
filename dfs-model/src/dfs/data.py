@@ -114,8 +114,9 @@ def load_stats(path, cfg, before_week=None):
 def cameo(st, qb_cfg):
     """QB game rows to drop as cameos: under qb.min_attempts, and (qb.cameo_rule = "backup_only", the default from
     week 8) only when another QB on the same team threw more passes in that game. A team's sole QB with few
-    attempts is still its starter (Mayfield, TB week 7: 11 attempts, left early, Daniels 0). "any" = the old rule:
-    every QB row under min_attempts."""
+    attempts is still its starter (Mayfield, TB week 7: 11 attempts, left early, Daniels 0). A tie for the team's
+    most attempts is a cameo for every QB in it (Doug, Oct 27; 2025 BAL wk 16 Lamar / Huntley 10 each). "any" = the
+    old rule: every QB row under min_attempts."""
     low = (st.position == 'QB') & (st.attempts.fillna(0) < qb_cfg['min_attempts'])
     rule = qb_cfg.get('cameo_rule', 'backup_only')
     if rule == 'any':
@@ -123,8 +124,12 @@ def cameo(st, qb_cfg):
     if rule != 'backup_only':
         raise ValueError(f'[model.qb] cameo_rule must be "backup_only" or "any", not {rule!r}')
     game = [c for c in ('season', 'week', 'team') if c in st]
-    att = st.attempts.where(st.position == 'QB').fillna(0)
-    return low & (att.groupby([st[c] for c in game]).transform('max') > att)
+    isqb = st.position == 'QB'
+    att = st.attempts.where(isqb).fillna(0)
+    keys = [st[c] for c in game]
+    top = att.groupby(keys).transform('max')
+    at_top = (isqb & (att == top)).groupby(keys).transform('sum')   # QBs sharing the team's most attempts
+    return low & ((top > att) | (at_top > 1))
 
 
 OFFENCE = ['QB', 'RB', 'FB', 'WR', 'TE']

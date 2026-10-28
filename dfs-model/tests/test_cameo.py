@@ -60,10 +60,20 @@ class CameoRuleTest(unittest.TestCase):
                   qb('Sole', 6, 30, team='BAL'))
         self.assertEqual(sorted(zip(st.player_display_name, st.week)), [('Other', 7), ('Sole', 6), ('Sole', 7)])
 
-    def test_tie_keeps_both(self):
-        # nobody threw more, so neither is a cameo (Doug's rule as written; 2025 BAL wk 16 Lamar / Huntley 10 each)
-        st = load('backup_only', qb('A', 16, 10, team='BAL'), qb('B', 16, 10, team='BAL'))
+    def test_tie_is_a_cameo_for_both(self):
+        # Doug, Oct 27: a tie for the most attempts is a cameo for both (2025 BAL wk 16 Lamar / Huntley 10 each)
+        st = load('backup_only', qb('A', 16, 10, team='BAL'), qb('B', 16, 10, team='BAL'), qb('A', 15, 30, team='BAL'))
+        self.assertEqual(list(zip(st.player_display_name, st.week)), [('A', 15)])
+
+    def test_tie_above_min_attempts_kept(self):
+        st = load('backup_only', qb('A', 16, 20, team='BAL'), qb('B', 16, 20, team='BAL'))
         self.assertEqual(len(st), 2)
+
+    def test_tie_does_not_count_non_qbs(self):
+        # a receiver's trick-play pass is not a QB tie
+        st = load('backup_only', qb('Sole', 7, 1, team='BAL'),
+                  dict(player_id='wr', player_display_name='Wideout', position='WR', team='BAL', week=7, attempts=1))
+        self.assertIn('Sole', set(st.player_display_name))
 
     def test_bad_rule(self):
         with self.assertRaises(ValueError):
