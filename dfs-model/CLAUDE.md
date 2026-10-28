@@ -483,6 +483,10 @@ Lamar / Huntley 10 each; without it Huntley fell 18.0 -> 16.0). Week 8 vs the ol
 change (rest within 0.2, stream noise). Prelim and sheet rebuilt: 150, mean 118.6, FLEX RB 74 / WR 37 / TE 39. Allen / Wayne: Doug marks them on the sheet if he wants them out. BAL / Lamar: after Friday.
 
 ## Week 8 run checklist (2026-w08)
+**State Oct 27 (head 0e0c5e1, pushed): steps 1-2 DONE (see "Week 8 preliminary run"). Next = step 3 (Doug's sheet,
+`data/2026-w08/review_sheet.xlsx`; use the Oct 22 read-back routine), then Friday: rename today's file to
+`fd_players_oct27.csv`, save the new download as `fd_players.csv`, diff, report, then `[status]` from Friday's report
+(BAL / Lamar call; TB stays Mayfield unless Doug says otherwise). Free entry: ask Doug before the final run.**
 1. FanDuel player list: download when the slate opens (`data/2026-w08/fd_players.csv`); **re-download Friday and
    Sunday morning**, keep the earlier file, run `python src/diff_players.py <earlier> <new>` and report added /
    removed players and new tags to Doug before re-running `model.py`. Confirm the slate against week.toml's list.
