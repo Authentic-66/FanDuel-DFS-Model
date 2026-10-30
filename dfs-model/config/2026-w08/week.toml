@@ -13,11 +13,14 @@
 # Player list: download fd_players.csv when it is out, again Friday and Sunday morning, and diff each against the last
 # (python src/diff_players.py <old> <new>): report added / removed players and tag changes to Doug.
 
-# PRELIMINARY (Oct 27): FanDuel's Oct 27 tags (O -> out, Q -> questionable) + IR players with 3+ targets + carries a
-# game in 2026. Replace with Friday's report.
+# FRIDAY (Oct 30, Doug): FanDuel's Oct 30 tags (data/2026-w08/fd_players.csv; O -> out, Q -> questionable, no D tags)
+# + IR players with 3+ targets + carries a game in 2026. Cleared since Oct 27: Lamar, St. Brown, Rice, Beck, A. Jones,
+# Warren, J. Wright, Nwangwu. DJ Moore kept Q: Rotowire Oct 30 lists him questionable (shoulder) though FanDuel dropped
+# his tag. Standard Q treatment, no hand adjustments. SUNDAY: Q players ACTIVE at inactives come off this list.
 [status]
 out = [
   "Josh Kattus",                                                         # FanDuel O
+  "Emeka Egbuka", "Brian Robinson Jr.", "Michael Briscoe",               # FanDuel O Oct 30 (Egbuka / Robinson ruled out)
   # IR with real 2026 volume (targets + carries a game)
   "De'Von Achane",                                                       # MIA 15.3
   "Davante Adams",                                                       # LAR 8.2
@@ -32,16 +35,24 @@ out = [
   "Jack Bech",                                                           # LV 3.0
 ]
 questionable = [
-  "Lamar Jackson", "Carson Beck",                                        # QBs
-  "Amon-Ra St. Brown", "Breece Hall", "Rashee Rice", "DJ Moore", "Jaylen Waddle", "Emeka Egbuka", "Ladd McConkey",
-  "Jeremiyah Love", "Aaron Jones Sr.", "Tyler Warren", "Tre' Harris", "Brian Robinson Jr.", "Jaylen Wright",
-  "Olamide Zaccheaus", "Tyjae Spears", "Calvin Ridley", "KaVontae Turpin", "Anthony Gould", "Ben Skowronek",
-  "Brenen Thompson", "Jameson Geers", "DJ Rogers", "Kene Nwangwu",
+  # RB (9)
+  "Breece Hall", "Jeremiyah Love", "Tyler Allgeier", "RJ Harvey", "TreVeyon Henderson", "Kenny Gainwell",
+  "Ray Davis", "Tyjae Spears", "LeQuint Allen Jr.",
+  # WR (17 + DJ Moore)
+  "George Pickens", "A.J. Brown", "Jaylen Waddle", "Michael Wilson", "Ladd McConkey", "Jakobi Meyers",
+  "Carnell Tate", "Malik Washington", "Tre' Harris", "Olamide Zaccheaus", "Calvin Ridley", "KaVontae Turpin",
+  "Anthony Gould", "Jared Wayne", "Ben Skowronek", "Jordan Whittington", "Brenen Thompson",
+  "DJ Moore",                                                            # Rotowire Q (FanDuel untagged)
+  # TE (10)
+  "Dalton Kincaid", "Travis Kelce", "Colby Parkinson", "Greg Dulcich", "Will Kacmarek", "Luke Schoonmaker",
+  "Drew Ogletree", "Ian Thomas", "Jameson Geers", "DJ Rogers",
 ]
 active = []
 
 [status.starting_qb]
 TB = "Baker Mayfield"          # Doug, Oct 27: he started week 7 and was TB's only QB (11 attempts)
+BAL = "Lamar Jackson"          # Oct 30: FanDuel tag cleared, full practice (Doug: Lamar off Q). Default would be Huntley
+                               # (BAL's week-7 starter); week-7 checklist rule: if Lamar plays, set BAL here.
 
 # Traded players. Houston is on bye in week 8, so Harrison is not on the slate: only the Arizona side runs, now by
 # present share (his old teammates' gain fades with each ARI game played without him; defaults.toml

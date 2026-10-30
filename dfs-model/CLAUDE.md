@@ -505,11 +505,27 @@ NE 12, BAL 11, DET 11, ...), 10 lineups use a filler (Engram 6, Mallory 4), 838 
 20 lineups identical to the model's. Unused: Herbert, Mason Taylor. Upload deleted. Rank 10 boost = 1.00 (linear to
 the last ranked, as in week 7).
 
+## Week 8 Friday run (Fri Oct 30) — statuses applied; preview sets built (not committed)
+`fd_players.csv` = Friday's download (Oct 27 file kept as `fd_players_oct27.csv`). Diff: 0 salary changes, 0 added,
+Demercado removed; tags cleared: Lamar, St. Brown, Rice, DJ Moore, Beck, A. Jones, Warren, J. Wright, Nwangwu; Egbuka /
+B. Robinson Q -> O, Briscoe O; 22 new Q (Pickens, A.J. Brown, M. Wilson, Meyers, Tate, Allgeier, Kincaid, Kelce, ...).
+FanDuel has no D tags. Rotowire report `data/2026-w08/injuries_rotowire_2026-10-30.docx` (Friday practice notes / coach
+quotes) agrees with FanDuel except **DJ Moore**: Rotowire Q (shoulder), FanDuel untagged -> kept Q. `[status]` = FanDuel
+O/Q + DJ Moore + the IR-volume list. **`[status.starting_qb] BAL = "Lamar Jackson"`** (default would start Huntley, BAL's
+week-7 QB, and Lamar would project 0; week-7 checklist rule). Projections: Lamar 18.6, Huntley 0, St. Brown 17.9, Rice
+13.2, A. Jones 12.4, Warren 9.8; new Q players ~-45% (routing), Stevenson +2.1, Bijan +1.6, Irving +1.5.
+Preview sets (untracked, uploads deleted): model `friday/` 150 at cap 25 (10 lineups relief to 27), mean 120.3 (prelim
+119.2); control `friday_cap45/` 150, mean 121.7; pool `pool/friday/` 150 at cap 25, mean 120.5. All 150 lineups differ
+from the prelim in each set. ARI no longer stacked (M. Wilson Q). `prelim/`, `model_cap45/`, `pool/` untouched (Oct 29);
+`proj.csv` / `sims.npy` are Friday's.
+
 ## Week 8 run checklist (2026-w08)
-**State Oct 29: step 3 DONE incl. the pool (see "Week 8 review applied"). Next = Friday:
-rename the Oct 27 file to
-`fd_players_oct27.csv`, save the new download as `fd_players.csv`, diff, report, then `[status]` from Friday's report
-(BAL / Lamar call; TB stays Mayfield unless Doug says otherwise). Free entry: ask Doug before the final run.**
+**State Oct 30: Friday DONE (see "Week 8 Friday run"). Next = Sunday: re-download `fd_players.csv` (keep Friday's as
+`fd_players_fri.csv`) and diff; FINAL lines + `[stacks.weights]`; after inactives (~10:30 CT) apply the Sunday status rule
+below, `model.py`, then the three final sets. Free entry: ask Doug before the final run.**
+**Sunday status rule (Doug, Oct 30): after inactives, every player on `[status] questionable` who is ACTIVE comes off the
+Q list before the final run (standard treatment, no hand adjustments); inactive ones move to `out`. Doug makes the calls
+on the Friday non-practisers (A.J. Brown, Henderson, Spears, Tate, ...). Re-check BAL = Lamar.**
 1. FanDuel player list: download when the slate opens (`data/2026-w08/fd_players.csv`); **re-download Friday and
    Sunday morning**, keep the earlier file, run `python src/diff_players.py <earlier> <new>` and report added /
    removed players and new tags to Doug before re-running `model.py`. Confirm the slate against week.toml's list.
@@ -519,7 +535,8 @@ rename the Oct 27 file to
    optimizer run in `weeks/2026-w08/prelim/`; review sheet (recipe in the week-7 checklist). Check the FLEX mix.
 3. Doug's sheet: red -> `[prefs] red` (+ `[shadow.red_lineups]`), **yellow -> `[shadow.yellow]`**, green ->
    `[shadow.green]`, Pool / Rank -> `[pool]` (pool kept weeks 8-9). Extra receivers only if Doug names them.
-4. Friday statuses, Sunday lines (FINAL), final `optimize.py --week 2026-w08`, control `--subdir model_cap45 --cap 45`,
+4. Friday statuses (DONE Oct 30), Sunday lines (FINAL), **Sunday inactives: active Q players off the Q list, inactive
+   -> out, rerun `model.py`**, final `optimize.py --week 2026-w08`, control `--subdir model_cap45 --cap 45`,
    `optimize.py --week 2026-w08 --pool`; 149 files if Doug has a free entry. Cap 25 (standing); if a set stalls, stop and ask Doug.
 5. After the slate: `convert_results.py`, `[contest] field_size`, `analyze_results.py`, `docs/week8_review.md`,
    ask Doug for winnings (running total -$3.65 after week 7).
