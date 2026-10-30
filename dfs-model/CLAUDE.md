@@ -522,7 +522,8 @@ from the prelim in each set. ARI no longer stacked (M. Wilson Q). `prelim/`, `mo
 ## Week 8 run checklist (2026-w08)
 **State Oct 30: Friday DONE (see "Week 8 Friday run"). Next = Sunday: re-download `fd_players.csv` (keep Friday's as
 `fd_players_fri.csv`) and diff; FINAL lines + `[stacks.weights]`; after inactives (~10:30 CT) apply the Sunday status rule
-below, `model.py`, then the three final sets. Free entry: ask Doug before the final run.**
+below, `model.py`, then the three final sets. **Doug has a free entry in week 8 (confirmed Oct 30): write the 149 files for the model set
+(`entered_upload_149.csv` etc., drop the lowest-projected lineup).**
 **Sunday status rule (Doug, Oct 30): after inactives, every player on `[status] questionable` who is ACTIVE comes off the
 Q list before the final run (standard treatment, no hand adjustments); inactive ones move to `out`. Doug makes the calls
 on the Friday non-practisers (A.J. Brown, Henderson, Spears, Tate, ...). Re-check BAL = Lamar.**
