@@ -482,9 +482,23 @@ rule made Daniels the starter). Weeks 4-7: no 2026 row and no starter changes; 2
 Lamar / Huntley 10 each; without it Huntley fell 18.0 -> 16.0). Week 8 vs the old rule: only Mayfield / Daniels
 change (rest within 0.2, stream noise). Prelim and sheet rebuilt: 150, mean 118.6, FLEX RB 74 / WR 37 / TE 39. Allen / Wayne: Doug marks them on the sheet if he wants them out. BAL / Lamar: after Friday.
 
+## Week 8 review applied (Thu Oct 29) — inputs only; pool NOT loaded yet
+Doug's sheet `data/2026-w08/review_sheet_reviewed.xlsx` (untracked; `review_sheet.xlsx` left as built). All 220 names
+match proj.csv. Colours typed as "red": **118 red, 0 yellow, 0 green** -> `[prefs] red` (applied) + `[shadow.red_lineups]`
+(40 of them held 256 prelim slots: Mason 25, Warren 20, B. Allen 13, O. Cooper 12, DET DST 11, Johnston 11, ...; red QBs
+Geno Smith, Penix, Rodgers, Nix, Willis, Ward and more; Allen / Wayne red). **Pool:** 97 rows marked P, but only 47 ranked
+and the ranked ones are exactly the target sizes (QB 10, RB 10, WR 14, TE 8, DST 5; ranks 1-N, no gaps); the other 50 P
+rows have no rank. Asked Doug which is the pool; with the ranked 47 only, Mayfield / Mahomes / D. Jones have 0 own
+WR/TE in the pool, Allen / Lawrence 1, Goff 1 usable (St. Brown Q, ranked WR 4, held out). Not loaded until he answers.
+Rebuilt with the reds (no model.py rerun: statuses unchanged): **model `prelim/` 150 at cap 25** (6 lineups used floor
+relief, max 27), mean 119.2 (Oct 27: 118.6), 15 stack teams (DAL 21, BUF 20, CIN 18, JAC 15, LAR 11, BAL 10, NE 10, ...);
+NYJ / PIT / ATL / DEN / MIA / TEN QBs red and LAC with no usable receiver, so 29 stack lineups reallocated. FLEX TE 84 /
+RB 47 / WR 19 (was TE 39 / RB 74: 60 RBs red). **Control `model_cap45/` 150**, mean 120.5, same stack counts, 109
+lineups identical to the model's, max exposure 40 (Nacua). Upload files deleted (Doug: no uploads yet).
+
 ## Week 8 run checklist (2026-w08)
-**State Oct 27 (head 0e0c5e1, pushed): steps 1-2 DONE (see "Week 8 preliminary run"). Next = step 3 (Doug's sheet,
-`data/2026-w08/review_sheet.xlsx`; use the Oct 22 read-back routine), then Friday: rename today's file to
+**State Oct 29: step 3 DONE except the pool (see "Week 8 review applied"; waiting on Doug's pool answer). Then Friday:
+rename the Oct 27 file to
 `fd_players_oct27.csv`, save the new download as `fd_players.csv`, diff, report, then `[status]` from Friday's report
 (BAL / Lamar call; TB stays Mayfield unless Doug says otherwise). Free entry: ask Doug before the final run.**
 1. FanDuel player list: download when the slate opens (`data/2026-w08/fd_players.csv`); **re-download Friday and

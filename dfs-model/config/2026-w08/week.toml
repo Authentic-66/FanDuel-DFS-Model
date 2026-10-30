@@ -72,7 +72,35 @@ stack_allocation = "proportional"   # stack counts follow the weights exactly in
 [prefs]
 starters_only = true
 red_teams = []
-red = []
+red = [
+  # Doug, Oct 29 (data/2026-w08/review_sheet_reviewed.xlsx): 118 red
+  # QB (9)
+  "Aaron Rodgers", "Geno Smith", "Michael Penix Jr.", "Bo Nix", "Malik Willis", "Cam Ward", "Jalon Daniels",
+  "Jack Strand", "Carson Wentz",
+  # RB (60)
+  "Jaylen Warren", "Jordan Mason", "Braelon Allen", "Rico Dowdle", "RJ Harvey", "J.K. Dobbins", "Bam Knight",
+  "Breece Hall", "Kenny Gainwell", "Aaron Jones Sr.", "Kimani Vidal", "Jonah Coleman", "Michael Carter",
+  "Samaje Perine", "Jeremiyah Love", "Chris Rodriguez Jr.", "Ty Johnson", "Keaton Mitchell", "Justice Hill",
+  "Dylan Sampson", "Mike Washington Jr.", "Sean Tucker", "Emmett Johnson", "Brian Robinson Jr.", "DJ Herman",
+  "Emari Demercado", "Tyler Goodson", "Jaleel McLaughlin", "Seth McGowan", "Isaiah Davis", "Lan Larison",
+  "Corey Kiner", "Khalil Herbert", "Tyjae Spears", "Ray Davis", "Jaylen Wright", "Sione Vaki", "Demond Claiborne",
+  "Ameer Abdullah", "Kaytron Allen", "Hunter Luepke", "Nick Singleton", "LeQuint Allen Jr.", "DeeJay Dallas",
+  "Michael Burton", "Dylan Laube", "Max Bredeson", "Frank Gore Jr.", "Tahj Brooks", "Rasheen Ali", "Kalel Mullings",
+  "Travis Homer", "Adam Prentice", "Kene Nwangwu", "Lew Nichols", "Julius Chestnut", "Jacob Saylors",
+  "Eli Heidenreich", "Josh Williams", "Dean Connors",
+  # WR (34)
+  "Carnell Tate", "Omar Cooper Jr.", "Keenan Allen", "Germie Bernard", "KC Concepcion Jr.", "Quentin Johnston",
+  "Ryan Flournoy", "Malik Washington", "Courtland Sutton", "Caleb Douglas", "Kendrick Bourne", "Reggie Virgil",
+  "Adonai Mitchell", "Ted Hurst III", "Ja'Kobi Lane", "Konata Mumpfield", "Rashod Bateman", "Brian Thomas Jr.",
+  "KeAndre Lambert-Smith", "Jahan Dotson", "Jerry Jeudy", "Jaylen Waddle", "Elic Ayomanor", "Jalen Nailor",
+  "Mitch Tinsley", "Dohnte Meyers", "Kevin Coleman Jr.", "Laquon Treadwell", "Chris Bell", "Isaiah Bond",
+  "Tim Patrick", "Jared Wayne", "Tre' Harris", "Brenen Thompson",
+  # TE (5)
+  "Michael Mayer", "Oronde Gadsden II", "Darnell Washington", "Kenyon Sadiq", "Charlie Kolar",
+  # DST (10)
+  "Detroit Lions", "Las Vegas Raiders", "Dallas Cowboys", "Atlanta Falcons", "Buffalo Bills", "Los Angeles Chargers",
+  "Miami Dolphins", "Indianapolis Colts", "Tennessee Titans", "Arizona Cardinals",
+]
 
 [prefs.yellow]                 # empty from week 8: yellow is shadow-only (Doug, Oct 26); his yellows go to [shadow.yellow]
 
@@ -87,14 +115,54 @@ red = []
 # Record only: NOT applied. Yellow and green go here; red is applied, so its review-run lineups go under
 # [shadow.red_lineups].
 [shadow]
-reviewed = ""
+reviewed = "data/2026-w08/review_sheet_reviewed.xlsx"   # Doug, Oct 29: 118 red, 0 yellow, 0 green
 red = []
 
-[shadow.red_lineups]
+[shadow.red_lineups]           # lineups each red player had in the prelim run (red is applied, so recorded here)
+"Jordan Mason" = 25
+"Jaylen Warren" = 20
+"Braelon Allen" = 13
+"Omar Cooper Jr." = 12
+"Detroit Lions" = 11
+"Quentin Johnston" = 11
+"Carnell Tate" = 10
+"Ryan Flournoy" = 10
+"Ja'Kobi Lane" = 9
+"Courtland Sutton" = 9
+"Miami Dolphins" = 9
+"RJ Harvey" = 9
+"Germie Bernard" = 9
+"Caleb Douglas" = 8
+"Atlanta Falcons" = 8
+"Geno Smith" = 7
+"Kendrick Bourne" = 7
+"Keenan Allen" = 6
+"KeAndre Lambert-Smith" = 5
+"Michael Penix Jr." = 5
+"Aaron Rodgers" = 5
+"Ted Hurst III" = 5
+"Bo Nix" = 4
+"Los Angeles Chargers" = 4
+"Reggie Virgil" = 4
+"Malik Willis" = 3
+"Dallas Cowboys" = 3
+"Oronde Gadsden II" = 3
+"Jahan Dotson" = 3
+"Mitch Tinsley" = 3
+"Cam Ward" = 2
+"Adonai Mitchell" = 2
+"Tennessee Titans" = 2
+"Las Vegas Raiders" = 2
+"Brian Thomas Jr." = 2
+"Indianapolis Colts" = 2
+"Malik Washington" = 1
+"Konata Mumpfield" = 1
+"Rashod Bateman" = 1
+"Arizona Cardinals" = 1
 
-[shadow.yellow]                # "Player" = lineups he had in the reviewed run (record only from week 8)
+[shadow.yellow]                # "Player" = lineups he had in the reviewed run (record only from week 8). Oct 29 sheet: none
 
-[shadow.green]                 # "Player" = lineups he had in the reviewed run (record only)
+[shadow.green]                 # "Player" = lineups he had in the reviewed run (record only). Oct 29 sheet: none
 
 [shadow.green_floor]
 
