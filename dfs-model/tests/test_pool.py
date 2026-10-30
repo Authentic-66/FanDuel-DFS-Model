@@ -47,6 +47,18 @@ class RankTest(unittest.TestCase):
     def test_unranked_is_flat(self):
         self.assertEqual(pool.rank_mult(1, 5, False, 0.05), 1.0)
 
+    def test_ranked_top_splits_ranked_and_unranked(self):
+        tab = pool.members(PROJ, {'WR': ['W2', 'W1'], 'QB': ['Q1'], 'ranked': True, 'ranked_top': {'WR': 1}})
+        wr = tab[tab.Pos == 'WR']
+        self.assertEqual(wr.Ranked.tolist(), [True, False])
+        self.assertEqual(wr.Listed.tolist(), [1, 1])
+        self.assertTrue(tab[tab.Pos == 'QB'].Ranked.all())   # no ranked_top entry = whole list ranked (old behaviour)
+        self.assertEqual(tab[tab.Pos == 'QB'].Listed.tolist(), [1])
+
+    def test_ranked_top_too_big_stops(self):
+        with self.assertRaises(ValueError):
+            pool.members(PROJ, {'WR': ['W1'], 'ranked': True, 'ranked_top': {'WR': 2}})
+
 
 class CapacityTest(unittest.TestCase):
     def tab(self, **k):

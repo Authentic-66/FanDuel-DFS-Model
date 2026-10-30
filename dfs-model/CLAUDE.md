@@ -41,7 +41,8 @@ and thinks in those terms: fundamentals model + market/public overlay, calibrati
   `[shadow]` = Doug's colour review saved as a record only (never applied; week 5 ran model-only), to score his
   reads against the model after the games.
   New week: copy last week's `week.toml` and edit.
-  `[pool]` QB/RB/WR/TE/DST lists (+ `ranked`) = Doug's player pool for pool mode (docs/pool_mode.md); settings
+  `[pool]` QB/RB/WR/TE/DST lists (+ `ranked`; `ranked_top = {QB = 10, ...}` = only the first N per list are ranked and
+  boosted, the rest are unranked members with no boost; new Oct 29) = Doug's player pool for pool mode (docs/pool_mode.md); settings
   (`max_filler`, `rank_boost`, `raise_cap_to`) in defaults.toml `[pool]`.
   Pool fillers use `[optimizer] exposure_cap` (a model cap change rebuilds the pool too).
   `[grading] extra_sets` = extra lineup folders under `weeks/<week>/` graded beside pool and model in `pool/grade.csv`
@@ -482,7 +483,7 @@ rule made Daniels the starter). Weeks 4-7: no 2026 row and no starter changes; 2
 Lamar / Huntley 10 each; without it Huntley fell 18.0 -> 16.0). Week 8 vs the old rule: only Mayfield / Daniels
 change (rest within 0.2, stream noise). Prelim and sheet rebuilt: 150, mean 118.6, FLEX RB 74 / WR 37 / TE 39. Allen / Wayne: Doug marks them on the sheet if he wants them out. BAL / Lamar: after Friday.
 
-## Week 8 review applied (Thu Oct 29) — inputs only; pool NOT loaded yet
+## Week 8 review applied (Thu Oct 29) — inputs only; pool loaded (all 97 P, Doug)
 Doug's sheet `data/2026-w08/review_sheet_reviewed.xlsx` (untracked; `review_sheet.xlsx` left as built). All 220 names
 match proj.csv. Colours typed as "red": **118 red, 0 yellow, 0 green** -> `[prefs] red` (applied) + `[shadow.red_lineups]`
 (40 of them held 256 prelim slots: Mason 25, Warren 20, B. Allen 13, O. Cooper 12, DET DST 11, Johnston 11, ...; red QBs
@@ -495,9 +496,17 @@ relief, max 27), mean 119.2 (Oct 27: 118.6), 15 stack teams (DAL 21, BUF 20, CIN
 NYJ / PIT / ATL / DEN / MIA / TEN QBs red and LAC with no usable receiver, so 29 stack lineups reallocated. FLEX TE 84 /
 RB 47 / WR 19 (was TE 39 / RB 74: 60 RBs red). **Control `model_cap45/` 150**, mean 120.5, same stack counts, 109
 lineups identical to the model's, max exposure 40 (Nacua). Upload files deleted (Doug: no uploads yet).
+**Doug, Oct 29 (later): pool = all 97 P players**; the 47 ranked get the rank boost, the 50 unranked are members with no
+boost (new `[pool] ranked_top`, `tests/test_pool.py`; pool.py only, model and control untouched). Sizes QB 17, RB 19,
+WR 31, TE 18, DST 12; held out Q: Lamar, St. Brown, Rice, Egbuka, DJ Moore, McConkey. Short of two pool receivers:
+Daniel Jones (Downs only: 3 stacks, with a filler TE) and Herbert (none: LAC dropped, 0 lineups). **Pool `pool/` 150 at
+cap 25** (no raise; 4 lineups floor relief to 27), mean 118.9, 15 stack teams (DAL 18, BUF 16, CIN 15, JAC 14, LAR 12,
+NE 12, BAL 11, DET 11, ...), 10 lineups use a filler (Engram 6, Mallory 4), 838 slots ranked / 502 unranked players,
+20 lineups identical to the model's. Unused: Herbert, Mason Taylor. Upload deleted. Rank 10 boost = 1.00 (linear to
+the last ranked, as in week 7).
 
 ## Week 8 run checklist (2026-w08)
-**State Oct 29: step 3 DONE except the pool (see "Week 8 review applied"; waiting on Doug's pool answer). Then Friday:
+**State Oct 29: step 3 DONE incl. the pool (see "Week 8 review applied"). Next = Friday:
 rename the Oct 27 file to
 `fd_players_oct27.csv`, save the new download as `fd_players.csv`, diff, report, then `[status]` from Friday's report
 (BAL / Lamar call; TB stays Mayfield unless Doug says otherwise). Free entry: ask Doug before the final run.**

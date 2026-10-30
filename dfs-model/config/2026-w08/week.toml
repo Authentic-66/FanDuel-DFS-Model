@@ -206,6 +206,52 @@ CLE = 4
 # review sheet (Pool / Rank columns) as in week 7. Pool players auto-raise to 40 if the capacity check fails; beyond that
 # stop and ask (week 7's cap 45 was week 7 only).
 [pool]
+ranked = true
+# Doug, Oct 29: all 97 P players are the pool. The first N of each list are his ranks 1..N (rank boost); the
+# rest are unranked pool members (no boost), in sheet order. ranked_top = how many are ranked per position.
+ranked_top = { QB = 10, RB = 10, WR = 14, TE = 8, DST = 5 }
+QB = [
+  # ranked 1-10
+  "Josh Allen", "Dak Prescott", "Matthew Stafford", "Drake Maye", "Joe Burrow",
+  "Trevor Lawrence", "Baker Mayfield", "Jared Goff", "Patrick Mahomes", "Daniel Jones",
+  # unranked (7)
+  "Jacoby Brissett", "Tyler Huntley", "Kirk Cousins", "Kyler Murray", "Deshaun Watson",
+  "Justin Herbert", "Lamar Jackson",
+]
+RB = [
+  # ranked 1-10
+  "Jahmyr Gibbs", "Jonathan Taylor", "Bijan Robinson", "James Cook III", "Kenneth Walker III",
+  "Javonte Williams", "Derrick Henry", "Kyren Williams", "Bucky Irving", "Chase Brown",
+  # unranked (9)
+  "Ashton Jeanty", "Ollie Gordon II", "Quinshon Judkins", "Bhayshul Tuten", "Rhamondre Stevenson",
+  "Tony Pollard", "Omarion Hampton", "Blake Corum", "Tyler Allgeier",
+]
+WR = [
+  # ranked 1-14
+  "Puka Nacua", "CeeDee Lamb", "Ja'Marr Chase", "Amon-Ra St. Brown", "Tee Higgins",
+  "Zay Flowers", "George Pickens", "Drake London", "Michael Wilson", "Justin Jefferson",
+  "Parker Washington", "Tre Tucker", "A.J. Brown", "DK Metcalf",
+  # unranked (17)
+  "Jameson Williams", "Garrett Wilson", "Denzel Boston", "DeMario Douglas", "Khalil Shakir",
+  "Jakobi Meyers", "Wan'Dale Robinson", "Xavier Worthy", "Keon Coleman", "Josh Downs",
+  "Chris Godwin Jr.", "Jordan Addison", "Rashee Rice", "Isaac TeSlaa", "Emeka Egbuka",
+  "DJ Moore", "Ladd McConkey",
+]
+TE = [
+  # ranked 1-8
+  "Brock Bowers", "Sam LaPorta", "Trey McBride", "Tyler Higbee", "Dalton Kincaid",
+  "Mike Gesicki", "T.J. Hockenson", "Hunter Henry",
+  # unranked (10)
+  "Travis Kelce", "Brenton Strange", "Harold Fannin Jr.", "Pat Freiermuth", "Jake Ferguson",
+  "Kyle Pitts Sr.", "Mark Andrews", "Mason Taylor", "Cade Otton", "Greg Dulcich",
+]
+DST = [
+  # ranked 1-5
+  "New England Patriots", "Cincinnati Bengals", "Kansas City Chiefs", "Cleveland Browns", "Pittsburgh Steelers",
+  # unranked (7)
+  "Jacksonville Jaguars", "Los Angeles Rams", "Denver Broncos", "Tampa Bay Buccaneers", "New York Jets",
+  "Minnesota Vikings", "Baltimore Ravens",
+]
 
 # Shadow control set (Doug, Oct 26: keep running): the normal model at cap 45, not entered:
 #   python src/optimize.py --week 2026-w08 --subdir model_cap45 --cap 45

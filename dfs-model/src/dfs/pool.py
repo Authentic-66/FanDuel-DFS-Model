@@ -4,6 +4,8 @@ model; written to weeks/<week>/pool/ by `optimize.py --pool`, graded by analyze_
 
 [pool] in week.toml: QB / RB / WR / TE / DST = lists of names (DST: FanDuel name, e.g. "Buffalo Bills", or team
 code). ranked = true: each list is in Doug's rank order, and the objective gets a small boost by rank (rank_boost).
+ranked_top = {QB = 10, ...} (optional, with ranked = true): only the first N names of that position's list are ranked
+and boosted (rank 1 .. N); the names after them are pool members with no boost (week 8: 47 ranked, 50 unranked).
 """
 import numpy as np
 import pandas as pd
@@ -28,22 +30,30 @@ def members(proj, pool, slate_names=None):
     the FanDuel slate at all (typo); a name on the slate but missing from proj (ruled out) is kept with a note.
     DST may be given as the FanDuel name or the team code."""
     rows, bad = [], []
+    key_of = {p: k for k, p in POSITIONS.items()}
+    tops = pool.get('ranked_top', {})
     for pos, names in listed(pool).items():
         seen = set()
+        top = int(tops.get(key_of[pos], len(names)))
+        if not 0 <= top <= len(names):
+            raise ValueError(f'[pool] ranked_top {key_of[pos]} = {top}, but only {len(names)} listed')
         for rank, name in enumerate(names, 1):
+            ranked_row = rank <= top
             hit = proj.index[(proj.Pos == pos) & ((proj.Name == name) | ((pos == 'D') & (proj.Team == name)))]
             if name in seen:
                 raise ValueError(f'[pool] {name!r} is listed twice under {pos}')
             seen.add(name)
             if len(hit):
-                rows.append(dict(Name=proj.Name[hit[0]], Pos=pos, Rank=rank, Listed=len(names), proj_row=int(hit[0]), Note=''))
+                rows.append(dict(Name=proj.Name[hit[0]], Pos=pos, Rank=rank, Listed=top, Ranked=ranked_row,
+                                 proj_row=int(hit[0]), Note=''))
             elif slate_names is not None and name in slate_names:
-                rows.append(dict(Name=name, Pos=pos, Rank=rank, Listed=len(names), proj_row=-1, Note='not in projections (out)'))
+                rows.append(dict(Name=name, Pos=pos, Rank=rank, Listed=top, Ranked=ranked_row, proj_row=-1,
+                                 Note='not in projections (out)'))
             else:
                 bad.append(f'{name} ({pos})')
     if bad:
         raise ValueError(f'[pool] names not on the slate at that position: {", ".join(bad)}')
-    return pd.DataFrame(rows, columns=['Name', 'Pos', 'Rank', 'Listed', 'proj_row', 'Note'])
+    return pd.DataFrame(rows, columns=['Name', 'Pos', 'Rank', 'Listed', 'Ranked', 'proj_row', 'Note'])
 
 
 def rank_mult(rank, listed_n, ranked, boost):
@@ -156,7 +166,8 @@ def build(proj, sims, cfg, slate_names=None):
         raise ValueError(f'pool mode: pool too small for {n} lineups at cap {cap} with {max_filler} filler(s) each '
                          f'(short by position {short}); add players or raise [pool] raise_cap_to')
     ranked, boost = pl.get('ranked', False), pl.get('rank_boost', 0.05)
-    by_row = {r.proj_row: rank_mult(r.Rank, r.Listed, ranked, boost) for r in tab[tab.Usable].itertuples()}
+    by_row = {r.proj_row: rank_mult(r.Rank, r.Listed, ranked, boost) if r.Ranked else 1.0
+              for r in tab[tab.Usable].itertuples()}
     mult = np.array([by_row.get(r, 1.0) if p else 1.0 for r, p in zip(df.row, df.InPool)])
     c = dict(cfg, prefs=dict(cfg['prefs'], green={}, green_floor={}),
              stacks=dict(cfg['stacks'], weights=stack_weights(df, cfg, max_filler)))
@@ -182,7 +193,7 @@ def outputs(df, sims, lineups, use, cfg, tab):
     upload, readable, ex = optimize.outputs(df, sims, lineups, use, cfg)
     readable.insert(readable.columns.get_loc('Stack'), 'Filler',
                     [', '.join(df.Name[i] for i in lp if not df.InPool[i]) for lp in lineups])
-    rank = {(r.Name, r.Pos): r.Rank for r in tab.itertuples()}
+    rank = {(r.Name, r.Pos): r.Rank if r.Ranked else 'unranked' for r in tab.itertuples()}
     ex.insert(ex.columns.get_loc('Lineups'), 'Pool',
               [str(rank.get((nm, p), 'filler')) for nm, p in zip(ex.Player, ex.Pos)])
     return upload, readable, ex
