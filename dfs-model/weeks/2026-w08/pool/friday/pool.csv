@@ -1,0 +1,98 @@
+Name,Pos,Rank,Listed,Ranked,Note,Usable,Proj,Mult,Lineups
+Josh Allen,QB,1,10,True,,True,24.2,1.05,17
+Dak Prescott,QB,2,10,True,,True,21.2,1.044,18
+Matthew Stafford,QB,3,10,True,,True,20.7,1.039,13
+Drake Maye,QB,4,10,True,,True,20.5,1.033,13
+Joe Burrow,QB,5,10,True,,True,21.7,1.028,16
+Trevor Lawrence,QB,6,10,True,,True,19.9,1.022,15
+Baker Mayfield,QB,7,10,True,,True,14.9,1.017,10
+Jared Goff,QB,8,10,True,,True,20.6,1.011,12
+Patrick Mahomes,QB,9,10,True,,True,17.1,1.006,6
+Daniel Jones,QB,10,10,True,,True,13.5,1.0,3
+Jacoby Brissett,QB,11,10,False,,True,18.0,1.0,0
+Tyler Huntley,QB,12,10,False,not the starting QB,False,0.0,,0
+Kirk Cousins,QB,13,10,False,,True,17.4,1.0,7
+Kyler Murray,QB,14,10,False,,True,15.7,1.0,7
+Deshaun Watson,QB,15,10,False,,True,15.3,1.0,2
+Justin Herbert,QB,16,10,False,,True,14.6,1.0,0
+Lamar Jackson,QB,17,10,False,,True,18.6,1.0,11
+Jahmyr Gibbs,RB,1,10,True,,True,21.6,1.05,27
+Jonathan Taylor,RB,2,10,True,,True,16.8,1.044,26
+Bijan Robinson,RB,3,10,True,,True,20.6,1.039,25
+James Cook III,RB,4,10,True,,True,19.5,1.033,26
+Kenneth Walker III,RB,5,10,True,,True,17.6,1.028,6
+Javonte Williams,RB,6,10,True,,True,17.6,1.022,26
+Derrick Henry,RB,7,10,True,,True,17.2,1.017,16
+Kyren Williams,RB,8,10,True,,True,17.8,1.011,25
+Bucky Irving,RB,9,10,True,,True,16.7,1.006,24
+Chase Brown,RB,10,10,True,,True,15.1,1.0,14
+Ashton Jeanty,RB,11,10,False,,True,15.1,1.0,9
+Ollie Gordon II,RB,12,10,False,,True,12.7,1.0,23
+Quinshon Judkins,RB,13,10,False,,True,12.8,1.0,9
+Bhayshul Tuten,RB,14,10,False,,True,13.1,1.0,17
+Rhamondre Stevenson,RB,15,10,False,,True,14.7,1.0,25
+Tony Pollard,RB,16,10,False,,True,12.3,1.0,22
+Omarion Hampton,RB,17,10,False,,True,10.7,1.0,22
+Blake Corum,RB,18,10,False,,True,10.0,1.0,5
+Tyler Allgeier,RB,19,10,False,questionable,False,5.5,,0
+Puka Nacua,WR,1,14,True,,True,20.7,1.05,27
+CeeDee Lamb,WR,2,14,True,,True,18.5,1.046,26
+Ja'Marr Chase,WR,3,14,True,,True,14.9,1.042,20
+Amon-Ra St. Brown,WR,4,14,True,,True,17.9,1.038,27
+Tee Higgins,WR,5,14,True,,True,15.0,1.035,27
+Zay Flowers,WR,6,14,True,,True,16.3,1.031,27
+George Pickens,WR,7,14,True,questionable,False,8.0,,0
+Drake London,WR,8,14,True,,True,14.4,1.023,15
+Michael Wilson,WR,9,14,True,questionable,False,7.0,,0
+Justin Jefferson,WR,10,14,True,,True,10.9,1.015,11
+Parker Washington,WR,11,14,True,,True,14.0,1.012,26
+Tre Tucker,WR,12,14,True,,True,11.7,1.008,25
+A.J. Brown,WR,13,14,True,questionable,False,6.3,,0
+DK Metcalf,WR,14,14,True,,True,11.6,1.0,11
+Jameson Williams,WR,15,14,False,,True,12.0,1.0,26
+Garrett Wilson,WR,16,14,False,,True,12.3,1.0,10
+Denzel Boston,WR,17,14,False,,True,9.2,1.0,11
+DeMario Douglas,WR,18,14,False,,True,9.8,1.0,27
+Khalil Shakir,WR,19,14,False,,True,9.2,1.0,27
+Jakobi Meyers,WR,20,14,False,questionable,False,4.8,,0
+Wan'Dale Robinson,WR,21,14,False,,True,9.4,1.0,25
+Xavier Worthy,WR,22,14,False,,True,8.2,1.0,6
+Keon Coleman,WR,23,14,False,,True,8.6,1.0,22
+Josh Downs,WR,24,14,False,,True,8.0,1.0,7
+Chris Godwin Jr.,WR,25,14,False,,True,8.6,1.0,22
+Jordan Addison,WR,26,14,False,,True,7.4,1.0,14
+Rashee Rice,WR,27,14,False,,True,13.2,1.0,20
+Isaac TeSlaa,WR,28,14,False,,True,4.9,1.0,4
+Emeka Egbuka,WR,29,14,False,not in projections (out),False,,,0
+DJ Moore,WR,30,14,False,questionable,False,4.7,,0
+Ladd McConkey,WR,31,14,False,questionable,False,4.2,,0
+Brock Bowers,TE,1,8,True,,True,16.2,1.05,19
+Sam LaPorta,TE,2,8,True,,True,11.6,1.043,22
+Trey McBride,TE,3,8,True,,True,17.2,1.036,27
+Tyler Higbee,TE,4,8,True,,True,10.2,1.029,27
+Dalton Kincaid,TE,5,8,True,questionable,False,5.6,,0
+Mike Gesicki,TE,6,8,True,,True,7.9,1.014,19
+T.J. Hockenson,TE,7,8,True,,True,7.7,1.007,8
+Hunter Henry,TE,8,8,True,,True,9.3,1.0,18
+Travis Kelce,TE,9,8,False,questionable,False,5.4,,0
+Brenton Strange,TE,10,8,False,,True,9.8,1.0,25
+Harold Fannin Jr.,TE,11,8,False,,True,7.9,1.0,4
+Pat Freiermuth,TE,12,8,False,,True,7.8,1.0,7
+Jake Ferguson,TE,13,8,False,,True,8.1,1.0,18
+Kyle Pitts Sr.,TE,14,8,False,,True,7.6,1.0,0
+Mark Andrews,TE,15,8,False,,True,7.2,1.0,15
+Mason Taylor,TE,16,8,False,,True,6.9,1.0,4
+Cade Otton,TE,17,8,False,,True,6.4,1.0,11
+Greg Dulcich,TE,18,8,False,questionable,False,3.6,,0
+New England Patriots,D,1,5,True,,True,7.8,1.05,6
+Cincinnati Bengals,D,2,5,True,,True,8.0,1.038,11
+Kansas City Chiefs,D,3,5,True,,True,7.2,1.025,18
+Cleveland Browns,D,4,5,True,,True,6.5,1.012,14
+Pittsburgh Steelers,D,5,5,True,,True,8.0,1.0,14
+Jacksonville Jaguars,D,6,5,False,,True,7.8,1.0,10
+Los Angeles Rams,D,7,5,False,,True,7.3,1.0,12
+Denver Broncos,D,8,5,False,,True,6.5,1.0,15
+Tampa Bay Buccaneers,D,9,5,False,,True,6.4,1.0,19
+New York Jets,D,10,5,False,,True,6.2,1.0,22
+Minnesota Vikings,D,11,5,False,,True,5.4,1.0,5
+Baltimore Ravens,D,12,5,False,,True,3.7,1.0,4
