@@ -1,16 +1,17 @@
 Team,Our_share_pct,Field_QB_own,Top_receivers,Receiver_own,Chalk,Leverage
-BUF,10.1,15.58,"Dalton Kincaid 4%, Keon Coleman 4%",8.1,CHALK,0.65
-CIN,9.7,8.95,"Tee Higgins 13%, Ja'Marr Chase 11%",24.6,,1.08
-DAL,11.3,7.98,"CeeDee Lamb 23%, George Pickens 11%",33.0,,1.42
-DET,7.0,7.88,"Jameson Williams 9%, Sam LaPorta 7%",16.0,,0.89
-LAR,7.8,7.02,"Puka Nacua 30%, Tyler Higbee 4%",33.9,,1.11
-NE,7.8,6.98,"A.J. Brown 6%, DeMario Douglas 4%",10.1,,1.12
-JAC,9.3,6.55,"Parker Washington 9%, Brenton Strange 4%",13.0,,1.42
-LV,4.7,4.13,"Brock Bowers 14%, Tre Tucker 7%",20.8,,1.14
-ARI,6.2,3.89,"Trey McBride 16%, Michael Wilson 7%",23.5,,1.59
-BAL,7.4,3.33,"Zay Flowers 17%, Mark Andrews 2%",18.8,,2.22
-KC,4.3,3.23,"Travis Kelce 4%, Xavier Worthy 3%",7.3,,1.33
-CLE,1.6,2.07,"Denzel Boston 3%, Harold Fannin Jr. 2%",5.6,,0.77
-MIN,4.7,1.87,"Justin Jefferson 5%, T.J. Hockenson 2%",7.8,,2.51
-TB,6.2,1.72,"Chris Godwin Jr. 2%, Cade Otton 1%",3.7,,3.6
-IND,1.9,1.22,"Josh Downs 2%, Will Mallory 1%",3.4,,1.56
+BUF,9.8,15.08,"Dalton Kincaid 4%, DJ Moore 3%",7.3,CHALK,0.65
+CIN,10.2,9.56,"Tee Higgins 13%, Ja'Marr Chase 11%",24.0,,1.07
+DAL,11.4,8.06,"CeeDee Lamb 23%, George Pickens 11%",33.8,,1.41
+DET,6.8,7.8,"Amon-Ra St. Brown 20%, Jameson Williams 7%",26.3,,0.87
+LAR,7.6,6.95,"Puka Nacua 30%, Tyler Higbee 5%",34.4,,1.09
+JAC,9.5,6.73,"Parker Washington 9%, Brenton Strange 4%",12.8,,1.41
+NE,6.4,6.2,"DeMario Douglas 6%, Hunter Henry 4%",9.5,,1.03
+BAL,7.6,4.96,"Zay Flowers 16%, Mark Andrews 2%",18.2,,1.53
+LV,4.9,4.34,"Brock Bowers 14%, Tre Tucker 6%",20.0,,1.13
+ARI,6.1,3.81,"Trey McBride 16%, Michael Wilson 7%",22.4,,1.6
+KC,4.2,3.18,"Rashee Rice 8%, Travis Kelce 4%",11.9,,1.32
+CLE,1.1,1.96,"Denzel Boston 3%, Harold Fannin Jr. 2%",5.3,,0.56
+MIN,4.5,1.85,"Justin Jefferson 5%, T.J. Hockenson 2%",7.5,,2.43
+TB,5.3,1.6,"Chris Godwin Jr. 3%, Cade Otton 2%",4.7,,3.31
+LAC,2.7,1.57,Ladd McConkey 2%,2.1,,1.72
+IND,1.9,1.2,"Tyler Warren 4%, Keenan Allen 3%",7.3,,1.58

@@ -32,20 +32,25 @@ out = [
   "Tyquan Thornton",                                                     # KC 3.8
   "Alec Pierce",                                                         # IND 3.5
   "Pat Bryant",                                                          # DEN 3.2
-  "Jack Bech",                                                           # LV 3.0
+  # (Jack Bech removed Sun Nov 1: FanDuel IR tag cleared, reported playing vs NYJ)
+  # SUNDAY Nov 1 (Doug's Sunday rule): Q players inactive / FanDuel O-NA-IR -> out
+  "Breece Hall",                                                         # FanDuel NA (inactive)
+  "RJ Harvey",                                                           # FanDuel IR, DEN inactive list
+  "TreVeyon Henderson", "A.J. Brown",                                    # FanDuel O, NE inactive list
+  "Tyjae Spears", "Carnell Tate",                                        # FanDuel O, TEN inactive list
+  "KaVontae Turpin",                                                     # FanDuel O, DAL inactive list
+  "Anthony Gould",                                                       # FanDuel O, IND inactive list
+  "Brenen Thompson",                                                     # FanDuel O, LAC inactive list
+  "Ben Skowronek",                                                       # FanDuel still Q; Steelers Depot: inactive
 ]
+# SUNDAY Nov 1: ACTIVE Q players removed (FanDuel tag cleared on the 10:37 CT list, after the 1pm inactives):
+# Love, Allgeier, Ray Davis, LeQuint Allen, Pickens, M. Wilson, Meyers, Ridley, DJ Moore, Kincaid, Ian Thomas (1pm);
+# McConkey, Tre' Harris, Malik Washington, Wayne, Kelce, Dulcich, Kacmarek (4pm games: tag cleared, inactives not
+# out until ~2:35 CT, after the upload). Still Q on FanDuel -> kept Q (held out): early-game Gainwell, Zaccheaus,
+# Schoonmaker, Ogletree, Geers, DJ Rogers (no inactive report found); late-game Waddle, Whittington, Parkinson.
 questionable = [
-  # RB (9)
-  "Breece Hall", "Jeremiyah Love", "Tyler Allgeier", "RJ Harvey", "TreVeyon Henderson", "Kenny Gainwell",
-  "Ray Davis", "Tyjae Spears", "LeQuint Allen Jr.",
-  # WR (17 + DJ Moore)
-  "George Pickens", "A.J. Brown", "Jaylen Waddle", "Michael Wilson", "Ladd McConkey", "Jakobi Meyers",
-  "Carnell Tate", "Malik Washington", "Tre' Harris", "Olamide Zaccheaus", "Calvin Ridley", "KaVontae Turpin",
-  "Anthony Gould", "Jared Wayne", "Ben Skowronek", "Jordan Whittington", "Brenen Thompson",
-  "DJ Moore",                                                            # Rotowire Q (FanDuel untagged)
-  # TE (10)
-  "Dalton Kincaid", "Travis Kelce", "Colby Parkinson", "Greg Dulcich", "Will Kacmarek", "Luke Schoonmaker",
-  "Drew Ogletree", "Ian Thomas", "Jameson Geers", "DJ Rogers",
+  "Kenny Gainwell", "Olamide Zaccheaus", "Luke Schoonmaker", "Drew Ogletree", "Jameson Geers", "DJ Rogers",
+  "Jaylen Waddle", "Jordan Whittington", "Colby Parkinson",
 ]
 active = []
 
@@ -84,9 +89,10 @@ stack_allocation = "proportional"   # stack counts follow the weights exactly in
 starters_only = true
 red_teams = []
 red = [
-  # Doug, Oct 29 (data/2026-w08/review_sheet_reviewed.xlsx): 118 red
-  # QB (9)
-  "Aaron Rodgers", "Geno Smith", "Michael Penix Jr.", "Bo Nix", "Malik Willis", "Cam Ward", "Jalon Daniels",
+  # Doug, Oct 29 (data/2026-w08/review_sheet_reviewed.xlsx): 118 red. Sun Nov 1: Doug cleared 5 on the sheet
+  # (Rodgers, Geno Smith, Penix, Nix, Keenan Allen) -> 113 red.
+  # QB (5)
+  "Malik Willis", "Cam Ward", "Jalon Daniels",
   "Jack Strand", "Carson Wentz",
   # RB (60)
   "Jaylen Warren", "Jordan Mason", "Braelon Allen", "Rico Dowdle", "RJ Harvey", "J.K. Dobbins", "Bam Knight",
@@ -100,7 +106,7 @@ red = [
   "Travis Homer", "Adam Prentice", "Kene Nwangwu", "Lew Nichols", "Julius Chestnut", "Jacob Saylors",
   "Eli Heidenreich", "Josh Williams", "Dean Connors",
   # WR (34)
-  "Carnell Tate", "Omar Cooper Jr.", "Keenan Allen", "Germie Bernard", "KC Concepcion Jr.", "Quentin Johnston",
+  "Carnell Tate", "Omar Cooper Jr.", "Germie Bernard", "KC Concepcion Jr.", "Quentin Johnston",
   "Ryan Flournoy", "Malik Washington", "Courtland Sutton", "Caleb Douglas", "Kendrick Bourne", "Reggie Virgil",
   "Adonai Mitchell", "Ted Hurst III", "Ja'Kobi Lane", "Konata Mumpfield", "Rashod Bateman", "Brian Thomas Jr.",
   "KeAndre Lambert-Smith", "Jahan Dotson", "Jerry Jeudy", "Jaylen Waddle", "Elic Ayomanor", "Jalen Nailor",
@@ -187,29 +193,31 @@ extra_receivers = []
 
 # Stack QB-team weights: weight = round(2 * (implied total - 16)), min 1, from data/2026-w08/lines.csv (to build).
 [stacks.weights]
-# PRELIMINARY (nflverse lines, Oct 27): round(2 x (implied - 16)), min 1
-DAL = 29
+# FINAL (nflverse lines, Sun Nov 1 16:42 UTC): round(2 x (implied - 16)), min 1, round half up.
+# Changes vs Oct 27: DAL 29->30, CIN 25->27, JAC 24->25, BAL 19->20, NE 20->17, NYJ 15->16, TB 16->14, LV 12->13,
+# PIT 11->10, ATL 11->9, CLE 4->3, MIA 6->3, TEN 4->1.
+DAL = 30
+CIN = 27
 BUF = 26
-CIN = 25
-JAC = 24
+JAC = 25
 LAR = 20
-NE = 20
-BAL = 19
+BAL = 20
 DET = 18
+NE = 17
+NYJ = 16
 ARI = 16
-TB = 16
-NYJ = 15
-LV = 12
+TB = 14
+LV = 13
 MIN = 12
-PIT = 11
-ATL = 11
 KC = 11
+PIT = 10
+ATL = 9
 DEN = 8
 LAC = 7
-MIA = 6
 IND = 5
-TEN = 4
-CLE = 4
+CLE = 3
+MIA = 3
+TEN = 1
 
 [stacks.rules]
 

@@ -519,8 +519,26 @@ Preview sets (untracked, uploads deleted): model `friday/` 150 at cap 25 (10 lin
 from the prelim in each set. ARI no longer stacked (M. Wilson Q). `prelim/`, `model_cap45/`, `pool/` untouched (Oct 29);
 `proj.csv` / `sims.npy` are Friday's.
 
+## Week 8 final run (Sun Nov 1, done ~10:55 CT) — entry file: weeks/2026-w08/entered_upload_149.csv (free entry)
+`fd_players.csv` = Sunday 10:37 CT download (Friday's kept as `fd_players_fri.csv`). Diff vs Friday: 0 added / removed /
+salary changes, 27 tag changes. Doug's sheet re-read: **5 reds cleared (Rodgers, Geno Smith, Penix, Nix, Keenan Allen),
+none added -> 113 red**; pool unchanged (97). Sunday status rule: inactive / FanDuel O-NA-IR -> `out` (Breece Hall NA,
+RJ Harvey IR, Henderson, A.J. Brown, Spears, Tate, Turpin, Gould, B. Thompson O; Skowronek still Q on FanDuel but
+reported inactive); FanDuel-cleared Q players -> active (1pm: Love, Allgeier, Ray Davis, LeQuint Allen, Pickens,
+M. Wilson, Meyers, Ridley, DJ Moore, Kincaid, Ian Thomas; **4pm games, inactives not out before the upload: McConkey,
+Tre' Harris, M. Washington, Wayne, Kelce, Dulcich, Kacmarek taken as active on FanDuel's cleared tag**, 12 of 149 lineups
+hold one, Kelce 8). Still Q on FanDuel, kept Q: Gainwell, Zaccheaus, Schoonmaker, Ogletree, Geers, DJ Rogers, Waddle,
+Whittington, Parkinson. Jack Bech off `out` (IR tag cleared, reported playing). Lamar active (not on BAL's inactive
+list): BAL starter stays Lamar (18.7, 10 stacks). Lines FINAL (nflverse 16:42 UTC: CIN -13.5, NE total 41.5, TB/ATL
+43.5 ...); `[stacks.weights]` rebuilt (DAL 30, CIN 27, BUF 26, JAC 25 ... TEN 1). Projections: Pickens 8.0 -> 14.5,
+M. Wilson 7.0 -> 12.3, Kelce 5.4 -> 9.9, Kincaid, Meyers, DJ Moore ~+4 (Q discount gone).
+Sets (all rules checked: slots, $59-60K, no red/out/Q/FanDuel-tagged, no duplicates, stack + bring-back, DST): model
+150 at cap 25 (4 lineups relief to 27), mean 120.0; **149 file drops lineup 126 (104.1), mean 120.1**; 18 stack teams
+(DAL 18, CIN 15, BUF 15, JAC 13, LAR 10, BAL 10, ...); FLEX TE 95 / RB 32 / WR 22. Control `model_cap45/` 150, mean
+121.1; pool `pool/` 150 at cap 25 (27 fillers), mean 120.1. First kickoff 12:00 CT (1:00 ET; DST ended Nov 1).
+
 ## Week 8 run checklist (2026-w08)
-**State Oct 30: Friday DONE (see "Week 8 Friday run"). Next = Sunday: re-download `fd_players.csv` (keep Friday's as
+**State Nov 1: FINAL RUN DONE (see "Week 8 final run"); next = step 5 after the slate.** Earlier: **State Oct 30: Friday DONE (see "Week 8 Friday run"). Next = Sunday: re-download `fd_players.csv` (keep Friday's as
 `fd_players_fri.csv`) and diff; FINAL lines + `[stacks.weights]`; after inactives (~10:30 CT) apply the Sunday status rule
 below, `model.py`, then the three final sets. **Doug has a free entry in week 8 (confirmed Oct 30): write the 149 files for the model set
 (`entered_upload_149.csv` etc., drop the lowest-projected lineup).**
