@@ -558,7 +558,11 @@ on the Friday non-practisers (A.J. Brown, Henderson, Spears, Tate, ...). Re-chec
    -> out, rerun `model.py`**, final `optimize.py --week 2026-w08`, control `--subdir model_cap45 --cap 45`,
    `optimize.py --week 2026-w08 --pool`; 149 files if Doug has a free entry. Cap 25 (standing); if a set stalls, stop and ask Doug.
 5. After the slate: `convert_results.py`, `[contest] field_size`, `analyze_results.py`, `docs/week8_review.md`,
-   ask Doug for winnings (running total -$3.65 after week 7).
+   ask Doug for winnings (running total -$3.65 after week 7). Check his entries match `entered_upload_149.csv`. In
+   the review, grade the Sunday status calls: 4pm-game Q players taken as active on FanDuel's cleared tag (McConkey,
+   Tre' Harris, Kelce, Dulcich, M. Washington, Wayne, Kacmarek; 12 lineups) and early-game players kept Q though
+   possibly active (Gainwell, Zaccheaus, Schoonmaker, Ogletree, Geers, DJ Rogers). Lesson to weigh: the 10:37 CT
+   list came 7 minutes after the 1pm inactives, so some early-game tags hadn't updated yet.
 
 ## Week-8 backlog
 - **Per-position redistribution mode**: RB out = routing by position; WR out = depth split; TE out = old 80% rule or none.
