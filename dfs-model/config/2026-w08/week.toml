@@ -278,6 +278,6 @@ DST = [
 extra_sets = ["model_cap45"]
 
 [contest]
-field_size = 0                 # from the results export after the slate
+field_size = 566416            # Pooch Punt, from the results export (Nov 2)
 
 [contest.guru]

@@ -537,8 +537,30 @@ Sets (all rules checked: slots, $59-60K, no red/out/Q/FanDuel-tagged, no duplica
 (DAL 18, CIN 15, BUF 15, JAC 13, LAR 10, BAL 10, ...); FLEX TE 95 / RB 32 / WR 22. Control `model_cap45/` 150, mean
 121.1; pool `pool/` 150 at cap 25 (27 fillers), mean 120.1. First kickoff 12:00 CT (1:00 ET; DST ended Nov 1).
 
+## Week 8 (2026-w08) result — see docs/week8_review.md
+149 model lineups (cap 25, entered unchanged: all 149 matched `entered_upload_149.csv`) + 1 free entry (Doug's own,
+111.7) in the Pooch Punt (566,416 entries). Model avg 106.4 vs field 120.2 (-13.8); best 190.4 (Burrow stack, rank
+8,591); 0 top-1%, 10 top-10% (all CIN stacks); winner 258.38; cash line ~120 (39 of 149 cashed). **One-QB slate: Burrow
+45.5, in 98.3% of the top 1,000; we had 15 CIN stacks (weight share, 10.1% vs 13.2% owned), avg 167.8; the other 134
+averaged 100.1.** Won $4.57 on $7.45: **net -$2.88, running total -$6.53** (no entry history checked; the week-7 payout
+tiers give $4.52 on our ranks). Four sets (exact ranks): model 106.4 / 10 / 0 / 190.4; control cap 45 107.4 / 13 / 0 /
+190.7; **pool 108.0 / 17 / 1 / 197.1 (rank 5,264), best set for the first time** (16 CIN stacks at 176.0); money
+as-if (week-7 tiers) $4.52 / $4.91 / $5.32+. Two weeks: pool vs control -1.9, +0.6; cap 45 vs model -2.9, +1.2.
+Reads as lineups (re-run as entered = 150/150): red +0.3; **clearing the 5 Sunday cost -2.6** (Rodgers 5.9, Penix 2.1
+right as reds; Geno 19.0, Nix 19.3 wrong); Ward / Willis red no effect (identical lineups; Ward 29.3 at proj 10.2).
+Reds as a group 4.93 projected / 4.96 scored; vs non-reds at same position / salary (proj 4+) +0.8 vs +0.9: no
+signal. Big red misses Braelon Allen 25.3 (25% owned), Warren 23.8; hits Mason 2.0, Cooper 0 (15% owned).
+Sunday calls right: 1pm cleared Q +1.8 a lineup over projection (M. Wilson 25.8 in 27, Pickens 5.8 in 21); 4pm cleared
+all active; kept-Q and outs cost nothing. **Lamar 1 snap, 0.0** (Huntley 10 snaps, Fagnano 21 att.): BAL 10 stacks 67.3.
+TB threw 3 passes (11 in week 7): Godwin / Otton 0. 75 of 149 lineups held a non-DST zero (Flowers 27, Tucker 25,
+Ferguson 18 hurt, Godwin 12). RB -12.6 vs field (4th week), FLEX TE 64%. Calibration: 20+ tier +0.3 (first good week),
+14-20 +2.5, beat-p90 7.7%, DST r 0.40, ownership MAE 1.2. Flags only: WR over-projection 2nd week (proj 8+ 11.5 vs
+9.7; 24+ totals still +1.6 after the correction), routing bumps 10.1 -> 8.3, spread no pattern. Week-9 list: review
+section 7.
+
 ## Week 8 run checklist (2026-w08)
-**State Nov 1: FINAL RUN DONE (see "Week 8 final run"); next = step 5 after the slate.** Earlier: **State Oct 30: Friday DONE (see "Week 8 Friday run"). Next = Sunday: re-download `fd_players.csv` (keep Friday's as
+**State Nov 2: ALL DONE (step 5 graded, docs/week8_review.md; see "Week 8 (2026-w08) result"). Next = week-9 prep.**
+Earlier: **State Nov 1: FINAL RUN DONE (see "Week 8 final run"); next = step 5 after the slate.** Earlier: **State Oct 30: Friday DONE (see "Week 8 Friday run"). Next = Sunday: re-download `fd_players.csv` (keep Friday's as
 `fd_players_fri.csv`) and diff; FINAL lines + `[stacks.weights]`; after inactives (~10:30 CT) apply the Sunday status rule
 below, `model.py`, then the three final sets. **Doug has a free entry in week 8 (confirmed Oct 30): write the 149 files for the model set
 (`entered_upload_149.csv` etc., drop the lowest-projected lineup).**
@@ -582,8 +604,11 @@ on the Friday non-practisers (A.J. Brown, Henderson, Spears, Tate, ...). Re-chec
 - From the week-7 review (section 6): DONE Oct 26 (docs/week8_prep.md): player-file refresh check, Harrison factor,
   ARI side via present_share, Q routing (on), yellows to shadow, TE-in-FLEX test (cap off), relief +2, control and pool
   kept, `assign_forced` fix.
-- **Week 9:** McCaffrey's status (left week 7 injured; SF bye in week 8); Jacobs' read (two games of data by then);
-  Harrison 0.15 / 0.9 applies (HOU back on the slate, if it is); pool review after week 9.
+- **Week 9 carry-overs:** McCaffrey's status (left week 7 injured; SF bye in week 8); Jacobs' read (two games: 11 car
+  + 7 tgt, then 21 car + 6 tgt: GB's lead back); Harrison 0.15 / 0.9 applies (HOU back on the slate, if it is); pool
+  review after week 9. New from the week-8 review: Lamar (left after 1 snap; BAL starter call), Jake Ferguson (4 snaps),
+  ARI QB (Minshew 42% of snaps), TB pass volume (3 and 11 attempts). Flags to test on history (no change yet): WR
+  over-projection / stronger WR correction at 24+ totals, routing bump size, RB vs field + TE flex.
 
 ## History refits (Oct 12) — see docs/phase2_history.md
 `fetch_stats.py --seasons 2020-2025 --history` puts player stats, team stats and schedules with Vegas lines in
