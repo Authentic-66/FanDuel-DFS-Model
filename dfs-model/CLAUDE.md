@@ -618,6 +618,13 @@ on the Friday non-practisers (A.J. Brown, Henderson, Spears, Tate, ...). Re-chec
   underdog side +1.2 = all underdogs; (c) corr 0.43 vs 0.24 p 0.28). Underdogs in general beat FD expectation ~2.5 vs
   favourites (p 0.003), mostly already in the projections. Yes items need code built OFF + week pinning.
   Scratch scripts were in the Nov 2 session scratchpad (w9/), not in the repo.
+- **Doug, Nov 2: tests 2 and 3 ADOPTED, ON from week 9 (defaults.toml); tests 1 and 4 no change.** WR correction:
+  [model.implied_sensitivity] one_sided = true, WR = -0.57 (project.implied_shift). Injury bump: [model.injury]
+  bump_scale = {RB 0.8, WR 0.45, TE 0.3} (usage.redistribute_out; also Q routing; trades NOT scaled). Weeks 4-8 pin
+  bump_scale 1.0, weeks 7-8 pin one_sided false / WR -0.34; weeks 4-8 rebuild bit-identical (proj + sims). tests/test_week9.py.
+  Week 8 under the new defaults: 202 of 482 players' draws move; the largest drops are high-total WRs (Lamb -1.8,
+  Douglas -1.9) and bumped teammates (bump 1+: 2.24 -> 1.32 avg). WATCH ITEM for next season: bad-defence games' FD
+  scoring correlation 0.43 vs 0.24 (n=28, p 0.28): recheck with 2026 added.
 
 ## History refits (Oct 12) — see docs/phase2_history.md
 `fetch_stats.py --seasons 2020-2025 --history` puts player stats, team stats and schedules with Vegas lines in

@@ -173,6 +173,7 @@ TE = { options = ["Tucker Kraft", "Luther Burden III", "Tre' Harris"], picked = 
 WR3 = { options = ["Luther Burden III", "Michael Wilson", "Malik Washington"], picked = "Michael Wilson" }
 
 [model.injury]
+bump_scale = { RB = 1.0, WR = 1.0, TE = 1.0 }   # as entered: the position-scaled injury bump became the default Nov 2 (week 9)
 questionable_routing = false     # as entered: questionable routing became the default Oct 26 (week 8)
 questionable_inactive_prob = 0.25 # as entered (0.45 from week 8)
 

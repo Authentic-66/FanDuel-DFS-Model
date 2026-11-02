@@ -41,7 +41,7 @@ def build(week, cfg, agg=None, st=None):
                    for pos, rule in routing.items()}
     xt, xc = usage.redistribute_out(agg, data.newly_out(fd_all, cfg['status']), fd, inj['redistribute_share'],
                                     st if absent_mode == 'present_share' or inj.get('skip_already_absent', True) else None,
-                                    absent_mode, routing)
+                                    absent_mode, routing, inj.get('bump_scale'))
     moved = data.trades(fd_all, cfg['status'])
     for extra, gained in zip((xt, xc), usage.trade_volume(agg, moved, fd, inj['redistribute_share'], routing, st,
                                                           inj.get('trade_old_team', 'full'))):
@@ -122,7 +122,7 @@ def build(week, cfg, agg=None, st=None):
 def questionable_routes(fd, agg, st, inj, routing, seed, n):
     """[model.injury] questionable_routing: each active RB / WR / TE marked Q sits in a fixed questionable_inactive_prob
     share of the draws, and in exactly those draws his teammates get his volume, routed as if he were ruled out
-    (position routing, depth split and absent_mode as configured; redistribute_share where no rule applies). The sit
+    (position routing, depth split, absent_mode and bump_scale as configured; redistribute_share where no rule applies). The sit
     draws come from their own generator, so no other player's draws move. Returns ({key: sit mask}, {key: (extra
     targets, extra carries)}); both empty when off."""
     if not inj.get('questionable_routing'):
@@ -136,7 +136,7 @@ def questionable_routes(fd, agg, st, inj, routing, seed, n):
         sits[r.Key] = qrng.random(n) < p
         gain[r.Key] = usage.redistribute_out(agg, q[q.Key == r.Key], fd, inj['redistribute_share'],
                                              st if mode == 'present_share' or inj.get('skip_already_absent', True) else None,
-                                             mode, routing)
+                                             mode, routing, inj.get('bump_scale'))
     return sits, gain
 
 
@@ -172,9 +172,14 @@ def role_guard(proj, sims, rg, overrides):
 
 
 def implied_shift(mean, pos, implied, spec, league):
-    """[model.implied_sensitivity]: mean-only correction per position, b * mean * (implied / league - 1)."""
+    """[model.implied_sensitivity]: mean-only correction per position, b * mean * (implied / league - 1).
+    one_sided = true: only teams above the league total move (down, for b < 0); teams below it are left alone
+    (docs/week9_tests.md section 2: raising low-total WRs made them worse)."""
     b = np.array([spec.get(p, 0.0) for p in pos])
-    return b * mean * (implied / league - 1)
+    rel = implied / league - 1
+    if spec.get('one_sided'):
+        rel = np.maximum(rel, 0)
+    return b * mean * rel
 
 
 def routing_bump(proj, unrouted, m):

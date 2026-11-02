@@ -79,6 +79,7 @@ first_week_factor = 0.9        # Doug, Oct 26 (0.7 in week 7)
 
 # Depth split for WRs only (Doug, Oct 12), kept.
 [model.injury]
+bump_scale = { RB = 1.0, WR = 1.0, TE = 1.0 }   # as entered: the position-scaled injury bump became the default Nov 2 (week 9)
 within_position = "depth_rank"
 depth_rank_positions = ["WR"]
 
@@ -281,3 +282,9 @@ extra_sets = ["model_cap45"]
 field_size = 566416            # Pooch Punt, from the results export (Nov 2)
 
 [contest.guru]
+
+# Nov 2: the WR implied-total correction became one-sided at -0.57 from week 9 (Doug). Pinned to the old
+# two-sided -0.34 so this week re-runs as entered.
+[model.implied_sensitivity]
+one_sided = false
+WR = -0.34

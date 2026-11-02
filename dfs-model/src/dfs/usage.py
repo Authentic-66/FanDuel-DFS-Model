@@ -98,7 +98,7 @@ def rank_weights(volume, ranks):
     return w / w.sum() if w.sum() > 0 else w
 
 
-def redistribute_out(agg, out_players, active_fd, share, st=None, mode='skip', routing=None):
+def redistribute_out(agg, out_players, active_fd, share, st=None, mode='skip', routing=None, scale=None):
     """Give each OUT player's per-game targets/carries to active same-team RB/WR/TE. Returns ({key: extra targets/g},
     {key: extra carries/g}). Without `routing`, `share` of it goes to all of them pro rata to their own per-game
     volume. With `routing` ([model.injury.position_share]; out_players needs a Position column) it is split by
@@ -109,7 +109,10 @@ def redistribute_out(agg, out_players, active_fd, share, st=None, mode='skip', r
           in, so the gain fades as the games without him accumulate.
       "skip": OUT players who missed their team's most recent game are skipped entirely (Oct 10 2026 behaviour; it
           assumed teammates' usage already reflected the absence, but usage is a season average plus the prior blend:
-          week 5, Braelon Allen got nothing for Breece Hall and Jaylen Warren nothing for Rico Dowdle)."""
+          week 5, Braelon Allen got nothing for Breece Hall and Jaylen Warren nothing for Rico Dowdle).
+    `scale` ([model.injury] bump_scale): {position: multiplier} on everything handed out for an OUT player of that
+    position (docs/week9_tests.md section 3: teammates gained about 60% of the routed bump; RB out 0.8, WR 0.45, TE 0.3).
+    None or a missing position = 1.0."""
     if mode not in ('present_share', 'skip'):
         raise ValueError(f'[model.injury] absent_mode must be "present_share" or "skip", not {mode!r}')
     extra = {'tgt': {}, 'car': {}}
@@ -119,6 +122,7 @@ def redistribute_out(agg, out_players, active_fd, share, st=None, mode='skip', r
         mates = active_fd[(active_fd.Team == o.Team) & active_fd.Position.isin(['RB', 'WR', 'TE'])]
         mates = mates[mates.Key.isin(agg.index) & (mates.Key != o.Key)]
         same = (mates.Position == getattr(o, 'Position', None)).values
+        mult = float((scale or {}).get(getattr(o, 'Position', None), 1.0))
         mates = mates.Key
         frac = {k: present_share(agg, st, o.Key, k, o.Team) if st is not None and mode == 'present_share' else 1.0
                 for k in mates}
@@ -133,7 +137,7 @@ def redistribute_out(agg, out_players, active_fd, share, st=None, mode='skip', r
                     continue
                 for k, w in zip(mates[group], split):
                     if part * w:
-                        gained[k] = gained.get(k, 0) + part * per_game(agg, o.Key, col) * w * frac[k]
+                        gained[k] = gained.get(k, 0) + part * per_game(agg, o.Key, col) * w * frac[k] * mult
     return extra['tgt'], extra['car']
 
 

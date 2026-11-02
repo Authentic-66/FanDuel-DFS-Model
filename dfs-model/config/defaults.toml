@@ -152,6 +152,11 @@ absent_mode = "present_share"      # OUT players who already missed games (Oct 1
                                    # "skip" = the Oct 10 behaviour, governed by skip_already_absent below
 skip_already_absent = true         # absent_mode "skip" only: don't redistribute an OUT player who missed his team's last
                                    # game at all; false = hand everyone out in full (the behaviour before Oct 10 2026)
+# Multiplier on everything handed out for an OUT (or questionable, in his sit draws) player, by HIS position. From week 9
+# (Doug, Nov 2; docs/week9_tests.md section 3): 2021-2025 absence games, teammates gained about 60% of the routed bump;
+# least-squares k by out position RB 0.82 (folds 0.71-0.87), WR 0.47 (0.39-0.54), TE 0.28 (0.10-0.59); moved teammates'
+# bias +1.23 -> +0.06. Traded players' old-team volume is NOT scaled. 1.0 everywhere = off (weeks 4-8 pin that).
+bump_scale = { RB = 0.8, WR = 0.45, TE = 0.3 }
 
 # Where an OUT player's per-game volume goes, by HIS position: *_same = share to teammates at his position, *_other =
 # share to the other skill positions (pro rata inside each group; a group with no volume gets nothing).
@@ -178,9 +183,13 @@ rb_slope = 0.12            # (leave-one-week-out range 0.09-0.14)
 # WR/TE over-react to the team implied total (docs/week7_prep.md section 3): after the calibration, each player's mean
 # moves by b * mean * (implied / league_team_total - 1). Fit 2021-2025 leave-one-season-out: WR -0.34 (-0.29 to -0.41),
 # TE -0.27 (-0.21 to -0.33). ON from week 7 (Doug, Oct 18, after the section 6 lineup test); TE kept at 0.
+# From week 9 (Doug, Nov 2; docs/week9_tests.md section 2): ONE-SIDED, WR -0.57: only WRs on teams above the league total
+# move (down); WRs below it are left alone. Refit leave-one-season-out 2021-2025: folds -0.49 to -0.64; WR bias +0.72 ->
+# +0.35, RMSE 7.099 -> 7.073; lineups weeks 5-8 neutral. Weeks 7-8 pin the old two-sided -0.34 (weeks 4-6 pin it off).
 [model.implied_sensitivity]
 enabled = true
-WR = -0.34
+one_sided = true
+WR = -0.57
 TE = 0.0
 
 # Wider simulated spread by position, applied after the calibration: every draw moves to this many times its distance
