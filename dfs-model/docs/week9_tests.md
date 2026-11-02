@@ -255,3 +255,69 @@ that we play fewer RBs (about 2.2 a lineup against the field's 2.6, the TE-flex 
 RBs outscored ours. But the RB reds did cost points: removing them would have added 2.2 a lineup in week 7 and 1.0 in
 week 8, and in week 8 the reds were 10.4 of the 12.6-point gap. Being lighter on RB reds looks worth it; it will not
 close the gap on its own.
+
+## 6. RB / flex fix: diagnosis, RB sim calibration, candidate rules (Doug, Nov 2; nothing changed)
+
+### 6.1 Diagnosis: what the FLEX TE is (the uploaded 150, weeks 5-8)
+
+| Week | FLEX TE / RB / WR | Extra TE standalone | Extra TE is the bring-back | Both TEs needed for the stack | RB stack pieces | RB bring-back pieces |
+|---|---|---|---|---|---|---|
+| 5 | 68 / 35 / 47 | 48 | 20 | 0 | 16 | 59 |
+| 6 | 47 / 69 / 34 | 34 | 13 | 0 | 17 | 55 |
+| 7 | 117 / 21 / 12 | 77 | 40 | 0 | 43 | 40 |
+| 8 | 95 / 32 / 23 | 70 | 25 | 0 | 22 | 59 |
+
+(In a TE-flex lineup, "extra TE" = the less structural of the two: standalone before bring-back before stack piece.)
+The stack rule (QB + 2 WR/TE + 1 opponent) counts an RB as a stack piece only if named in `[stacks] extra_receivers`
+(the RB stack pieces above are those named RBs or RBs that happen to be on the QB's team). **The bring-back already
+allows an RB**, and RBs were 37-39% of bring-back pieces. **No lineup needed two TEs for its stack.** 70% of extra TEs
+(229 of 327) are standalone: the optimizer chose them on projection per salary over an RB. So the stack rule is not the
+cause.
+
+### 6.2 RB upside in the sims, 2021-2025 (weeks 4-18, with the week-9 calibration, WR correction and spread)
+
+| Position | n | Beat sim p90 | Beat sim p95 | 95% noise band (p95) |
+|---|---|---|---|---|
+| RB | 3,365 | 10.1% | 5.4% | 4.3-5.7% |
+| WR | 5,063 | 10.3% | 4.9% | 4.4-5.6% |
+| TE | 1,698 | 9.8% | 4.9% | 4.0-6.0% |
+| QB | 2,088 | 8.8% | 3.5% | |
+
+By projection band RBs are slightly narrow below 12 (p95 7.3% at 0-8, 6.5% at 8-12; few of those make lineups) and too
+wide at 12-16 (p95 2.7%), where our lineup RBs sit. By season, RB p95 ran 3.5-6.2%. **The sims do not understate RB upside
+overall**, so (b) "widen RB variance" fails the history test and was not fitted or run; (c) likewise.
+
+### 6.3 Lineup test, weeks 5-8 (points a lineup vs as entered; baseline reproduced all 150 each week)
+
+Baseline: 108.33 / 103.97 / 100.90 / 106.26; top 10% 32; top 1% 1; money as-if $20.75 (week-7 tiers, ranks above
+~9,900 counted at $0.25); RB gap (our RB points a lineup minus the field's) -19.4 / -5.5 / -10.3 / -12.6 (mean -11.9).
+
+| Variant | Builds 150? | Wk 5 | Wk 6 | Wk 7 | Wk 8 | Mean | Top 10% | Top 1% | Money | RB gap mean | FLEX TE by week | Best by week |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| (a1) any RB counts as a stack piece | all | +2.42 | -1.10 | -0.17 | -0.23 | +0.23 | 33 | 0 | $20.22 | -10.7 | 54 / 41 / 113 / 82 | 174.5 / 142.7 / 150.3 / 192.3 |
+| (a2) bring-back must include an RB | wk 7 stops at 125 | +0.52 | -2.07 | fail | +1.06 | -0.16 (3 wks) | 30 vs 21 | 3 vs 1 | $13.87 vs $13.05 | | 53 / 33 / - / 74 | 181.9 / 156.6 / - / 200.4 |
+| (d) TE flex only if top-3 by projection | wk 7 stops at 139 | +0.01 | +0.19 | fail | +0.90 | +0.37 (3 wks) | 18 vs 21 | 1 vs 1 | $14.03 vs $13.05 | | 40 / 37 / - / 62 | 180.8 / 158.4 / - / 190.4 |
+| (d) top-5 by projection | wk 7 stops at 149 | -0.17 | -0.15 | fail | -0.53 | -0.28 (3 wks) | 19 vs 21 | 1 vs 1 | $13.05 vs $13.05 | | 53 / 43 / - / 80 | 180.8 / 158.4 / - / 190.4 |
+| (d) top-8 by projection | all | +0.11 | -0.29 | +0.19 | -0.38 | -0.09 | 35 | 1 | $20.71 | -12.0 | 64 / 45 / 112 / 94 | 184.9 / 158.4 / 155.7 / 190.4 |
+| (d) top-5 by salary | wk 7 stops at 149 | -0.24 | +0.08 | fail | +0.96 | +0.27 (3 wks) | 19 vs 21 | 1 vs 1 | $13.55 vs $13.05 | | 52 / 40 / - / 80 | 180.8 / 158.4 / - / 190.4 |
+| (a1) + top-3 by projection | wk 7 stops at 140 | +2.83 | -1.03 | fail | +0.36 | +0.72 (3 wks) | 20 vs 21 | 0 vs 1 | $13.80 vs $13.05 | | 38 / 31 / - / 54 | 174.5 / 142.7 / - / 192.3 |
+| (a1) + top-8 by projection | all | +2.59 | -1.07 | +0.06 | -0.14 | +0.36 | 32 | 0 | $20.10 | -10.5 | 50 / 40 / 106 / 82 | 174.5 / 142.7 / 150.3 / 192.3 |
+| (a1) + top-5 by salary | all | +2.50 | -0.97 | +1.32 | +0.11 | **+0.74** | 30 | 0 | $21.01 | -10.1 | 45 / 32 / 96 / 69 | 174.5 / 142.7 / 150.5 / 192.3 |
+
+"3 wks" rows compare with the baseline's weeks 5, 6 and 8 only. (a1) is the only (a) rule that builds every week, so it
+is the one combined with (d). (a1) also makes top-5 by salary buildable in week 7 (more teams can be stacked).
+
+### 6.4 Recommendation: no change for week 9
+
+- **Cause:** not the stack rule (no lineup needs two TEs; RB bring-backs are already allowed and used) and not RB sim
+  width (RBs beat p90/p95 at 10.1% / 5.4%, the same as WRs and TEs). The FLEX TE is a value pick: cheap TEs project
+  well per dollar, and the projection error found in test 1 (TEs 12+ over-projected) is small next to that.
+- **No candidate passes your rule 4.** Lineup rules cannot be tested in history (no FanDuel salaries before 2026), so
+  the bar is "does not hurt weeks 5-8". Every rule hurts at least one week, fails to build week 7, or both. The best
+  average, (a1) + top-5 TEs by salary (+0.74, money +$0.26, all weeks build), gets almost all of it from week 5 (+2.5),
+  costs about a point in week 6 and loses the only top-1% lineup (week 6's 158.4; (a1) causes that in every
+  combination). Top-8 by projection builds every week but barely binds (flex TE 64 / 45 / 112 / 94 against 68 / 47 /
+  117 / 95) and is neutral (-0.09).
+- If you want something on trial, (a1) + top-5 by salary is the one to watch, as a shadow build alongside the real
+  one for weeks 9-10 rather than a live change.
+- **The bigger RB lever is still the RB reds** (section 5: removing them was +2.2 in week 7 and +1.0 in week 8).
