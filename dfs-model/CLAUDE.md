@@ -625,6 +625,8 @@ on the Friday non-practisers (A.J. Brown, Henderson, Spears, Tate, ...). Re-chec
   Week 8 under the new defaults: 202 of 482 players' draws move; the largest drops are high-total WRs (Lamb -1.8,
   Douglas -1.9) and bumped teammates (bump 1+: 2.24 -> 1.32 avg). WATCH ITEM for next season: bad-defence games' FD
   scoring correlation 0.43 vs 0.24 (n=28, p 0.28): recheck with 2026 added.
+  RB reds check (docs/week9_tests.md s5): reds NOT the main RB-gap driver (wk5, no reds, gap -19.4); gap mostly fewer
+  RBs (2.2 vs 2.6/lineup) + non-red RBs; but RB reds cost +2.2 (wk7) / +1.0 (wk8) a lineup, 10.4 of wk8 12.6 gap.
 
 ## History refits (Oct 12) — see docs/phase2_history.md
 `fetch_stats.py --seasons 2020-2025 --history` puts player stats, team stats and schedules with Vegas lines in

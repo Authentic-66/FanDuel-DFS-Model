@@ -232,3 +232,26 @@ totals land on the line. (c) points the right way (wider totals, the two offence
 neither difference is significant, and "both teams beat expectation" goes the other way. So no stack-weight bump. The
 (c) case for more bring-backs isn't proven either: every stack already carries a bring-back, and these games already get
 higher stack weights through their totals. Worth re-checking once 2026 adds a season (about 5 more games).
+
+## 5. RB reds vs the RB gap (Doug, Nov 2, before week-9 colours)
+
+RB points per lineup (field = ownership-weighted; ours = the as-entered 150 rebuilt). "Red RBs" = RBs on that week's red
+list (week 5: the recorded-only shadow list). The re-run flips only the RB reds and leaves every other colour as entered.
+
+| Week | Reds applied? | RB reds | Field RB pts | of which red RBs | Ours | Gap | Gap from red RBs | Gap from non-red RBs | RBs per lineup field / ours | Re-run without RB reds (wk 5: with) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 5 | No (shadow) | 2 | 50.4 | 3.1 | 31.1 | -19.4 | -3.1 | -16.3 | 2.63 / 2.23 | +0.1 a lineup, top-10% 3 vs 3 |
+| 6 | Yes | 0 | 37.8 | 0.0 | 32.3 | -5.5 | 0.0 | -5.5 | 2.66 / 2.46 | no RB reds: unchanged |
+| 7 | Yes | 47 | 40.3 | 1.6 | 30.0 | -10.3 | -1.6 | -8.7 | 2.53 / 2.14 | +2.2 a lineup; top-10% 14 vs 11; top-1% 1 vs 0; best 158.8 vs 151.4 |
+| 8 | Yes | 55 | 43.3 | 10.4 | 30.6 | -12.6 | -10.4 | -2.3 | 2.66 / 2.21 | +1.0 a lineup; top-10% 11 vs 10; best 195.8 vs 190.4 |
+
+(a) Weeks with RB reds applied (7-8) averaged a gap of -11.4; weeks without (5-6) -12.4. No difference.
+(b) Over the four weeks the gap totals -47.8 points; red RBs account for -15.1 (-12.0 in the weeks they were applied),
+non-red RBs -32.8. Week 8 is the exception: there the reds were most of it (Braelon Allen 25.3 at 25% owned, Warren
+23.8, Coleman 18.4).
+
+**Plainly: the RB reds are not what drives the gap.** It was largest in week 5, when no reds were applied. Most of it is
+that we play fewer RBs (about 2.2 a lineup against the field's 2.6, the TE-flex issue in section 1) and the field's
+RBs outscored ours. But the RB reds did cost points: removing them would have added 2.2 a lineup in week 7 and 1.0 in
+week 8, and in week 8 the reds were 10.4 of the 12.6-point gap. Being lighter on RB reds looks worth it; it will not
+close the gap on its own.
