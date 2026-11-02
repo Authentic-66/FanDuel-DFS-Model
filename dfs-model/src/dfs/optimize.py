@@ -49,7 +49,12 @@ def eligible_pool(proj, prefs, opt):
             & ~(opt['exclude_questionable'] & (pr.Inj == 'Q') & ~pr.Name.isin(green))
             & ((pr.Pos == 'D') | (pr.Proj >= opt['min_proj']) | pr.Name.isin(green))
             & ((pr.Pos != 'QB') | pr.StartingQB))
-    return pr[keep].reset_index(drop=True)
+    out = pr[keep].reset_index(drop=True)
+    top = opt.get('flex_te_top_salary', 0) or 0
+    if top:     # [optimizer] flex_te_top_salary: the slate's top-N TEs by salary (reds included), for the FLEX rule
+        tes = proj[proj.Pos == 'TE'].sort_values('Salary', ascending=False, kind='stable')
+        out['FlexTE'] = out.Id.isin(set(tes.Id.head(top)))
+    return out
 
 
 def green_boost(prefs):
@@ -127,7 +132,8 @@ def receivers(df, stacks):
 
 def solve_lineup(df, obj, team, rule, cap, use, forced, prior_lineups, roster, opt, outside=None, te_flex=True):
     """One lineup (df indices) or None if infeasible. outside = (indices, max) for pool mode: at most max players
-    from those indices (the non-pool fillers). te_flex = False: no TE in the FLEX (exactly the TE slot's count)."""
+    from those indices (the non-pool fillers). te_flex = False: no TE in the FLEX (exactly the TE slot's count).
+    df.FlexTE (from [optimizer] flex_te_top_salary): a second TE only if one of the two is a FlexTE TE (he fills the FLEX)."""
     import pulp
     idx = df.index
     pos = lambda p: [i for i in idx if df.Pos[i] == p]
@@ -152,6 +158,8 @@ def solve_lineup(df, obj, team, rule, cap, use, forced, prior_lineups, roster, o
     for name in rule['require']:
         P += pulp.lpSum(x[i] for i in idx if df.Name[i] == name) == 1
     P += pulp.lpSum(x[i] for i in idx if df.Team[i] == opp and df.Pos[i] != 'D') >= rule['bring_back']
+    if 'FlexTE' in df:      # at most the TE slot's count of TEs outside the top-N by salary
+        P += pulp.lpSum(x[i] for i in pos('TE') if not df.FlexTE[i]) <= counts['TE']
     for d in pos('D'):   # no DST facing our own offensive players
         for i in idx:
             if df.Pos[i] != 'D' and df.Team[i] == df.Opp[d]:
@@ -239,6 +247,9 @@ def build_lineups(df, sims, cfg, pool_mode=None):
     outside it per lineup, cap = exposure cap for pool players at the standing cap, mult = objective multiplier per row).
     None = the normal model, unchanged."""
     opt, prefs, stacks = cfg['optimizer'], cfg['prefs'], cfg['stacks']
+    if opt.get('rb_stack_pieces'):  # [optimizer] rb_stack_pieces: every pool RB counts as a stack piece, as if named in
+        rbs = set(df.Name[df.Pos == 'RB']) - set(df.Name[df.Pos != 'RB'])     # [stacks] extra_receivers
+        stacks = dict(stacks, extra_receivers=sorted(set(stacks.get('extra_receivers', [])) | rbs))
     n = opt['n_lineups']
     rnd = random.Random(opt['seed'])
     cap, need = exposure_limits(df, prefs, opt)

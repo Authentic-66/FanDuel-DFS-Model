@@ -627,6 +627,12 @@ on the Friday non-practisers (A.J. Brown, Henderson, Spears, Tate, ...). Re-chec
   scoring correlation 0.43 vs 0.24 (n=28, p 0.28): recheck with 2026 added.
   RB reds check (docs/week9_tests.md s5): reds NOT the main RB-gap driver (wk5, no reds, gap -19.4); gap mostly fewer
   RBs (2.2 vs 2.6/lineup) + non-red RBs; but RB reds cost +2.2 (wk7) / +1.0 (wk8) a lineup, 10.4 of wk8 12.6 gap.
+- **RB/flex (week9_tests s6-7, Nov 2): NO live change (Doug agreed).** Stack rule not the cause (no lineup needs 2 TEs;
+  RB bring-backs allowed); RB sims calibrated (p90 10.1% / p95 5.4%); flex TEs beat the passed-over RBs +0.4; history
+  TE tiers <8 / 8-10 / 10-12 / 12+ bias -0.1 / +0.5 / -0.2 / +2.6: no mid/low fix.
+  **SHADOW BUILD weeks 9-10:** after the real final build run `optimize.py --week 2026-w09 --flex-shadow`
+  (-> weeks/<week>/flex_shadow/; RB stack pieces + TE flex top-5 by salary) and put "flex_shadow" in the week's
+  `[grading] extra_sets` so Monday grades it. Not entered. Same for week 10.
 
 ## History refits (Oct 12) — see docs/phase2_history.md
 `fetch_stats.py --seasons 2020-2025 --history` puts player stats, team stats and schedules with Vegas lines in

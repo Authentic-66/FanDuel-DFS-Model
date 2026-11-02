@@ -259,6 +259,11 @@ floor_cap_overflow = 2       # cap relief for floor lineups only: players at exp
                              # +2 from week 8 (+1 cost week 4 -2.2 a lineup and stalled week 7 at 147; docs/week8_prep.md 4)
 flex_te_max_share = 0        # at most this share of lineups with a TE in the FLEX (0 = off). Built Oct 26
                              # (docs/week8_prep.md section 2); week 7 had 78%. NOT adopted: Doug and Claude decide
+# Flex shadow build (Doug, Nov 2; docs/week9_tests.md section 6): weeks 9-10 only as `optimize.py --flex-shadow`
+# (weeks/<week>/flex_shadow/, not entered, graded via [grading] extra_sets). Both OFF for the real build.
+flex_te_top_salary = 0       # N > 0: a TE may play the FLEX only if he is among the slate's top N by salary
+                             # (two TEs: at least one of them top N; reds still count in the ranking)
+rb_stack_pieces = false      # true: every pool RB counts as a stack piece (as if all were in [stacks] extra_receivers)
 
 [optimizer.starters]         # depth kept per team when prefs.starters_only (QB = week's starter)
 RB = 1

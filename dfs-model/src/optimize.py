@@ -3,6 +3,8 @@
 --subdir writes them to weeks/<week>/<subdir>/ instead, leaving the main files alone (e.g. to compare settings).
 --cap N overrides [optimizer] exposure_cap for this run only (e.g. week 7's shadow control set:
 --subdir model_cap45 --cap 45).
+--flex-shadow: the weeks 9-10 shadow build (Doug, Nov 2): [optimizer] rb_stack_pieces = true and flex_te_top_salary = 5
+for this run only, written to weeks/<week>/flex_shadow/ unless --subdir is given (docs/week9_tests.md section 6).
 --pool builds Doug's pool lineups from [pool] in week.toml instead (docs/pool_mode.md) and writes them to
 weeks/<week>/pool/ (or pool/<subdir>/), plus pool.csv: every listed player, his rank, status and lineups."""
 import os
@@ -13,7 +15,15 @@ from dfs import config, optimize as opt, ownership, pool, project
 
 week, cfg, args = config.cli(__doc__, [(('--subdir',), dict(default='', help='write outputs to weeks/<week>/<subdir>/')),
                                        (('--pool',), dict(action='store_true', help="Doug's pool lineups -> weeks/<week>/pool/")),
-                                       (('--cap',), dict(type=int, default=0, help='exposure cap for this run (default: config)'))])
+                                       (('--cap',), dict(type=int, default=0, help='exposure cap for this run (default: config)')),
+                                       (('--flex-shadow',), dict(action='store_true',
+                                                                 help='RB stack pieces + TE flex top-5 by salary -> flex_shadow/'))])
+if args.flex_shadow:
+    if args.pool:
+        raise SystemExit('--flex-shadow is for the model build, not --pool')
+    cfg['optimizer'].update(rb_stack_pieces=True, flex_te_top_salary=5)
+    args.subdir = args.subdir or 'flex_shadow'
+    print('flex shadow: every RB a stack piece, TE in the FLEX only if top-5 by salary; ->', args.subdir)
 if args.cap:
     print(f"exposure cap {args.cap} for this run (config: {cfg['optimizer']['exposure_cap']})")
     cfg['optimizer']['exposure_cap'] = args.cap

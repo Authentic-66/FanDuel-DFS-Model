@@ -321,3 +321,63 @@ is the one combined with (d). (a1) also makes top-5 by salary buildable in week 
 - If you want something on trial, (a1) + top-5 by salary is the one to watch, as a shadow build alongside the real
   one for weeks 9-10 rather than a live change.
 - **The bigger RB lever is still the RB reds** (section 5: removing them was +2.2 in week 7 and +1.0 in week 8).
+
+## 7. Flex TEs vs the RBs passed over, and TE calibration by tier (Doug, Nov 2)
+
+### 7.1 Weeks 5-8: the FLEX TE vs the best RB the optimizer passed over
+
+For each of the 327 uploaded TE-flex lineups: the extra TE (as in 6.1) against the highest-projected eligible-pool RB
+that fit the slot (salary within the TE's salary plus unused cap, not already in the lineup, max 4 per team, not facing
+the lineup's DST; exposure caps ignored, so a capped RB still counts as passed over). No RB fit in 67 lineups (53 in
+week 8, mostly reds).
+
+| | Lineups | TE proj | TE actual | RB found | RB proj | RB actual | TE minus RB (actual) | RB outscored TE |
+|---|---|---|---|---|---|---|---|---|
+| Week 5 | 68 | 12.4 | 12.2 | 60 | 21.1 | 18.5 | -5.7 | 60% |
+| Week 6 | 47 | 13.6 | 10.0 | 46 | 16.1 | 12.8 | -2.6 | 54% |
+| Week 7 | 117 | 10.8 | 7.2 | 112 | 12.3 | 2.9 | +4.4 | 18% |
+| Week 8 | 95 | 11.3 | 10.2 | 42 | 15.3 | 13.1 | +2.1 | 38% |
+| **All** | 327 | 11.7 | 9.5 | 260 | 15.5 | 9.9 | **+0.4** | 37% |
+| TE projected under 8 | 59 | 7.1 | 6.5 | 37 | 12.5 | 3.3 | +3.4 | 19% |
+| TE 8-10 | 50 | 9.2 | 8.3 | 18 | 17.5 | 13.3 | -4.9 | 61% |
+| TE 10-12 | 100 | 10.9 | 4.8 | 87 | 13.0 | 6.2 | -0.9 | 38% |
+| TE 12+ | 118 | 15.6 | 15.5 | 118 | 17.9 | 14.2 | +1.3 | 39% |
+
+The flex TEs fell 2.2 short of projection, but the RBs passed over fell 5.6 short, so swapping the TE for the
+best-projected RB would have lost 0.4 points per lineup overall. Week 7 dominates: Pierre Strong Jr. was the passed-over RB in 62
+lineups and scored 0. The weak spot is the 10-12 tier (4.8 on 10.9), and it is a few players: Likely (23 lineups, 2.2)
+and Higbee (18, 2.4) in week 7. The 12+ TEs (Bowers, McBride) scored to projection.
+
+All TEs in the weeks 5-8 projections by tier (proj minus actual): under 8 +0.6 (n 147), 8-10 +1.2 (20), 10-12 +5.3 (12,
+standard error 1.6), 12+ +0.9 (13). Too few to fit on.
+
+### 7.2 2021-2025: TE calibration by projection tier (week-9 settings)
+
+| Tier | n | Proj | Actual | Bias (proj - actual) | Std error | Seasons over-projected | Beat p90 / p95 |
+|---|---|---|---|---|---|---|---|
+| Under 8 | 941 | 6.13 | 6.24 | -0.11 | 0.18 | 2 of 5 | 11% / 6% |
+| 8-10 | 394 | 8.90 | 8.37 | +0.54 | 0.30 | 5 of 5 (0.08 to 1.29) | 9% / 4% |
+| 10-12 | 196 | 10.87 | 11.07 | -0.20 | 0.55 | 2 of 5 | 11% / 6% |
+| 12+ | 167 | 14.43 | 11.84 | +2.58 | 0.61 | 5 of 5 (3.1 / 3.2 / 3.8 / 1.1 / 0.7) | 6% / 2% |
+
+Corrections fitted leave-one-season-out (TE loses s of each projected point above a knee):
+
+| Correction | s (folds) | RMSE (6.222 now) | Bias (+0.30 now) | Under 8 | 8-10 | 10-12 | 12+ |
+|---|---|---|---|---|---|---|---|
+| knee 8 | 0.36 (0.32-0.39) | 6.166 | -0.12 | -0.11 | +0.21 | -1.24 | +0.35 |
+| knee 9 | 0.45 (0.40-0.48) | 6.162 | -0.06 | -0.11 | +0.45 | -1.05 | +0.21 |
+| knee 10 (test 1) | 0.58 (0.52-0.61) | 6.158 | -0.01 | -0.11 | +0.54 | -0.71 | +0.10 |
+| flat -0.8 for 8+ | 0.64-0.98 | 6.203 | -0.06 | -0.11 | -0.28 | -1.01 | +1.79 |
+
+**Low and mid-tier TEs are not meaningfully over-projected in history:** under 8 -0.1, 10-12 -0.2; 8-10 is +0.5 (about
+two standard errors). Every correction that fixes 8-10 pushes 10-12 to -1.0 or worse. The over-projection is the 12+
+tier, and it has shrunk (+0.7 to +1.1 in 2024-25). The knee-10 slope that fixes it is the test-1 candidate (-0.6 a lineup in weeks 5-8).
+**No mid/low-tier fix proposed.**
+
+### 7.3 Flex shadow build, weeks 9-10 (Doug, Nov 2)
+
+`optimize.py --week 2026-w09 --flex-shadow` builds 150 with every RB counted as a stack piece and a TE in the FLEX only if
+he is a top-5 TE by salary (`[optimizer] rb_stack_pieces`, `flex_te_top_salary`, both off by default) into
+`weeks/2026-w09/flex_shadow/`. Not entered. Add `[grading] extra_sets = ["flex_shadow"]` (plus any control set) to the
+week's week.toml so Monday's grading reports it beside the entered set. Checked: with the switches off, weeks 5-8
+rebuild the uploaded 150 exactly. With them on, weeks 5-8 give 110.83 / 103.00 / 102.22 / 106.37, matching the section 6 test.
