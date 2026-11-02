@@ -24,7 +24,7 @@ Nothing reached the top 1%.
 **Money: week 8 net -$2.88.** Won **$4.57** (Doug) on $7.45 of fees (149 paid + 1 free). Running total since week 4:
 **-$6.53** (week 4 +$2.35, week 5 -$4.74, week 6 -$1.49, week 7 +$0.23, week 8 -$2.88). Check: the week-7 payout
 tiers applied to our week-8 ranks give $4.52, so $4.57 is consistent (the tiers moved a little with the bigger field).
-If there were other entries this week (week 7 had two Hail Mary entries), the net changes.
+Doug confirmed (Nov 2) the 149 + free entry were his only week-8 entries, so -$2.88 / -$6.53 stand.
 
 ## 1. Model lineups vs the field
 
