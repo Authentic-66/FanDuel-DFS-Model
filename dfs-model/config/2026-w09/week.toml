@@ -1,0 +1,139 @@
+# Week 9 settings (2026-w09). Made Nov 3 from 2026-w08's week.toml with the week-specific parts emptied and the
+# as-entered pins DELETED (week 8 pinned bump_scale 1.0 and one_sided false / WR -0.34 to re-run as entered).
+# Overrides any key in config/defaults.toml. Standing rules come from defaults: starters only, 25-lineup cap, leverage off,
+# salary floor $59,000 with cap relief +2, role guard, Harrison's old team (ARI) by present share, questionable routing
+# ON at 0.45. NEW DEFAULTS FROM WEEK 9 (Doug, Nov 2; docs/week9_tests.md s2-3): WR implied-total correction one-sided at
+# -0.57 ([model.implied_sensitivity] one_sided = true) and the position-scaled injury bump ([model.injury] bump_scale
+# RB 0.8 / WR 0.45 / TE 0.3). Neither is pinned here, so both run.
+# READS: red applied ([prefs] red); yellow and green shadow-only ([shadow.yellow], [shadow.green]). Doug will green RBs
+# with clear role increases (shadow only); the week-9 review grades them vs projection and salary-matched RBs.
+# Schedule (nflverse schedule_2026.csv, Nov 3). Main slate = Sunday 1:00 / 4:05 / 4:25 ET, 11 games / 22 teams
+# (matches FanDuel's list, 568 players):
+#   DEN@CAR, DAL@IND, NYJ@KC, DET@MIA, CLE@NO, NYG@PHI, LAR@WAS, HOU@LAC, LV@SF, GB@NE, ARI@SEA.
+# Off the main slate: JAX@BAL (Thu), CIN@ATL (London, 9:30 ET), TB@CHI (SNF), BUF@MIN (MNF). Byes: PIT, TEN.
+# So BAL (Lamar) and TB are not on the slate: no starting-QB call needed for either.
+# Player list: re-download Friday and Sunday morning and diff (python src/diff_players.py <old> <new>).
+
+# PRELIMINARY (Tue Nov 3): FanDuel's Nov 3 tags (O / D -> out, Q -> questionable) + IR players with 3+ targets +
+# carries a game in 2026. Friday's report replaces this; Sunday: active Q players come off the Q list (Doug's rule).
+[status]
+out = [
+  "Kendrick Bourne",                                                     # FanDuel O
+  "Jeremy McNichols",                                                    # FanDuel D
+  # IR with real 2026 volume (targets + carries a game)
+  "Dameon Pierce", "De'Von Achane", "Jacory Croskey-Merritt", "RJ Harvey", "Davante Adams", "Tank Bigsby",
+  "Ronnie Rivers", "Jonathon Brooks", "Will Shipley", "Jaxson Dart", "Terry McLaurin", "Chris Brooks",
+  "Mack Hollins", "Jalen Hurts", "Raheim Sanders", "Terrance Ferguson", "Jayden Reed", "David Njoku",
+  "Romeo Doubs", "Jaylin Noel", "Tyquan Thornton", "Tyrone Tracy Jr.", "Alec Pierce", "Pat Bryant",
+  "Demarcus Robinson", "Xavier Legette",
+]
+questionable = [
+  # FanDuel Q, Nov 3 (30)
+  "Breece Hall", "Cam Skattebo", "Christian McCaffrey", "Jeremiyah Love", "David Montgomery", "Michael Wilson",
+  "DeVonta Smith", "TreVeyon Henderson", "Christian Watson", "Bam Knight", "A.J. Brown", "Mike Evans",
+  "Deebo Samuel Sr.", "Dontayvion Wicks", "Rashid Shaheed", "Hunter Henry", "CJ Donaldson", "Jake Ferguson",
+  "Velus Jones Jr.", "Colby Parkinson", "Brenen Thompson", "Theo Johnson", "Matthew Stafford", "KaVontae Turpin",
+  "Drew Lock", "Luke Schoonmaker", "Britain Covey", "Anthony Gould", "Dean Connors", "Jacob Saylors",
+]
+active = []
+
+[status.starting_qb]
+
+# Traded players. Houston IS on the main slate (HOU@LAC), so the Houston side runs for the first time since week 7.
+# Doug, Oct 26: share 0.15, factor 0.9 (13.3% of HOU targets over his two HOU games, weeks 6-7; 19-21% of snaps).
+# Remove the entry after ~3 HOU games (week 9 is his third).
+[[status.trade]]
+player = "Marvin Harrison Jr."
+position = "WR"
+from = "ARI"
+to = "HOU"
+new_target_share = 0.15        # Doug, Oct 26
+first_week_factor = 0.9        # Doug, Oct 26 (0.7 in week 7)
+
+# Doug's projection reads: new mean FanDuel points.
+[overrides]
+
+# Depth split for WRs only (Doug, Oct 12), kept. bump_scale NOT set: the week-9 default (RB 0.8 / WR 0.45 / TE 0.3) runs.
+[model.injury]
+within_position = "depth_rank"
+depth_rank_positions = ["WR"]
+
+[optimizer]
+stack_allocation = "proportional"   # stack counts follow the weights exactly instead of random draws
+
+[prefs]
+starters_only = true
+red_teams = []
+red = []
+
+[prefs.yellow]                 # empty: yellow is shadow-only (Doug, Oct 26)
+
+[prefs.green]                  # empty: green is shadow-only
+
+[prefs.green_floor]
+
+[prefs.starter_override]
+
+[prefs.player_cap]
+
+# Record only: NOT applied.
+[shadow]
+red = []
+
+[shadow.red_lineups]
+
+[shadow.yellow]
+
+[shadow.green]
+
+[shadow.green_floor]
+
+[shadow.trade]
+"Marvin Harrison Jr." = { from = "ARI", to = "HOU", new_target_share = 0.15, first_week_factor = 0.9 }   # Doug, Oct 26
+
+# Doug adds extra stack receivers per week (none carried over).
+[stacks]
+extra_receivers = []
+
+# Stack QB-team weights: weight = round(2 * (implied total - 16)), min 1, round half up.
+# PRELIMINARY (nflverse lines, Tue Nov 3 14:02 UTC; data/2026-w09/lines.csv).
+[stacks.weights]
+SF = 30
+DAL = 26
+DET = 26
+KC = 24
+SEA = 24
+LAR = 21
+NE = 18
+DEN = 15
+NO = 14
+IND = 14
+HOU = 13
+NYG = 12
+MIA = 12
+GB = 12
+WAS = 10
+LV = 10
+CLE = 9
+CAR = 9
+NYJ = 5
+PHI = 5
+LAC = 4
+ARI = 1
+
+[stacks.rules]
+
+# Doug's pool: kept for week 9 (Doug, Oct 26; shadow: built and graded, not entered), reviewed after week 9. Lists come
+# from his week-9 review sheet (Pool / Rank columns). Empty until he marks it.
+[pool]
+ranked = true
+
+# Shadow sets graded beside the entered model (Doug, Nov 2): control at cap 45 and the flex shadow (weeks 9-10).
+#   python src/optimize.py --week 2026-w09 --subdir model_cap45 --cap 45
+#   python src/optimize.py --week 2026-w09 --flex-shadow
+[grading]
+extra_sets = ["model_cap45", "flex_shadow"]
+
+[contest]
+
+[contest.guru]

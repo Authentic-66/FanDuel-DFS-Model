@@ -586,8 +586,35 @@ on the Friday non-practisers (A.J. Brown, Henderson, Spears, Tate, ...). Re-chec
    possibly active (Gainwell, Zaccheaus, Schoonmaker, Ogletree, Geers, DJ Rogers). Lesson to weigh: the 10:37 CT
    list came 7 minutes after the 1pm inactives, so some early-game tags hadn't updated yet.
 
+## Week 9 preliminary run (Tue Nov 3) — inputs only; checklist steps 0-2 DONE
+Slate: 11 games / 22 teams, matches nflverse (568 players, `fd_players.csv` downloaded Nov 3 07:59; keep it as the base
+for Friday's diff): DEN@CAR, DAL@IND, NYJ@KC, DET@MIA, CLE@NO, NYG@PHI, LAR@WAS, HOU@LAC, LV@SF, GB@NE, ARI@SEA. Off:
+JAX@BAL (Thu), CIN@ATL (London), TB@CHI (SNF), BUF@MIN (MNF); byes PIT, TEN. **BAL (Lamar) and TB are not on the
+slate**: no starting-QB call, no TB volume question this week. `config/2026-w09/week.toml` = week 8's with the pins
+DELETED; **confirmed live** (in-process, nothing written): one-sided WR -0.57 moves 45 players (JSN -1.3, St. Brown /
+Lamb -1.2, Nacua -0.9), bump_scale RB .8 / WR .45 / TE .3 moves 93 (Chism -1.4, Higbee / R. White -1.2). Stats through
+week 8 (28 teams incl. MNF); `data/cache/snap_counts_2026.csv` fetched (nflverse snap_counts release, untracked).
+Lines PRELIMINARY (nflverse Nov 3 14:02 UTC): SF 30, DAL / DET 26, KC / SEA 24, LAR 21, NE 18 ... ARI 1. `[status]` =
+FanDuel tags (Bourne O, McNichols D -> out; 30 Q) + 26 IR players with 3+ targets + carries a game.
+Carry-overs: Harrison 0.15 / 0.9 runs (HOU on the slate; HOU WR2, 7.0; no starter override needed; 3rd HOU game ->
+remove the entry after week 9); Jacobs projects as GB's lead back without a read (16.2; 58% -> 81% of carries, 52 -> 71%
+snaps); **McCaffrey Q (hamstring)** after the bye, held out (12.7 if cleared; 52% snaps week 7); **Stafford Q (arm), LAR's
+starter: 0 LAR stacks** (weight 21 reallocated); Ferguson Q (ankle; 4 snaps week 8, DAL TE1 = next eligible); ARI QB:
+week 8 Brissett 23 att / 47 snaps, Minshew 23 att / 34 snaps (tie, both 23); default starts Brissett (14.8), ARI weight 1.
+Model warnings: FanDuel team differs from stats for Demercado (HOU, was DAL), Wayne (MIA, was HOU), Kaytron Allen (MIA,
+was WAS); role guard 0: Mafah (NYG, no 2026 data), Kirk (SF), Browning, Gabriel, Estime and others.
+Prelim sets (uploads deleted, all rules checked: slots, $59-60K, no out / Q / tagged, no duplicates, stack + bring-back,
+DST): model `prelim/` 150 at cap 25 (relief to 26), mean 115.9, FLEX TE 57 / RB 52 / WR 41; control `model_cap45/` 150,
+mean 117.4 (max JSN 43); flex shadow `flex_shadow/` 150, mean 117.1, FLEX RB 83 / TE 44 / WR 23 (every two-TE lineup has a
+top-5-salary TE). Stacks (all three): SF 15, DAL / KC / DET 13, SEA 12, NE 10, NO / IND / DEN 8, HOU 7, ... ARI 1, LAR 0.
+**SF stacks all use Jordan Watkins (4.8)**: Evans / Deebo Q, Kirk / Cooks role-guarded. Review sheet
+`data/2026-w09/review_sheet.xlsx` (226 rows, Lineups 1,350) with a new **RB_trend** column (last 3 team games: snap %,
+carry share, target share, UP / DOWN) for Doug's RB greens. RB notes: SEA's Emanuel Wilson (RB1 by projection, 11.0)
+had 0% snaps in week 8 (Charbonnet 37%, Price 48%); Jeanty 6% of LV carries week 8.
+
 ## Week 9 run checklist (2026-w09) — START HERE when FanDuel releases the week-9 player list
-**State Nov 2: all week-9 tests done and decided (docs/week9_tests.md s1-10, docs/learn_from_winners.md). Nothing
+**State Nov 3: steps 0-2 DONE (see "Week 9 preliminary run"). Next = Doug's sheet (step 4: colours, Pool / Rank,
+RB greens shadow), then the pool build; Friday statuses.** Earlier: **State Nov 2: all week-9 tests done and decided (docs/week9_tests.md s1-10, docs/learn_from_winners.md). Nothing
 built for week 9 yet: `config/2026-w09/` and `data/2026-w09/` do not exist.**
 0. **New week.toml = copy week 8's, then DELETE the as-entered pins** (they keep weeks 4-8 reproducible and must not
    carry over): `[model.injury] bump_scale = {1.0...}` and `[model.implied_sensitivity] one_sided = false / WR = -0.34`.
