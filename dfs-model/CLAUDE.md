@@ -637,6 +637,10 @@ built for week 9 yet: `config/2026-w09/` and `data/2026-w09/` do not exist.**
 4. Doug's sheet: red -> `[prefs] red` (+ `[shadow.red_lineups]`; DST reds as usual), yellow -> `[shadow.yellow]`,
    green -> `[shadow.green]` (**he will green RBs with clear role increases: shadow only**), Pool / Rank -> `[pool]`.
    Read-back rules in the week-7 checklist (counts per position, mismatches listed, Doug fixes the sheet).
+4b. **FanDuel Research projections (Doug, Nov 3; weekly, record only):** Doug saves FDR's main-slate projections CSV
+   Friday and Sunday morning as `data/2026-w09/fdr_projections_fri.csv` / `fdr_projections_sun.csv`. Check the
+   names match `fd_players.csv` (list any that don't) and commit them with the week's files. Not used by the model.
+   See "FanDuel Research projections test".
 5. Friday statuses; Sunday: FINAL lines + weights, inactives (active Q off the Q list, inactive -> out; Doug's Sunday
    rule in the week-8 checklist), rerun `model.py`, then the sets: final `optimize.py --week 2026-w09` (cap 25,
    entered), control `--subdir model_cap45 --cap 45`, `optimize.py --week 2026-w09 --pool`, and the flex shadow
@@ -647,6 +651,21 @@ built for week 9 yet: `config/2026-w09/` and `data/2026-w09/` do not exist.**
    2026-w05,...,2026-w09`, `docs/week9_review.md`. **Must include: Doug's RB greens vs projection and vs salary-matched
    non-green RBs** (plus the shadow-green lineup re-run), flex shadow vs entered, cap 45 vs 25, pool review, the
    carry-over calls (step 3), and winnings (ask; check the entry-history xlsx; running total -$6.53 after week 8).
+
+## FanDuel Research projections test (Doug, Nov 3) — collect weeks 9-12, test after week 12; NOTHING LIVE
+- **Every week from week 9:** Doug downloads FanDuel Research's main-slate projections CSV Friday and again Sunday
+  morning, saved as `data/<week>/fdr_projections_fri.csv` and `fdr_projections_sun.csv`. Archive them with the weekly
+  files (commit; `data/<week>/*.csv` is tracked). On the first file, record its columns and match its names to
+  `fd_players.csv` (aliases if needed). Projections and lineups never read them.
+- **After week 12 (4 weeks, 9-12): does FDR's projection predict actual points beyond ours?** Same regression as the
+  ownership test (`docs/week9_tests.md` section 8.1): rows = every slate player with a result and an as-entered
+  projection of 4+; residual = actual FanDuel points minus our as-entered (Sunday final) projection; regress it on
+  FDR's Sunday projection (also as FDR minus ours), controlling for position, log salary, week and our projection;
+  standard errors clustered by game. Report the coefficient, se, p, each week's sign, and by position; repeat with
+  the Friday file (does Sunday's news add anything?).
+- **Only if it does: test a blend** (as section 8.3): nested leave-one-week-out blend weight (held-out week never
+  used to fit), projection accuracy (MAE / bias) and lineups re-built as entered, reporting average, top-10%,
+  top-1% and best per week. Doug decides; nothing adopted automatically.
 
 ## Week-8 backlog
 - **Per-position redistribution mode**: RB out = routing by position; WR out = depth split; TE out = old 80% rule or none.
