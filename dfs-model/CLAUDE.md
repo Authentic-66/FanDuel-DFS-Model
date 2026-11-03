@@ -659,8 +659,16 @@ built for week 9 yet: `config/2026-w09/` and `data/2026-w09/` do not exist.**
    entered), control `--subdir model_cap45 --cap 45`, `optimize.py --week 2026-w09 --pool`, and the flex shadow
    `optimize.py --week 2026-w09 --flex-shadow` (cap 25, not entered), and the **cash-style shadows (Doug, Nov 3;
    weeks 9-10, not entered)** `optimize.py --week 2026-w09 --no-draw` (projection-only objective, cap 25 -> nodraw/)
-   and `--median70` (median objective, cap 105, overlap 7 -> median70/). 149 files if Doug has a free entry (ask). If a
-   set stalls at cap 25, stop and ask Doug (no cap raise without him).
+   and `--median70` (median objective, cap 105, overlap 7 -> median70/).
+   **ENTERED SET CHANGED (Doug, Nov 3 evening): 75 median-70 + 74 current-model lineups, no duplicates, free entry as
+   usual** -> `python src/combine_entry.py --week 2026-w09` (after the main and median70 builds) writes
+   `entered_upload_149.csv` / `entered_readable_149.csv` / `entered_exposure.csv` / `entered_source.csv` (lineups
+   evenly spaced through each build so each half keeps its stack mix; checks slots, cap, player list, out / Q / reds,
+   duplicates; prints combined exposure top 15 and flags players over 50%: **report both to Doug**). All five full
+   150 sets stay in their folders for grading (model = main folder, median70, nodraw, model_cap45, flex_shadow).
+   Dry run on the prelim (Nov 3, scratch): 149 built, 0 duplicates, all checks passed, top Jacobs 45% / Kyren 44% /
+   NO DST 37% (median70 alone has both RBs at 105 of 150), none over 50%. If a set stalls at cap 25, stop and ask
+   Doug (no cap raise without him).
 6. After the slate: `convert_results.py <export> --user gst1999`, `[contest] field_size`, `analyze_results.py` (grades
    model / control / pool / flex_shadow / nodraw / median70; with `data/2026-w09/prizes_pooch-punt.csv` (Doug's
    Prizes-tab screenshot, transcribed Nov 3: $35,000, pays ranks 1-265,100) and the All Entries export in raw/, every
