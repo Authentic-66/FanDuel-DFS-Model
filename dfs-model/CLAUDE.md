@@ -613,6 +613,11 @@ top-5-salary TE). Stacks (all three): SF 15, DAL / KC / DET 13, SEA 12, NE 10, N
 `data/2026-w09/review_sheet.xlsx` (226 rows, Lineups 1,350) with a new **RB_trend** column (last 3 team games: snap %,
 carry share, target share, UP / DOWN) for Doug's RB greens. RB notes: SEA's Emanuel Wilson (RB1 by projection, 11.0)
 had 0% snaps in week 8 (Charbonnet 37%, Price 48%); Jeanty 6% of LV carries week 8.
+**Rebuilt Nov 3 afternoon with promotion ON (6340035):** 11 promoted (Raridon 5.4 and K. Williams 5.0 enter the pool;
+Gray 4.0, Allen 3.9, Franklin 3.8, Cooks 3.4, ...). Model `prelim/` mean 115.7, FLEX TE 60 / RB 56 / WR 34, 62 of 150
+lineups unchanged, Raridon 6 / K. Williams 3, Chism 10 -> 1; control mean 117.2 (JSN 41); flex shadow mean 116.8. Stack
+counts unchanged. Rules checked, uploads deleted. Review sheet rebuilt (237 rows, Lineups 1,350) with **RoleDrop**
+(E. Wilson, Lambert-Smith; Cody White is still guarded so not listed) and **Promoted** columns.
 
 ## Week 9 run checklist (2026-w09) — START HERE when FanDuel releases the week-9 player list
 **State Nov 3: steps 0-2 DONE (see "Week 9 preliminary run"). Next = Doug's sheet (step 4: colours, Pool / Rank,
