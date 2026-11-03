@@ -586,6 +586,41 @@ on the Friday non-practisers (A.J. Brown, Henderson, Spears, Tate, ...). Re-chec
    possibly active (Gainwell, Zaccheaus, Schoonmaker, Ogletree, Geers, DJ Rogers). Lesson to weigh: the 10:37 CT
    list came 7 minutes after the 1pm inactives, so some early-game tags hadn't updated yet.
 
+## Week 9 run checklist (2026-w09) — START HERE when FanDuel releases the week-9 player list
+**State Nov 2: all week-9 tests done and decided (docs/week9_tests.md s1-10, docs/learn_from_winners.md). Nothing
+built for week 9 yet: `config/2026-w09/` and `data/2026-w09/` do not exist.**
+0. **New week.toml = copy week 8's, then DELETE the as-entered pins** (they keep weeks 4-8 reproducible and must not
+   carry over): `[model.injury] bump_scale = {1.0...}` and `[model.implied_sensitivity] one_sided = false / WR = -0.34`.
+   Week 9 runs the new defaults (WR one-sided -0.57, bump_scale RB 0.8 / WR 0.45 / TE 0.3). Keep the WR depth split
+   (`within_position = "depth_rank"`, `depth_rank_positions = ["WR"]`) and `stack_allocation = "proportional"` unless
+   Doug says otherwise. Empty: `[status]`, `[overrides]`, `[prefs] red`, `[shadow.*]`, `[stacks.weights]`,
+   `[stacks] extra_receivers` (Doug adds per week), `[contest]` field_size. Pool: kept for week 9 (Doug, Oct 26), the
+   lists come from his week-9 sheet; pool review after week 9. `[grading] extra_sets = ["model_cap45", "flex_shadow"]`.
+   Check the slate (byes / Thursday / SNF / MNF teams) against nflverse schedule_2026.csv.
+1. FanDuel player list -> `data/2026-w09/fd_players.csv`; re-download Friday and Sunday, keep the earlier file and run
+   `python src/diff_players.py <earlier> <new>`; report added / removed / tag changes before re-running model.py.
+2. Prelim (week-8 recipe): `fetch_stats.py` (week 8 in), PRELIMINARY nflverse lines -> `lines.csv`, `[stacks.weights]`
+   = round(2 x (implied - 16)), min 1; `[status]` from FanDuel tags + IR players with 3+ targets + carries a game;
+   `model.py` (read role-guard / team-mismatch warnings); prelim optimizer run in `weeks/2026-w09/prelim/`; review sheet
+   (recipe in the week-7 checklist). Check the FLEX mix.
+3. Carry-overs to raise with Doug at the prelim: **McCaffrey** status (left week 7 hurt; SF bye week 8), **Jacobs** read
+   (GB lead back: 11 car + 7 tgt, then 21 + 6), **Harrison** trade 0.15 / 0.9 applies if HOU is on the slate (remove the
+   entry after ~3 HOU games), **Lamar** (1 snap week 8; BAL starter call via `[status.starting_qb]`), Jake Ferguson
+   (4 snaps), ARI QB (Minshew 42% of snaps), TB pass volume (3 and 11 attempts).
+4. Doug's sheet: red -> `[prefs] red` (+ `[shadow.red_lineups]`; DST reds as usual), yellow -> `[shadow.yellow]`,
+   green -> `[shadow.green]` (**he will green RBs with clear role increases: shadow only**), Pool / Rank -> `[pool]`.
+   Read-back rules in the week-7 checklist (counts per position, mismatches listed, Doug fixes the sheet).
+5. Friday statuses; Sunday: FINAL lines + weights, inactives (active Q off the Q list, inactive -> out; Doug's Sunday
+   rule in the week-8 checklist), rerun `model.py`, then the sets: final `optimize.py --week 2026-w09` (cap 25,
+   entered), control `--subdir model_cap45 --cap 45`, `optimize.py --week 2026-w09 --pool`, and the flex shadow
+   `optimize.py --week 2026-w09 --flex-shadow` (cap 25, not entered). 149 files if Doug has a free entry (ask). If a
+   set stalls at cap 25, stop and ask Doug (no cap raise without him).
+6. After the slate: `convert_results.py <export> --user gst1999`, `[contest] field_size`, `analyze_results.py` (grades
+   model / control / pool / flex_shadow), `learn_from_winners.py --week 2026-w09` and `--compare
+   2026-w05,...,2026-w09`, `docs/week9_review.md`. **Must include: Doug's RB greens vs projection and vs salary-matched
+   non-green RBs** (plus the shadow-green lineup re-run), flex shadow vs entered, cap 45 vs 25, pool review, the
+   carry-over calls (step 3), and winnings (ask; check the entry-history xlsx; running total -$6.53 after week 8).
+
 ## Week-8 backlog
 - **Per-position redistribution mode**: RB out = routing by position; WR out = depth split; TE out = old 80% rule or none.
   Basis: the section 11.2 accuracy table (players moved 1+: RB out 6.65 routing vs 6.70 old; WR out 6.53 depth vs 6.77 pro
