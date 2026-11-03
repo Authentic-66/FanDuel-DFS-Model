@@ -633,6 +633,15 @@ on the Friday non-practisers (A.J. Brown, Henderson, Spears, Tate, ...). Re-chec
   **SHADOW BUILD weeks 9-10:** after the real final build run `optimize.py --week 2026-w09 --flex-shadow`
   (-> weeks/<week>/flex_shadow/; RB stack pieces + TE flex top-5 by salary) and put "flex_shadow" in the week's
   `[grading] extra_sets` so Monday grades it. Not entered. Same for week 10.
+- **Tests 8-10 (week9_tests s8-10, Nov 2; nothing changed, Doug decides):** 8 ownership signal REAL but NOT usable:
+  actual ownership beats our projection +1.42 per log unit (~+1 pt per doubling, p < 0.001, every week; QB +3.5,
+  RB +2.1), but projected ownership (LOWO, + news / position slopes, MAE 2.60) carries none of it (-0.39, p 0.74);
+  blend lineups 103.8 vs 104.9 as entered (top-1% 1 -> 0); actual-ownership ceiling 108.0 / top-1% 4. Needs an
+  outside pre-lock ownership source. 9 cheap DSTs NOT under-projected (live +1.1, se 1.1, only wks 6-7; history weak
+  matchups -0.28); our weeks 7-8 shortfall = reds (3 of 8 / 7 of 8 cheap DSTs red; reds right on points). 10 cap swap:
+  cap 45 - 25 avg +5.5 / +1.9 / -2.9 / +1.2, top-1% level, best worse 2 of 4, p10 -1.0, money +$0.18/week; nothing
+  blocks it; if adopted: week.toml `exposure_cap = 45`, control `--subdir model_cap25 --cap 25`, extra_sets
+  ["model_cap25", "flex_shadow"], pool and flex shadow at the entered cap (or `--cap 25`). Week 4 has no sims.npy.
 
 ## Learn from winners (Nov 2) — see docs/learn_from_winners.md; WEEKLY REVIEW STEP from week 9
 Doug: add to every weekly review. After `convert_results.py`: `python src/learn_from_winners.py --week <week>`

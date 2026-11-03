@@ -381,3 +381,130 @@ he is a top-5 TE by salary (`[optimizer] rb_stack_pieces`, `flex_te_top_salary`,
 `weeks/2026-w09/flex_shadow/`. Not entered. Add `[grading] extra_sets = ["flex_shadow"]` (plus any control set) to the
 week's week.toml so Monday's grading reports it beside the entered set. Checked: with the switches off, weeks 5-8
 rebuild the uploaded 150 exactly. With them on, weeks 5-8 give 110.83 / 103.00 / 102.22 / 106.37, matching the section 6 test.
+
+## 8. Ownership as a market signal (Doug, Nov 2; nothing changed)
+
+Benter's idea: the public's odds hold information the model lacks, so blend the two. Here the "odds" are ownership.
+Rows: weeks 5-8, every slate player with a result and an as-entered projection of 4+ (660 player-weeks; 42 games).
+Residual = actual FanDuel points minus our as-entered projection. Standard errors are clustered by game (players in
+one game move together), so the effective sample is about 42, not 660. Scratch scripts: own_signal.py, own_lineups.py.
+
+**8.1 Do popular players beat our projection? Yes.** Controlling for position, log salary, week and our projection,
+residual on log(actual ownership): **+1.42 per log unit (se 0.31, p < 0.001), about +1.0 point per doubling of
+ownership.** Positive every week (+1.69 / +1.55 / +1.37 / +1.11; p 0.01 / 0.001 / 0.04 / 0.25). Without the
+projection control it is +0.38 (p 0.11): highly owned players are also our high projections, which run hot, so the
+two pull against each other. Players who scored 0 left out: +1.15 (p 0.001); ownership in % instead of log: +0.20 per
+point (p 0.005). By position: QB +3.5 (p < 0.001), RB +2.1 (p 0.005), DST +1.6 (p 0.13), WR +0.7 (p 0.12), TE +0.1.
+So the field knows something we don't, mostly about QBs and RBs.
+
+**8.2 (a) Can we predict that ownership before lock? Not the part that matters.** Projected-ownership ridge on
+logit(%Drafted), leave-one-week-out on weeks 5-8 (rows projected 2+):
+
+| model | MAE (pts) | log-r | players 15%+ owned: actual vs predicted |
+|---|---:|---:|---|
+| as entered (trained on earlier weeks) | 2.66 | 0.869 | 25.2 vs 14.9 |
+| current features, LOWO | 2.63 | 0.861 | 25.2 vs 16.5 |
+| + injury/role news (routing bump, Q tag), position-specific salary / projection / value slopes | 2.60 | 0.871 | 25.2 vs 17.7 |
+
+The new inputs help a little (the chalk shortfall 10.3 -> 7.5 points) but the error on chalk stays about 13 points.
+The decisive test: residual on log(**projected** ownership, out of week) = **-0.39 (se 1.15, p 0.74): nothing.**
+With both in, the "surprise" (actual minus projected, log) carries it all: +1.74 (p < 0.001), projected -1.42 (p 0.23).
+A model built from our own inputs (salary, our projection, Vegas, news we already have) can only re-weight those
+inputs; the field's edge is information outside them (late news, other people's projections, Guru).
+
+**8.3 (b) Blended projection, nested leave-one-week-out** (the held-out week is never used to fit, and each training
+week's projected ownership is itself out of week). A = recalibration only (residual on position, our projection, log
+salary); B = A + log(projected ownership) = the blend; C = A + log(actual ownership) = the ceiling, NOT available
+before lock.
+
+| held out, Proj 4+ | RMSE | bias (proj - actual) | r |
+|---|---:|---:|---:|
+| ours as entered | 7.408 | +1.09 | 0.493 |
+| A recalibration only | 7.239 | +0.02 | 0.501 |
+| **B blend (projected ownership)** | **7.281** | -0.06 | 0.493 |
+| C ceiling (actual ownership) | 7.077 | +0.01 | 0.533 |
+
+B is worse than A (squared error +0.60 a player, t -2.6 over 42 games); its ownership coefficient flips sign by
+held-out week (+1.22, -1.66, -0.08, -0.36). Lineups (as-entered rebuild with each player's projection and draws moved
+by the held-out delta; players under 4 untouched; base = the entered 150 in every week):
+
+| | avg wk 5 / 6 / 7 / 8 | mean | top 10% | top 1% | best wk 5 / 6 / 7 / 8 | money as-if |
+|---|---|---:|---:|---:|---|---:|
+| as entered | 108.33 / 103.97 / 100.90 / 106.26 | 104.87 | 32 | 1 | 184.9 / 158.4 / 151.4 / 190.4 | $20.75 |
+| A recalibration | 108.11 / 103.05 / 100.94 / 107.43 | 104.88 | 34 | 0 | 168.0 / 151.4 / 152.4 / 190.4 | $19.11 |
+| **B blend** | 106.61 / 100.34 / 100.96 / 107.23 | **103.79** | 34 | 0 | 160.7 / 145.3 / 152.4 / 190.4 | $18.28 |
+| C ceiling | 112.31 / 104.21 / 102.37 / 113.08 | 107.99 | 38 | 4 | 184.6 / 153.2 / 164.1 / 219.9 | $24.52 |
+
+**Verdict: no blend.** The signal is real and worth about +3 points a lineup and 3 extra top-1% finishes over four
+weeks *if* we had the field's ownership before lock (C), but a projected-ownership model from our inputs adds nothing
+and the blend costs 1.1 points a lineup. On significance: 8.1 is solid (p < 0.001, same sign every week); 8.3's B-vs-A
+loss is t -2.6 on four held-out weeks; C is an upper bound, not a result. The route to the signal is an **outside
+pre-lock ownership projection** (a public ownership projection, or the full Guru lists each week) as the "public
+odds" input: that is what would let a Benter-style blend work. By-product: A (salary-aware recalibration) removes the
++1.1 bias at no lineup cost (avg 104.88 vs 104.87, top 1% 1 -> 0); the week-9 model already lowers WR and bumped
+projections (sections 2-3), so A is not proposed as is.
+
+## 9. Cheap DSTs: under-projected, or luck? (Doug, Nov 2; nothing changed)
+
+**Live, weeks 5-8 (84 DST-weeks), as-entered projection vs actual by salary** (scratch: dst_cal.py):
+
+| salary | n | opp implied | own % | proj | actual | actual - proj (se) | pts / $1k |
+|---|---:|---:|---:|---:|---:|---|---:|
+| < $3.8k | 33 | 25.0 | 5.8 | 4.85 | 5.94 | **+1.09 (1.10)** | 1.78 |
+| $3.8-4.2k | 20 | 22.8 | 3.3 | 5.92 | 5.90 | -0.02 (1.43) | 1.48 |
+| $4.3-4.7k | 20 | 20.8 | 3.9 | 7.06 | 6.85 | -0.21 (1.22) | 1.52 |
+| $4.8k+ | 11 | 17.6 | 5.9 | 8.15 | 8.09 | -0.06 (1.75) | 1.65 |
+
+Cheap DSTs beat their projection by +1.1, within one standard error; by week -0.5 / +3.4 / +2.4 / -0.7 (adding week 4:
++0.6, se 0.9). Salary adds nothing beyond the opponent's implied total (-0.66 per $1k, se 1.47; the model uses
++0.35); the opponent term fits -0.42 (se 0.24; model -0.35).
+
+**History 2021-2025 (2,238 team-games, weeks 4-18; no FanDuel salaries, so by projection = the live opponent term
+around a level from the other seasons):** the lowest quintile (weakest matchups, the cheap end) projected 4.54 and
+scored 4.26 (-0.28, se 0.23); the top quintile +0.30. Low-projected DSTs are, if anything, slightly over-projected,
+and they have less upside (15+ points in 4.5% of games vs 16.1% for the top quintile). The opponent slope refits to
+-0.40 to -0.47 by season (live -0.35): the formula is a touch flat, which also points away from "cheap DSTs are
+under-projected".
+
+**Verdict: the field got lucky with cheap DSTs in weeks 6-7; they are not under-projected.** We had few of them in
+weeks 7-8 because of the reds, not the model: 3 of 8 cheap DSTs were red in week 7 (incl. TEN, 34% owned), 7 of 8 in
+week 8 (incl. DET, 21%). In weeks 5-6, with no DST reds, the model used a cheap DST in 36% / 32% of lineups (field
+44-48%). The reds were right on DST points (red DSTs 2.5 vs 5.6 for the rest in week 7, 6.0 vs 7.7 in week 8). The
+winners' cheap DSTs mattered for the salary they freed for RBs (learn_from_winners.md), which is the RB/flex question
+again. Possible small cleanup, not proposed: the +0.35 per $1k salary term has no support live and no history to
+test it on.
+
+## 10. Cap for week 9: swap roles (cap 45 entered, cap 25 control)? (Doug, Nov 2)
+
+Nothing technical blocks it: `--cap` works for the model, `--pool` and `--flex-shadow` runs. The week-9 setup would be
+`[optimizer] exposure_cap = 45` in `config/2026-w09/week.toml` (defaults.toml stays 25; salary-floor relief goes to
+47), control `optimize.py --week 2026-w09 --subdir model_cap25 --cap 25`, and `[grading] extra_sets =
+["model_cap25", "flex_shadow"]`. Week 4 cannot be rebuilt (its draws were never archived), so weeks 5-8 only
+(scratch: cap_compare.py; weeks 5-6 cap-45 sets are the scratch builds from learn_from_winners.md):
+
+| cap 45 minus cap 25 | wk 5 | wk 6 | wk 7 | wk 8 | mean |
+|---|---:|---:|---:|---:|---:|
+| average | +5.5 | +1.9 | -2.9 | +1.2 | **+1.4** |
+| top-10% lineups | +2 | +2 | -3 | +3 | +1.0 a week |
+| top-1% lineups | 0 | -1 | +1 | 0 | 0 |
+| best lineup | -4.0 | -6.0 | +6.4 | +0.3 | -0.8 |
+| money as-if (week-7 tiers) | +$1.01 | +$0.54 | -$1.23 | +$0.39 | +$0.18 a week |
+| bottom 10% (p10) | -0.8 | +2.0 | -4.8 | -0.3 | -1.0 |
+
+What argues against it (none decisive):
+1. **Thin evidence.** The +1.4 is mostly week 5 (+5.5); without it +0.1. Top-1% finishes are level and the best
+   lineup was worse in two of four weeks. The week-6 prep cap test (older model, model-only) had week 4 the other
+   way: 105.1 at cap 25 vs 103.1 at 40.
+2. **It doesn't fix what the study found.** Cap 45 adds more to the chalk that missed than to the chalk that hit
+   (learn_from_winners.md section 4), and leaves the RB, TE-flex and DST gaps unchanged.
+3. **More concentration, the risk 25 was set for.** 7-16 players in 30+ lineups (at cap 25 only floor relief goes
+   past 25), max 40-48; the bottom 10% of lineups was 1.0 lower; one dud costs more (Flowers 0.0 in week 8: 31 lineups
+   vs 27). Overlap between lineups +0.2 players. Duplication with the field stays negligible at both caps (0-6 of
+   150 lineups identical to another entry).
+4. **Knock-on for the shadows.** The pool (players and fillers) and the flex shadow read `exposure_cap`: at 45 they
+   are built at 45 unless run with `--cap 25`. Suggest building both at the entered cap, so each still answers "better
+   than what we entered?"; the pool review after week 9 then compares a cap-45 pool (as in week 7).
+
+In favour: both caps keep being measured, so the swap costs no information; cap 45 never stalled (25 needed 27 in
+week 7); money +$0.18 a week. **My read: fine to swap for weeks 9-10 as a measured trial, not as a finding.** A
+middle cap (e.g. 35) is untested.
