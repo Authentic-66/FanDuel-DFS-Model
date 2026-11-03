@@ -64,6 +64,9 @@ first_week_factor = 0.7        # Doug, Oct 19 (was 0.5 on Oct 18 from ~20% of sn
 [overrides]
 # Doug, Oct 23: Aaron Jones Sr. left at the model's 14.1 (Jordan Mason back); no read.
 
+[model.role_guard]
+promotion = false              # as entered: role-guard promotion became the default in week 9
+
 # Week 6 ran the depth split for WRs only (Doug, Oct 12). Kept for week 7 unless Doug says otherwise.
 [model.injury]
 bump_scale = { RB = 1.0, WR = 1.0, TE = 1.0 }   # as entered: the position-scaled injury bump became the default Nov 2 (week 9)

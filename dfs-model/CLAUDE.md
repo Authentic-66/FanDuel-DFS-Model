@@ -619,7 +619,8 @@ had 0% snaps in week 8 (Charbonnet 37%, Price 48%); Jeanty 6% of LV carries week
 RB greens shadow), then the pool build; Friday statuses.** Earlier: **State Nov 2: all week-9 tests done and decided (docs/week9_tests.md s1-10, docs/learn_from_winners.md). Nothing
 built for week 9 yet: `config/2026-w09/` and `data/2026-w09/` do not exist.**
 0. **New week.toml = copy week 8's, then DELETE the as-entered pins** (they keep weeks 4-8 reproducible and must not
-   carry over): `[model.injury] bump_scale = {1.0...}` and `[model.implied_sensitivity] one_sided = false / WR = -0.34`.
+   carry over): `[model.injury] bump_scale = {1.0...}` and `[model.implied_sensitivity] one_sided = false / WR = -0.34`. (From week 10: also delete `[model.role_guard] promotion = false`, the
+   week 4-8 pin; week 9 has none.)
    Week 9 runs the new defaults (WR one-sided -0.57, bump_scale RB 0.8 / WR 0.45 / TE 0.3). Keep the WR depth split
    (`within_position = "depth_rank"`, `depth_rank_positions = ["WR"]`) and `stack_allocation = "proportional"` unless
    Doug says otherwise. Empty: `[status]`, `[overrides]`, `[prefs] red`, `[shadow.*]`, `[stacks.weights]`,
@@ -658,6 +659,10 @@ built for week 9 yet: `config/2026-w09/` and `data/2026-w09/` do not exist.**
    2026-w05,...,2026-w09`, `docs/week9_review.md`. **Must include: Doug's RB greens vs projection and vs salary-matched
    non-green RBs** (plus the shadow-green lineup re-run), flex shadow vs entered, cap 45 vs 25, pool review, the
    carry-over calls (step 3), and winnings (ask; check the entry-history xlsx; running total -$6.53 after week 8).
+   **Also the promotion kill-rule check** (Doug, Nov 3): every player in the final proj.csv with `GuardRescue` set and
+   Proj 4+, projected vs actual FanDuel points (and the role-drop flags vs actual). Kill rule: if over weeks 9-10
+   combined they under-score their projection by 1.5+ points on average, set `promotion = false` in defaults.toml and
+   tell Doug (week 10 review decides; week 9 alone is reported, not acted on).
 
 ## FanDuel Research projections test (Doug, Nov 3) — collect weeks 9-12, test after week 12; NOTHING LIVE
 - **Every week from week 9:** Doug downloads FanDuel Research's main-slate projections CSV Friday and again Sunday
@@ -674,7 +679,12 @@ built for week 9 yet: `config/2026-w09/` and `data/2026-w09/` do not exist.**
   used to fit), projection accuracy (MAE / bias) and lineups re-built as entered, reporting average, top-10%,
   top-1% and best per week. Doug decides; nothing adopted automatically.
 
-## Role guard and injury-driven role changes (proposal Nov 3; BUILT + TESTED Nov 3, all OFF, awaiting Doug)
+## Role guard and injury-driven role changes (proposal Nov 3; BUILT + TESTED Nov 3; DECIDED Nov 3)
+**Doug, Nov 3: promotion ON from week 9** (defaults.toml `promotion = true`; weeks 4-8 week.toml pin `promotion =
+false`, checked: weeks 7-8 rebuild identical). **Snap projection NO. Role drop: flag only, no scaling.** **Kill rule:**
+each weekly review reports the players promotion lifted to 4+ (projected vs actual); if they under-score by 1.5+ points
+on average over weeks 9-10 combined, turn promotion off and tell Doug. New week.toml files must NOT copy the
+`promotion = false` pin from weeks 4-8.
 **Results: docs/role_guard_tests.md.** Switches in defaults.toml `[model.role_guard]` (promotion, snap_projection,
 role_drop_action), code in src/dfs/snaps.py + project.py, history test `src/fit_role_guard.py`. Off = projections and
 draws identical (weeks 5-9 checked). Recommendation: **1 promotion YES narrowly** (history bias -3.29 -> 0.00, RMSE

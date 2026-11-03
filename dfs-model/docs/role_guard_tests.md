@@ -87,7 +87,13 @@ Players changed a week: promotion 15 / 23 / 24 / 26; role drop scale 0 / 1 / 2 /
 - Switch 3 flag: Emanuel Wilson (SEA RB, 11.4: 40% -> 0%), Lambert-Smith (LAC WR, 3.3), Cody White (LV WR, 3.7). With
   "scale": Wilson 11.0 -> 6.8, out of the pool (SEA RB1 by projection becomes Charbonnet).
 
-## 5. Recommendation (Doug decides; nothing is on)
+## 5. Decision (Doug, Nov 3)
+
+**Promotion ON from week 9** (weeks 4-8 pinned off; weeks 7-8 checked identical). **Snap projection NO. Role drop:
+flag only, no scaling.** Kill rule: each weekly review reports the players promotion lifted to 4+ (projected vs
+actual); if they under-score by 1.5+ points on average over weeks 9-10 combined, promotion goes off and Doug is told.
+
+## 6. Recommendation as made (before the decision)
 
 | Switch | History calibration | Weeks 5-8 | Recommendation |
 |---|---|---|---|

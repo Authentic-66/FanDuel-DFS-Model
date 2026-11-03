@@ -127,9 +127,11 @@ positions = ["WR", "TE"]   # role floor positions (Doug, Oct 18: keep RBs out). 
                            # (Bam Knight 17 touches, week 6); add "RB" to apply Doug's spec to every skill position
 report_min_proj = 3.0      # warnings list guarded players who would otherwise project at least this
 # Recent-role switches (Doug, Nov 3; docs/role_guard_tests.md). Need data/cache/snap_counts_<season>.csv (fetch_stats.py).
-# All OFF: built and history-tested, Doug decides. The snap columns (LastSnap, RecentVol, ...) and the role-drop FLAG
-# are reporting only and change no projection.
-promotion = false          # switch 1: a role-floor player under min_volume is kept if RoleVol + GainedVol (volume from
+# Doug, Nov 3: promotion ON from week 9 (weeks 4-8 pin it off); snap_projection NO; role drop = flag only, no scaling.
+# Kill rule: each weekly review reports the players promotion lifted to 4+ (projected vs actual); if they under-score
+# by 1.5+ points on average over weeks 9-10 combined, turn promotion off and tell Doug. The snap columns (LastSnap,
+# RecentVol, ...) and the role-drop FLAG are reporting only and change no projection.
+promotion = true           # switch 1: a role-floor player under min_volume is kept if RoleVol + GainedVol (volume from
                            # teammates ruled OUT) >= min_volume, or his targets + carries per team game over the last
                            # promotion_games games >= min_volume, or he played promotion_snap_share+ of snaps last game
 promotion_games = 2

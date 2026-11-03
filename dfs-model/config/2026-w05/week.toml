@@ -179,6 +179,7 @@ questionable_inactive_prob = 0.25 # as entered (0.45 from week 8)
 
 [model.role_guard]
 enabled = false                # as entered: the role guard became the default in week 7
+promotion = false              # as entered: role-guard promotion became the default in week 9
 
 [model.implied_sensitivity]
 enabled = false                # as entered: the WR implied-total correction became the default in week 7
