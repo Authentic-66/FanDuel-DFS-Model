@@ -131,8 +131,11 @@ ranked = true
 # Shadow sets graded beside the entered model (Doug, Nov 2): control at cap 45 and the flex shadow (weeks 9-10).
 #   python src/optimize.py --week 2026-w09 --subdir model_cap45 --cap 45
 #   python src/optimize.py --week 2026-w09 --flex-shadow
+# Cash-style shadows (Doug, Nov 3), built at the final run, graded with exact money from data/2026-w09/prizes_pooch-punt.csv:
+#   python src/optimize.py --week 2026-w09 --no-draw
+#   python src/optimize.py --week 2026-w09 --median70
 [grading]
-extra_sets = ["model_cap45", "flex_shadow"]
+extra_sets = ["model_cap45", "flex_shadow", "nodraw", "median70"]
 
 [contest]
 

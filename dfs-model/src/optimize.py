@@ -5,10 +5,15 @@
 --subdir model_cap45 --cap 45).
 --flex-shadow: the weeks 9-10 shadow build (Doug, Nov 2): [optimizer] rb_stack_pieces = true and flex_te_top_salary = 5
 for this run only, written to weeks/<week>/flex_shadow/ unless --subdir is given (docs/week9_tests.md section 6).
+--no-draw / --median70: the weeks 9-10 cash-style shadow sets (Doug, Nov 3; docs/late_news_and_cash_builds.md in the
+NBA repo): --no-draw = objective is the projection only (mean_weight 1), same caps -> nodraw/; --median70 = objective
+is each player's median sim score, mean_weight 1, exposure cap 105 (70% of 150), max overlap 7 -> median70/.
+Built at the final run, not entered, graded beside the entered set ([grading] extra_sets).
 --pool builds Doug's pool lineups from [pool] in week.toml instead (docs/pool_mode.md) and writes them to
 weeks/<week>/pool/ (or pool/<subdir>/), plus pool.csv: every listed player, his rank, status and lineups."""
 import os
 
+import numpy as np
 import pandas as pd
 
 from dfs import config, optimize as opt, ownership, pool, project
@@ -17,7 +22,21 @@ week, cfg, args = config.cli(__doc__, [(('--subdir',), dict(default='', help='wr
                                        (('--pool',), dict(action='store_true', help="Doug's pool lineups -> weeks/<week>/pool/")),
                                        (('--cap',), dict(type=int, default=0, help='exposure cap for this run (default: config)')),
                                        (('--flex-shadow',), dict(action='store_true',
-                                                                 help='RB stack pieces + TE flex top-5 by salary -> flex_shadow/'))])
+                                                                 help='RB stack pieces + TE flex top-5 by salary -> flex_shadow/')),
+                                       (('--no-draw',), dict(action='store_true',
+                                                             help='shadow: projection-only objective -> nodraw/')),
+                                       (('--median70',), dict(action='store_true',
+                                                              help='shadow: median objective, cap 105, overlap 7 -> median70/'))])
+if (args.no_draw or args.median70) and (args.pool or args.flex_shadow or (args.no_draw and args.median70)):
+    raise SystemExit('--no-draw / --median70: one at a time, model build only')
+if args.no_draw:
+    cfg['optimizer'].update(mean_weight=1.0)
+    args.subdir = args.subdir or 'nodraw'
+    print('no-draw shadow: objective = projection only (mean_weight 1); ->', args.subdir)
+if args.median70:
+    cfg['optimizer'].update(mean_weight=1.0, exposure_cap=105, max_overlap=7)
+    args.subdir = args.subdir or 'median70'
+    print('median-70 shadow: objective = median sim score, cap 105, overlap 7; ->', args.subdir)
 if args.flex_shadow:
     if args.pool:
         raise SystemExit('--flex-shadow is for the model build, not --pool')
@@ -47,6 +66,8 @@ if args.pool:
     print(tab.to_string(index=False))
 else:
     df = opt.eligible_pool(proj, cfg['prefs'], o)
+    if args.median70:
+        df = df.assign(Proj=np.median(sims, axis=1)[df.row.values])   # pool chosen on projections, built on medians
     lineups, use = opt.build_lineups(df, sims, cfg)
     upload, readable, exposure = opt.outputs(df, sims, lineups, use, cfg)
 opt.write_upload(out('upload.csv'), upload, cfg['roster']['slots'])

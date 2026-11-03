@@ -204,10 +204,49 @@ def outputs(df, sims, lineups, use, cfg, tab):
 
 # --- grading (analyze_results.py) -------------------------------------------------------------------------------------
 
-def grade(lineup_sets, actuals, entered_ids, top=None, qs=None, field_size=0):
+def load_prizes(path):
+    """prizes_<contest>.csv (rank_from,rank_to,prize; Doug's Prizes-tab screenshot) -> prize by rank (index k-1)."""
+    t = pd.read_csv(path).sort_values('rank_from')
+    out = np.zeros(int(t.rank_to.max()))
+    for r in t.itertuples():
+        out[int(r.rank_from) - 1:int(r.rank_to)] = r.prize
+    return out
+
+
+def field_points(raw_dir):
+    """Every entry's points from the contest's All Entries export (largest non-Hail-Mary csv), best first."""
+    import glob
+    import os
+    files = [f for f in glob.glob(os.path.join(raw_dir, '*.csv')) if 'hail_mary' not in os.path.basename(f).lower()]
+    if not files:
+        return None
+    e = pd.read_csv(max(files, key=os.path.getsize), usecols=['EntryId', 'Points'], low_memory=False)
+    return np.sort(e.dropna(subset=['EntryId']).Points.fillna(0).values)[::-1]
+
+
+def money(pts, field, prizes, fee=0.05):
+    """Each lineup ranked alone against the field (exact), as if entered: cashed, won, cost, net. Ties share the
+    tied places' prizes (FanDuel's rule)."""
+    neg = -field
+    won, cashed = [], 0
+    for s in pts:
+        above = int(np.searchsorted(neg, -s - 1e-6, side='left'))
+        tied = int(np.searchsorted(neg, -s + 1e-6, side='right')) - above + 1
+        places = np.arange(above, above + tied)
+        paid = places[places < len(prizes)]
+        won.append(float(prizes[paid].sum() / tied) if len(paid) else 0.0)
+        cashed += above < len(prizes)
+    won = float(np.sum(won))
+    cost = round(fee * len(pts), 2)
+    return dict(cashed=cashed, cash_rate=round(cashed / max(len(pts), 1), 3), won=round(won, 2), cost=cost,
+                net=round(won - cost, 2))
+
+
+def grade(lineup_sets, actuals, entered_ids, top=None, qs=None, field_size=0, field=None, prizes=None):
     """Score lineup sets on actual points. lineup_sets: {label: list of Id lists}. Returns one row per set: lineups,
     avg, top_10pct, top_1pct, best, best_rank (ranks when field data is given) and entered = how many of the set's
-    lineups match an entered lineup (same 9 Ids)."""
+    lineups match an entered lineup (same 9 Ids). field (every entry's points) + prizes (load_prizes): adds cashed,
+    cash_rate, won, cost, net per set as if entered (Doug, Nov 3)."""
     from .backtest import est_rank
     act = actuals.set_index('Id').FPTS
     ent = {frozenset(ids) for ids in entered_ids}
@@ -220,5 +259,7 @@ def grade(lineup_sets, actuals, entered_ids, top=None, qs=None, field_size=0):
             rk = np.array([est_rank(x, top, qs, field_size) for x in pts])
             r.update(top_10pct=int((rk <= 0.10 * field_size).sum()), top_1pct=int((rk <= 0.01 * field_size).sum()),
                      best_rank=int(rk.min()))
+        if field is not None and prizes is not None:
+            r.update(money(pts, field, prizes))
         rows.append(r)
     return pd.DataFrame(rows)

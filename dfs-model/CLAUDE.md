@@ -630,7 +630,7 @@ built for week 9 yet: `config/2026-w09/` and `data/2026-w09/` do not exist.**
    (`within_position = "depth_rank"`, `depth_rank_positions = ["WR"]`) and `stack_allocation = "proportional"` unless
    Doug says otherwise. Empty: `[status]`, `[overrides]`, `[prefs] red`, `[shadow.*]`, `[stacks.weights]`,
    `[stacks] extra_receivers` (Doug adds per week), `[contest]` field_size. Pool: kept for week 9 (Doug, Oct 26), the
-   lists come from his week-9 sheet; pool review after week 9. `[grading] extra_sets = ["model_cap45", "flex_shadow"]`.
+   lists come from his week-9 sheet; pool review after week 9. `[grading] extra_sets = ["model_cap45", "flex_shadow", "nodraw", "median70"]`.
    Check the slate (byes / Thursday / SNF / MNF teams) against nflverse schedule_2026.csv.
 1. FanDuel player list -> `data/2026-w09/fd_players.csv`; re-download Friday and Sunday, keep the earlier file and run
    `python src/diff_players.py <earlier> <new>`; report added / removed / tag changes before re-running model.py.
@@ -657,10 +657,14 @@ built for week 9 yet: `config/2026-w09/` and `data/2026-w09/` do not exist.**
 5. Friday statuses; Sunday: FINAL lines + weights, inactives (active Q off the Q list, inactive -> out; Doug's Sunday
    rule in the week-8 checklist), rerun `model.py`, then the sets: final `optimize.py --week 2026-w09` (cap 25,
    entered), control `--subdir model_cap45 --cap 45`, `optimize.py --week 2026-w09 --pool`, and the flex shadow
-   `optimize.py --week 2026-w09 --flex-shadow` (cap 25, not entered). 149 files if Doug has a free entry (ask). If a
+   `optimize.py --week 2026-w09 --flex-shadow` (cap 25, not entered), and the **cash-style shadows (Doug, Nov 3;
+   weeks 9-10, not entered)** `optimize.py --week 2026-w09 --no-draw` (projection-only objective, cap 25 -> nodraw/)
+   and `--median70` (median objective, cap 105, overlap 7 -> median70/). 149 files if Doug has a free entry (ask). If a
    set stalls at cap 25, stop and ask Doug (no cap raise without him).
 6. After the slate: `convert_results.py <export> --user gst1999`, `[contest] field_size`, `analyze_results.py` (grades
-   model / control / pool / flex_shadow), `learn_from_winners.py --week 2026-w09` and `--compare
+   model / control / pool / flex_shadow / nodraw / median70; with `data/2026-w09/prizes_pooch-punt.csv` (Doug's
+   Prizes-tab screenshot, transcribed Nov 3: $35,000, pays ranks 1-265,100) and the All Entries export in raw/, every
+   set gets exact cashed / won / net as if entered), `learn_from_winners.py --week 2026-w09` and `--compare
    2026-w05,...,2026-w09`, `docs/week9_review.md`. **Must include: Doug's RB greens vs projection and vs salary-matched
    non-green RBs** (plus the shadow-green lineup re-run), flex shadow vs entered, cap 45 vs 25, pool review, the
    carry-over calls (step 3), and winnings (ask; check the entry-history xlsx; running total -$6.53 after week 8).

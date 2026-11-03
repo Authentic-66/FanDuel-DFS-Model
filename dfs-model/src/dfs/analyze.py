@@ -180,6 +180,10 @@ def pool_report(week, cfg, folder='pool'):
     sets['entered'] = ent
     n_field = cfg['contest'].get('field_size', 0)
     top_path, q_path = os.path.join(week.data, 'results_top2000.csv'), os.path.join(week.data, 'results_field_quantiles.csv')
+    # money as if entered (Doug, Nov 3): needs the contest's prize table and the full All Entries export
+    prize_path = os.path.join(week.data, 'prizes_pooch-punt.csv')
+    field = pool.field_points(os.path.join(week.data, 'raw')) if os.path.exists(prize_path) else None
+    prizes = pool.load_prizes(prize_path) if field is not None else None
     if n_field and os.path.exists(top_path) and os.path.exists(q_path):
-        return pool.grade(sets, act, ent, pd.read_csv(top_path), pd.read_csv(q_path), n_field)
-    return pool.grade(sets, act, ent)
+        return pool.grade(sets, act, ent, pd.read_csv(top_path), pd.read_csv(q_path), n_field, field, prizes)
+    return pool.grade(sets, act, ent, field=field, prizes=prizes)
