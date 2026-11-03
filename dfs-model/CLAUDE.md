@@ -620,7 +620,7 @@ counts unchanged. Rules checked, uploads deleted. Review sheet rebuilt (237 rows
 (E. Wilson, Lambert-Smith; Cody White is still guarded so not listed) and **Promoted** columns.
 
 ## Week 9 run checklist (2026-w09) — START HERE when FanDuel releases the week-9 player list
-**State Nov 3: steps 0-2 DONE (see "Week 9 preliminary run"). Next = Doug's sheet (step 4: colours, Pool / Rank,
+**State Nov 3 evening: steps 0-2 DONE, prelim REBUILT with role-guard promotion ON (see "Week 9 preliminary run" and "Role guard and injury-driven role changes"); review sheet rebuilt with RoleDrop + Promoted columns, unmarked. Friday order: Stafford status FIRST (LAR stacks), ARI QB (Brissett unless Doug says Minshew), SF Kirk / Cooks (guarded unless Doug overrides), statuses + player-list diff, save fdr_projections_fri.csv. Next = Doug's sheet (step 4: colours, Pool / Rank,
 RB greens shadow), then the pool build; Friday statuses.** Earlier: **State Nov 2: all week-9 tests done and decided (docs/week9_tests.md s1-10, docs/learn_from_winners.md). Nothing
 built for week 9 yet: `config/2026-w09/` and `data/2026-w09/` do not exist.**
 0. **New week.toml = copy week 8's, then DELETE the as-entered pins** (they keep weeks 4-8 reproducible and must not
