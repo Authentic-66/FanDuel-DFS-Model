@@ -71,7 +71,10 @@ def passes_role_guard(proj, rg):
         raise ValueError('pool mode: proj.csv has no RoleVol / NoData columns (written by model.py since week 7): re-run model.py')
     low = proj.Pos.isin(rg.get('positions', ['WR', 'TE'])) & (proj.RoleVol.fillna(0) < rg.get('min_volume', 3.0))
     guarded = proj['RoleGuard'].fillna('').astype(str).ne('') if 'RoleGuard' in proj else False
-    return (proj.Pos == 'D') | (~proj.NoData.astype(bool) & ~low & ~guarded)
+    # kept by a recent-role switch (GuardRescue is filled whether or not the switch is on; count it only when on)
+    on = rg.get('enabled') and (rg.get('promotion') or rg.get('snap_projection'))
+    kept = proj['GuardRescue'].fillna('').astype(str).ne('') if on and 'GuardRescue' in proj else False
+    return (proj.Pos == 'D') | ((~proj.NoData.astype(bool) & ~low | kept) & ~guarded)
 
 
 def frame(proj, cfg, slate_names=None):

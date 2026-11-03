@@ -1,8 +1,10 @@
 """Build the week's projections and correlated sims: slate + lines + stats -> proj DataFrame, sims array (rows aligned)."""
+import os
+
 import numpy as np
 import pandas as pd
 
-from . import data, opponent, sim, usage
+from . import data, opponent, sim, snaps, usage
 
 
 def load_usage(week, cfg):
@@ -104,7 +106,14 @@ def build(week, cfg, agg=None, st=None):
     if q_gain:      # report only: raw points each player gains from questionable teammates sitting (before calibration)
         proj['QBump'] = np.round([q_bump.get(i, 0.0) for i in range(len(proj))], 1)
     sims = np.array(sims)
-    proj['RoleGuard'] = role_guard(proj, sims, m.get('role_guard', {}), cfg.get('overrides', {}))
+    rg = m.get('role_guard', {})
+    feats = snap_features(week, cfg, st, rg)
+    if feats is not None:       # recent-role columns (reporting; used only by switches that are on)
+        for c in snaps.FEATURES:
+            proj[c] = proj.Key.map(feats[c]).where(proj.Team.values == proj.Key.map(feats.team).values)
+        proj['GuardRescue'] = guard_rescue(proj, rg)[0]
+        proj['RoleDrop'] = role_drop(proj, rg, sims)
+    proj['RoleGuard'] = role_guard(proj, sims, rg, cfg.get('overrides', {}))
     sims = adjust(proj, sims, lines, m)
     opp = m.get('opponent', {})
     if opp.get('enabled'):      # last: a multiplier on the finished draws, so the calibration and spread fits still hold
@@ -147,6 +156,90 @@ def role_volume(st):
     return ((agg.tgt + agg.car) / agg.g).to_dict()
 
 
+SNAP_SWITCHES = ('promotion', 'snap_projection')
+
+
+def snap_features(week, cfg, st, rg):
+    """dfs.snaps.features for the slate (snap counts before this week + the prior season), or None when the guard is
+    off. Missing snap file: an error if a switch needs it, else a note (the role-drop flag is skipped)."""
+    if not rg.get('enabled'):
+        return None
+    file = snaps.path(week.cache, week.season)
+    if not os.path.exists(file):
+        on = [s for s in SNAP_SWITCHES if rg.get(s)] + (['role_drop_action'] if rg.get('role_drop_action', 'flag') != 'flag' else [])
+        if on:
+            raise FileNotFoundError(f'[model.role_guard] {", ".join(on)} needs {file}: run fetch_stats.py')
+        print(f'note: no snap counts ({file}); role-drop flag skipped (run fetch_stats.py)')
+        return None
+    sn = snaps.load(file, cfg, before_week=week.number)
+    pf = snaps.path(week.cache, week.season - 1)
+    prior = snaps.load(pf, cfg) if os.path.exists(pf) else None
+    return snaps.features(sn, st, prior, games=rg.get('promotion_games', 2))
+
+
+def guard_rescue(proj, rg):
+    """Players the role guard would zero but the recent-role switches keep (docs/role_guard_tests.md). Returns
+    (label per row, '' = not rescued; draw multiplier per row). Needs the snaps.FEATURES columns.
+      promotion (switch 1): a role-floor player under min_volume passes if RoleVol + GainedVol (volume inherited from
+          OUT teammates this week) >= min_volume, or RecentVol (team's last promotion_games games) >= min_volume, or
+          LastSnap >= promotion_snap_share.
+      snap_projection (switch 2): a no-data player (active, no stat row this season) with LastSnap >= snap_min_share
+          keeps his fallback draws scaled by LastSnap / PriorSnap (capped at 1; 1 without a prior-season share)."""
+    n = len(proj)
+    label, mult = np.full(n, '', dtype=object), np.ones(n)
+    if 'LastSnap' not in proj or not rg.get('enabled'):
+        return label, mult
+    mv = rg.get('min_volume', 3.0)
+    last = proj.LastSnap.fillna(0).values
+    nodata = proj.NoData.astype(bool).values
+    if rg.get('promotion'):
+        low = (proj.Pos.isin(rg.get('positions', ['WR', 'TE'])).values & ~nodata
+               & (proj.RoleVol.fillna(0).values < mv))
+        inherit = proj.RoleVol.fillna(0).values + proj.GainedVol.fillna(0).values >= mv
+        recent = proj.RecentVol.fillna(0).values >= mv
+        snapped = last >= rg.get('promotion_snap_share', 0.5)
+        for i in np.flatnonzero(low & (inherit | recent | snapped)):
+            why = [w for w, h in (('inherits', inherit[i]), (f'last {rg.get("promotion_games", 2)} games', recent[i]),
+                                  (f'snaps {last[i]:.0%}', snapped[i])) if h]
+            label[i] = 'promoted: ' + ', '.join(why)
+    if rg.get('snap_projection'):
+        prior = proj.PriorSnap.values.astype(float)
+        for i in np.flatnonzero(nodata & (last >= rg.get('snap_min_share', 0.5))):
+            mult[i] = min(1.0, last[i] / prior[i]) if prior[i] > 0 else 1.0
+            label[i] = f'snaps {last[i]:.0%}, fallback x{mult[i]:.2f}'
+    return label, mult
+
+
+def role_drop(proj, rg, sims=None):
+    """Switch 3: flag players active in their team's last game with under role_drop_max of the snaps after averaging
+    role_drop_min_avg+ in their earlier games, not tagged Q / O (Emanuel Wilson, SEA week 8: 0% after 32-48%).
+    Returns the flag per row ('' = none) and prints the list. role_drop_action = "flag" (default) changes nothing;
+    "scale" multiplies the flagged players' draws (sims, in place) by Recent2Snap / AvgSnap (capped at 1)."""
+    out = np.full(len(proj), '', dtype=object)
+    if 'LastSnap' not in proj or not rg.get('enabled'):
+        return out
+    hit = (proj.Pos.isin(['RB', 'WR', 'TE']).values & proj.ActiveLast.fillna(False).astype(bool).values
+           & (proj.LastSnap.fillna(1).values < rg.get('role_drop_max', 0.10))
+           & (proj.AvgSnap.fillna(0).values >= rg.get('role_drop_min_avg', 0.30))
+           & ~proj.Inj.isin(['Q', 'O']).values)
+    action = rg.get('role_drop_action', 'flag')
+    if action not in ('flag', 'scale'):
+        raise ValueError(f'[model.role_guard] role_drop_action must be "flag" or "scale", not {action!r}')
+    for i in np.flatnonzero(hit):
+        f = min(1.0, proj.Recent2Snap.iat[i] / proj.AvgSnap.iat[i])
+        out[i] = f'snaps {proj.AvgSnap.iat[i]:.0%} -> {proj.LastSnap.iat[i]:.0%} last game'
+        if action == 'scale' and sims is not None:
+            sims[i] *= f
+            out[i] += f' (draws x{f:.2f})'
+    pre = sims.mean(axis=1) if sims is not None else np.zeros(len(proj))
+    shown = [f'{proj.Name.iat[i]} ({proj.Team.iat[i]} {proj.Pos.iat[i]}, {pre[i]:.1f}: {out[i]})'
+             for i in np.flatnonzero(hit) if pre[i] >= rg.get('report_min_proj', 3.0)]
+    if shown:
+        print(f'WARNING: role drop (last game under {rg.get("role_drop_max", 0.10):.0%} of snaps after '
+              f'{rg.get("role_drop_min_avg", 0.30):.0%}+; red or read them): ' + ', '.join(shown))
+    return out
+
+
 def role_guard(proj, sims, rg, overrides):
     """[model.role_guard]: zero the draws (in place) of skill players with no current-season stats (projected from
     FanDuel FPPG alone) and of RB / WR / TE averaging under min_volume targets + carries a game in their current-season
@@ -159,6 +252,14 @@ def role_guard(proj, sims, rg, overrides):
     nodata = proj.NoData.values & ~exempt
     low = ((proj.Pos.isin(rg.get('positions', ['RB', 'WR', 'TE']))).values & ~proj.NoData.values & ~exempt
            & (proj.RoleVol.fillna(0).values < rg.get('min_volume', 3.0)))
+    rescued, mult = guard_rescue(proj, rg)          # switches 1-2 (off by default): recent role keeps the player
+    kept = (rescued != '') & (nodata | low)
+    if kept.any():
+        sims[kept] *= mult[kept][:, None]
+        nodata, low = nodata & ~kept, low & ~kept
+        print('role guard: kept by recent role: ' + ', '.join(
+            f'{proj.Name.iat[i]} ({proj.Team.iat[i]} {proj.Pos.iat[i]}, {sims[i].mean():.1f}: {rescued[i]})'
+            for i in np.flatnonzero(kept)))
     why[nodata], why[low] = 'no 2026 data', f"role < {rg.get('min_volume', 3.0):g}"
     pre = sims.mean(axis=1)
     shown = lambda m: ', '.join(f'{proj.Name[i]} ({proj.Team[i]} {proj.Pos[i]}, {pre[i]:.1f})' for i in np.flatnonzero(m)

@@ -309,7 +309,9 @@ Review sheet recipe (builder is a scratch script, not in the repo): rows = every
 `RoleGuard`, sorted by position then Proj; columns Player, Team, Opp, Pos, Salary, Proj, Value_per_1k, Implied_total,
 Routing_bump, Role_vol, Own_proj_%, Lineups (from the prelim/review exposure.csv), Status, In_model_pool (Y or the
 reason: red, questionable, not the starting QB, depth, projects < 4), Color (reds pre-filled), Pool, Rank; tabs
-held_out_Q and notes. Check: Lineups sums to 1,350.
+held_out_Q and notes. Check: Lineups sums to 1,350. **From week 9 also:** `RB_trend` (RBs: team's last 3 games, snap % /
+carry share / target share, UP / DOWN; from `data/cache/snap_counts_<season>.csv`) and `RoleDrop` (proj.csv column
+from model.py: the switch-3 flag, e.g. "snaps 40% -> 0% last game"; docs/role_guard_tests.md).
 Reading it back (Oct 22 lesson): count Pool = Y per position after stripping blanks (cleared Excel cells come back as
 " "), compare to the sizes, and before loading list every mismatch (count, unmarked ranks, marked-but-unranked) for
 Doug; he prefers to fix the sheet himself so the file matches what was used. Keep the sheet's notes and his run
@@ -672,7 +674,14 @@ built for week 9 yet: `config/2026-w09/` and `data/2026-w09/` do not exist.**
   used to fit), projection accuracy (MAE / bias) and lineups re-built as entered, reporting average, top-10%,
   top-1% and best per week. Doug decides; nothing adopted automatically.
 
-## Role guard and injury-driven role changes (proposal Nov 3, awaiting Doug; nothing changed)
+## Role guard and injury-driven role changes (proposal Nov 3; BUILT + TESTED Nov 3, all OFF, awaiting Doug)
+**Results: docs/role_guard_tests.md.** Switches in defaults.toml `[model.role_guard]` (promotion, snap_projection,
+role_drop_action), code in src/dfs/snaps.py + project.py, history test `src/fit_role_guard.py`. Off = projections and
+draws identical (weeks 5-9 checked). Recommendation: **1 promotion YES narrowly** (history bias -3.29 -> 0.00, RMSE
+5.29 -> 3.99; weeks 5-8 avg -0.29, top-10% 34 vs 35, top-1% 1 vs 0, money +$0.75; live 4+ promoted 5.09 vs 3.01, n 31:
+watch); **2 snap projection NO** (fires twice in 3 seasons); **3 role-drop scale NO, flag kept** (history better, n 44,
+but live Skattebo / Hockenson wrong; the flag prints in model.py and fills proj.csv RoleDrop: reporting only, live).
+If Doug turns promotion on: pin `promotion = false` in weeks 4-8 week.toml, re-run model.py + sets.
 Why the guard misses promotions: it tests `RoleVol` = the player's own 2026 targets + carries per game over ALL his
 2026 games, before routing; volume inherited from OUT teammates (`GainedVol`) never counts, and a player active with
 no stat row (Kirk: SF week 7, 30% snaps, 0 targets) is "no 2026 data". SF scenario (Evans + Deebo OUT, in-process):

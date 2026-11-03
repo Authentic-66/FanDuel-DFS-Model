@@ -31,6 +31,9 @@ years = seasons(a.seasons) if a.seasons else [week.season, week.season - 1]
 for yr in years:
     urllib.request.urlretrieve(f'{RELEASE}/stats_player/stats_player_week_{yr}.csv', week.stats(yr))
     print('saved', week.stats(yr))
+    snap_file = os.path.join(week.cache, f'snap_counts_{yr}.csv')     # role guard switches (dfs/snaps.py)
+    urllib.request.urlretrieve(f'{RELEASE}/snap_counts/snap_counts_{yr}.csv', snap_file)
+    print('saved', snap_file)
 if a.history:
     for yr in years:
         path = os.path.join(week.cache, f'stats_team_week_{yr}.csv')

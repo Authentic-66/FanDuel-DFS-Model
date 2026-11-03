@@ -126,6 +126,19 @@ min_volume = 3.0
 positions = ["WR", "TE"]   # role floor positions (Doug, Oct 18: keep RBs out). RB left out: RB backups who inherit the job get real work
                            # (Bam Knight 17 touches, week 6); add "RB" to apply Doug's spec to every skill position
 report_min_proj = 3.0      # warnings list guarded players who would otherwise project at least this
+# Recent-role switches (Doug, Nov 3; docs/role_guard_tests.md). Need data/cache/snap_counts_<season>.csv (fetch_stats.py).
+# All OFF: built and history-tested, Doug decides. The snap columns (LastSnap, RecentVol, ...) and the role-drop FLAG
+# are reporting only and change no projection.
+promotion = false          # switch 1: a role-floor player under min_volume is kept if RoleVol + GainedVol (volume from
+                           # teammates ruled OUT) >= min_volume, or his targets + carries per team game over the last
+                           # promotion_games games >= min_volume, or he played promotion_snap_share+ of snaps last game
+promotion_games = 2
+promotion_snap_share = 0.5
+snap_projection = false    # switch 2: a no-data player (active, no stat row this season) with snap_min_share+ of snaps
+snap_min_share = 0.5       # last game keeps his fallback projection x (last-game share / prior-season share, max 1)
+role_drop_action = "flag"  # switch 3: players active last game under role_drop_max of snaps after role_drop_min_avg+
+role_drop_max = 0.10       # are flagged (warning + RoleDrop column; Doug reds or reads them). "scale" also multiplies
+role_drop_min_avg = 0.30   # their draws by (mean snap share, team's last 2 games) / (earlier average), max 1
 
 [model.injury]
 redistribute_share = 0.8           # share of newly-OUT players' targets/carries given to active teammates, pro rata
