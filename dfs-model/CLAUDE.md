@@ -641,6 +641,11 @@ built for week 9 yet: `config/2026-w09/` and `data/2026-w09/` do not exist.**
    Friday and Sunday morning as `data/2026-w09/fdr_projections_fri.csv` / `fdr_projections_sun.csv`. Check the
    names match `fd_players.csv` (list any that don't) and commit them with the week's files. Not used by the model.
    See "FanDuel Research projections test".
+4c. **Doug's prelim notes (Nov 3), for Friday:** (1) **Stafford's Friday status FIRST THING** (LAR's starter; Q = 0
+   LAR stacks, weight 21). (2) ARI QB: keep Brissett (default) unless Doug says ARI named Minshew; then
+   `[status.starting_qb] ARI = "Gardner Minshew"` (check the FanDuel name). (3) SF: if Evans and Deebo are both out,
+   the guard keeps Kirk / Cooks at 0 (unguarded they project 6.4 / 3.8; see "Role guard and injury-driven role
+   changes"); no change unless Doug gives an [overrides] read.
 5. Friday statuses; Sunday: FINAL lines + weights, inactives (active Q off the Q list, inactive -> out; Doug's Sunday
    rule in the week-8 checklist), rerun `model.py`, then the sets: final `optimize.py --week 2026-w09` (cap 25,
    entered), control `--subdir model_cap45 --cap 45`, `optimize.py --week 2026-w09 --pool`, and the flex shadow
@@ -666,6 +671,26 @@ built for week 9 yet: `config/2026-w09/` and `data/2026-w09/` do not exist.**
 - **Only if it does: test a blend** (as section 8.3): nested leave-one-week-out blend weight (held-out week never
   used to fit), projection accuracy (MAE / bias) and lineups re-built as entered, reporting average, top-10%,
   top-1% and best per week. Doug decides; nothing adopted automatically.
+
+## Role guard and injury-driven role changes (proposal Nov 3, awaiting Doug; nothing changed)
+Why the guard misses promotions: it tests `RoleVol` = the player's own 2026 targets + carries per game over ALL his
+2026 games, before routing; volume inherited from OUT teammates (`GainedVol`) never counts, and a player active with
+no stat row (Kirk: SF week 7, 30% snaps, 0 targets) is "no 2026 data". SF scenario (Evans + Deebo OUT, in-process):
+guard on Kirk 0 / Cooks 0; guard off **Kirk 6.4** (FanDuel FPPG fallback = his 2025 HOU role) / **Cooks 3.8** (still
+below min_proj 4). Routing adds little (Cooks +0.7, Watkins +0.4) because both have been absent since weeks 6 / 5,
+so SF's current usage already reflects it. Week 7, the one game without both: targets Kittle 10, McCaffrey 7, Watkins
+6 (76% snaps), Cowing 5, Cooks 3 (68% snaps), Black 3, Kirk 0 (30%). So the model's Watkins-as-WR2 matches the evidence;
+Cooks' snaps rose 12 -> 40 -> 52 -> 68% weeks 4-7 without the targets following.
+Proposed (each a switch, OFF, history-tested weeks 4-8 + 2023-25 with nflverse snap counts before Doug decides):
+1. **Promotion path:** the guard passes a player if RoleVol + GainedVol >= 3 (inherits a starter ruled out this week),
+   OR his targets + carries per game over the team's last 2 games >= 3 (role already grown), OR he played 50%+ of
+   snaps in the team's last game. Cooks would pass on snaps (68%), projecting 3.8.
+2. **Active-but-no-stats players** (snap row, no stat row, like Kirk): project from recent snaps / role, not the
+   FanDuel FPPG fallback; stay 0 below 50% snaps.
+3. **Reverse case, role drop (Emanuel Wilson: SEA RB1 by projection 11.0, 0% snaps week 8 while Charbonnet 37% and
+   Price 48% appeared):** flag, don't zero: a player active last game with under 10% snaps after averaging 30%+, and
+   not on the injury list, goes in the prelim warnings and the review sheet (Doug reds or reads him). A
+   recency-weighted volume option tested on history alongside.
 
 ## Week-8 backlog
 - **Per-position redistribution mode**: RB out = routing by position; WR out = depth split; TE out = old 80% rule or none.
