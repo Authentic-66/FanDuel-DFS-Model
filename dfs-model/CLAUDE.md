@@ -634,6 +634,20 @@ on the Friday non-practisers (A.J. Brown, Henderson, Spears, Tate, ...). Re-chec
   (-> weeks/<week>/flex_shadow/; RB stack pieces + TE flex top-5 by salary) and put "flex_shadow" in the week's
   `[grading] extra_sets` so Monday grades it. Not entered. Same for week 10.
 
+## Learn from winners (Nov 2) — see docs/learn_from_winners.md; WEEKLY REVIEW STEP from week 9
+Doug: add to every weekly review. After `convert_results.py`: `python src/learn_from_winners.py --week <week>`
+(reads the full export in `data/<week>/raw/`, `--export` if there are several csvs; writes `weeks/<week>/winners.csv`
+and `winners_top_owned.csv`; model set + every `[grading] extra_sets` set in the most-owned exposure table), then
+`--compare 2026-w05,...,<week>` (differences vs the field top 10% in all weeks / all but one / fewer) and report both,
+plus below-median share and the cap check (model vs control on the 10 most-owned; hit = top 10% at 1.2x field).
+Weeks 5-8 result (nothing changed): every week we had -0.5 RB a lineup, FLEX RB 27% vs top 10% 75% (field 64%), TE
+salary +$2,300, DST +$500 (cheap DST 19% vs 55%), avg player ownership 11.2% vs 17.6% (field 16.8%). Winner traits =
+RB in FLEX and cheap DST (top 10% beyond the field the same way); QB+2 / bring-back is our rule, not a winner trait
+(top 10% = field; top 1% leans our way). Below the median 80 / 61 / 48 / 72% of our lineups (avg -23.4 / -6.3 / 0.0 /
+-12.2). Cap: binds (28 of 40 most-owned at the cap), but cap 45 adds more to the chalk that missed (+4.0) than to the
+hits (+2.2); lineups +1.4 avg, top-1% 1 vs 1; it changes ownership ~1/5 of the gap and none of the RB / TE / DST gap.
+Weeks 5-6 controls were scratch builds at cap 45 (not in weeks/).
+
 ## History refits (Oct 12) — see docs/phase2_history.md
 `fetch_stats.py --seasons 2020-2025 --history` puts player stats, team stats and schedules with Vegas lines in
 `data/cache` (untracked); `fit_history.py` refits DST, injury share, spread and calibration on 2021-2025, leave-one-season-out,
