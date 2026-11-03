@@ -642,6 +642,13 @@ on the Friday non-practisers (A.J. Brown, Henderson, Spears, Tate, ...). Re-chec
   cap 45 - 25 avg +5.5 / +1.9 / -2.9 / +1.2, top-1% level, best worse 2 of 4, p10 -1.0, money +$0.18/week; nothing
   blocks it; if adopted: week.toml `exposure_cap = 45`, control `--subdir model_cap25 --cap 25`, extra_sets
   ["model_cap25", "flex_shadow"], pool and flex shadow at the entered cap (or `--cap 25`). Week 4 has no sims.npy.
+- **Doug's decisions on tests 8-10 (Nov 2):** 8 no blend; ownership signal PARKED unless Doug finds a free pre-lock
+  ownership source (then shadow-test it 2 weeks). 9 DST reds stay as is. 10 **no swap: cap 25 entered, cap 45
+  control** (`--subdir model_cap45 --cap 45`, `[grading] extra_sets = ["model_cap45", "flex_shadow"]`), keep measuring both.
+- **Week 9 reads:** Doug marks greens on RBs with clear role increases (shadow-only, `[shadow.green]`, as usual).
+  **Monday's week-9 review must report the RB greens vs projection (actual - proj each and as a group) and vs
+  non-green RBs at the same salary** (salary-matched, e.g. within $300 or the same $500 band, same slate; proj 4+),
+  plus the usual shadow-green lineup re-run.
 
 ## Learn from winners (Nov 2) — see docs/learn_from_winners.md; WEEKLY REVIEW STEP from week 9
 Doug: add to every weekly review. After `convert_results.py`: `python src/learn_from_winners.py --week <week>`
