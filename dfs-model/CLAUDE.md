@@ -620,6 +620,10 @@ counts unchanged. Rules checked, uploads deleted. Review sheet rebuilt (237 rows
 (E. Wilson, Lambert-Smith; Cody White is still guarded so not listed) and **Promoted** columns.
 
 ## Week 9 run checklist (2026-w09) — START HERE when FanDuel releases the week-9 player list
+**State end of Nov 3 (all committed and pushed, head 7698fda):** Nov 3 additions: exact Pooch Punt money grading
+(`data/2026-w09/prizes_pooch-punt.csv`), cash shadows `--no-draw` / `--median70`, and the **entered set = 75 median-70
++ 74 model via `src/combine_entry.py`** (step 5). Sunday order: final model build, median70, nodraw, cap 45, flex
+shadow, pool, then combine_entry; report combined exposure (top 15, >50% flags) to Doug before upload.
 **State Nov 3 evening: steps 0-2 DONE, prelim REBUILT with role-guard promotion ON (see "Week 9 preliminary run" and "Role guard and injury-driven role changes"); review sheet rebuilt with RoleDrop + Promoted columns, unmarked. Friday order: Stafford status FIRST (LAR stacks), ARI QB (Brissett unless Doug says Minshew), SF Kirk / Cooks (guarded unless Doug overrides), statuses + player-list diff, save fdr_projections_fri.csv. Next = Doug's sheet (step 4: colours, Pool / Rank,
 RB greens shadow), then the pool build; Friday statuses.** Earlier: **State Nov 2: all week-9 tests done and decided (docs/week9_tests.md s1-10, docs/learn_from_winners.md). Nothing
 built for week 9 yet: `config/2026-w09/` and `data/2026-w09/` do not exist.**
