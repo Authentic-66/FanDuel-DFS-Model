@@ -698,8 +698,9 @@ built for week 9 yet: `config/2026-w09/` and `data/2026-w09/` do not exist.**
    set gets exact cashed / won / net as if entered), `learn_from_winners.py --week 2026-w09` and `--compare
    2026-w05,...,2026-w09`, `docs/week9_review.md`. **Must include: Doug's RB greens vs projection and vs salary-matched
    non-green RBs** (plus the shadow-green lineup re-run), flex shadow vs entered, cap 45 vs 25, pool review, the
-   carry-over calls (step 3), **Doug's RB reds split by reason (Doug, Nov 5): role/news = Jeanty, E. Wilson, Hampton;
-   matchup = Ollie Gordon II (vs DET run D), Braelon Allen (vs KC run D): each group's actual vs projected, and what
+   carry-over calls (step 3), **Doug's RB reds split by reason, grouped by his sheet notes (Doug, Nov 5): role/news =
+   E. Wilson (3rd on the depth chart); matchup = Jeanty (vs SF run D), Hampton (vs HOU), Ollie Gordon II (vs DET),
+   Braelon Allen (vs KC): each group's actual vs projected, and what
    removing each group alone changed (lineup re-run with only that group red vs no reds)**, and winnings (ask; check the entry-history xlsx; running total -$6.53 after week 8).
    **Also the promotion kill-rule check** (Doug, Nov 3): every player in the final proj.csv with `GuardRescue` set and
    Proj 4+, projected vs actual FanDuel points (and the role-drop flags vs actual). Kill rule: if over weeks 9-10
