@@ -18,6 +18,7 @@
 # carries a game in 2026. Friday's report replaces this; Sunday: active Q players come off the Q list (Doug's rule).
 [status]
 out = [
+  "Sam Darnold",                                                         # Doug, review sheet Nov 5: "Darnold is out"
   "Kendrick Bourne",                                                     # FanDuel O
   "Jeremy McNichols",                                                    # FanDuel D
   # IR with real 2026 volume (targets + carries a game)
@@ -38,6 +39,9 @@ questionable = [
 active = []
 
 [status.starting_qb]
+SEA = "Drew Lock"              # Doug, sheet Nov 5: Darnold out, Lock in his pool. Lock is still Q (FanDuel, elbow):
+                               # held out until Friday clears him, so SEA has no usable QB / stacks until then
+ARI = "Gardner Minshew II"     # Doug, sheet Nov 5: "Named started this week" (Brissett: "No longer starter")
 
 # Traded players. Houston IS on the main slate (HOU@LAC), so the Houston side runs for the first time since week 7.
 # Doug, Oct 26: share 0.15, factor 0.9 (13.3% of HOU targets over his two HOU games, weeks 6-7; 19-21% of snaps).
@@ -64,7 +68,17 @@ stack_allocation = "proportional"   # stack counts follow the weights exactly in
 [prefs]
 starters_only = true
 red_teams = []
-red = []
+red = [
+  # Doug, Nov 5 (data/2026-w09/review_sheet_reviewed.xlsx): 7 red, 0 yellow, 0 green. His notes in quotes.
+  # Brissett was typed "red0" (read as red; his note says he is no longer the starter).
+  "Sam Darnold",              # QB SEA: "Darnold is out"
+  "Jacoby Brissett",          # QB ARI: "No longer starter"
+  "Ashton Jeanty",            # RB LV: "49ers highly ranked run defemse"
+  "Ollie Gordon II",          # RB MIA: "Lions have a good run defense"
+  "Braelon Allen",            # RB NYJ: "KC has a great run defense"
+  "Emanuel Wilson",           # RB SEA: "Now listed as third on the depth chart"
+  "Omarion Hampton",          # RB LAC: "Texans have a good run defense"
+]
 
 [prefs.yellow]                 # empty: yellow is shadow-only (Doug, Oct 26)
 
@@ -73,6 +87,7 @@ red = []
 [prefs.green_floor]
 
 [prefs.starter_override]
+SEA = ["Zach Charbonnet"]      # Doug, Nov 5: "now listed as the starter" (E. Wilson red, 3rd on the depth chart)
 
 [prefs.player_cap]
 
@@ -80,7 +95,14 @@ red = []
 [shadow]
 red = []
 
-[shadow.red_lineups]
+[shadow.red_lineups]           # lineups each red player had in the Nov 3 prelim (red is applied, so recorded here)
+"Ashton Jeanty" = 18
+"Braelon Allen" = 16
+"Ollie Gordon II" = 14
+"Emanuel Wilson" = 12
+"Sam Darnold" = 12
+"Omarion Hampton" = 6
+"Jacoby Brissett" = 1
 
 [shadow.yellow]
 
@@ -124,9 +146,38 @@ ARI = 1
 [stacks.rules]
 
 # Doug's pool: kept for week 9 (Doug, Oct 26; shadow: built and graded, not entered), reviewed after week 9. Lists come
-# from his week-9 review sheet (Pool / Rank columns). Empty until he marks it.
+# from his week-9 review sheet (Pool column; loaded Nov 5).
 [pool]
-ranked = true
+ranked = false
+# Doug, Nov 5 (data/2026-w09/review_sheet_reviewed.xlsx): 94 players marked Y = the pool. Rank left blank on
+# purpose: membership only, no rank boost (ranked = false -> every pool player x 1.00). Sheet order.
+QB = [  # 21
+  "Brock Purdy", "Jared Goff", "Dak Prescott", "Drake Maye", "Patrick Mahomes", "Tyler Shough", "Jordan Love",
+  "C.J. Stroud", "Kirk Cousins", "Jayden Daniels", "Bryce Young", "Bo Nix", "Deshaun Watson", "Malik Willis",
+  "Daniel Jones", "Geno Smith", "Justin Herbert", "J.J. McCarthy", "Matthew Stafford", "Gardner Minshew II",
+  "Drew Lock",
+]
+RB = [  # 18
+  "Jahmyr Gibbs", "Kenneth Walker III", "Jonathan Taylor", "Kyren Williams", "Javonte Williams", "Josh Jacobs",
+  "Chuba Hubbard", "Rhamondre Stevenson", "Christian McCaffrey", "Quinshon Judkins", "Rachaad White", "J.K. Dobbins",
+  "Zach Charbonnet", "Kaelon Black", "Blake Corum", "Woody Marks", "Alvin Kamara", "Tyler Allgeier",
+]
+WR = [  # 27
+  "Jaxon Smith-Njigba", "Puka Nacua", "CeeDee Lamb", "Amon-Ra St. Brown", "Chris Olave", "Malik Nabers",
+  "Matthew Golden", "Tetairoa McMillan", "George Pickens", "Rashee Rice", "Stefon Diggs", "Jameson Williams",
+  "Nico Collins", "Jalen Coker", "Keenan Allen", "Denzel Boston", "Jaylen Waddle", "Christian Watson",
+  "DeMario Douglas", "Josh Downs", "Courtland Sutton", "Marvin Harrison Jr.", "Ladd McConkey", "Makai Lemon",
+  "Michael Wilson", "Treylon Burks", "Hollywood Brown",
+]
+TE = [  # 18
+  "Brock Bowers", "George Kittle", "Trey McBride", "Sam LaPorta", "Isaiah Likely", "Travis Kelce", "Tucker Kraft",
+  "Tyler Warren", "Harold Fannin Jr.", "Dallas Goedert", "Juwan Johnson", "Tyler Higbee", "Dalton Schultz",
+  "AJ Barner", "Greg Dulcich", "Darren Waller", "Chig Okonkwo", "Eli Raridon",
+]
+DST = [  # 10
+  "Seattle Seahawks", "Houston Texans", "New York Giants", "Kansas City Chiefs", "Denver Broncos",
+  "San Francisco 49ers", "Detroit Lions", "Cleveland Browns", "Green Bay Packers", "New York Jets",
+]
 
 # Shadow sets graded beside the entered model (Doug, Nov 2): control at cap 45 and the flex shadow (weeks 9-10).
 #   python src/optimize.py --week 2026-w09 --subdir model_cap45 --cap 45

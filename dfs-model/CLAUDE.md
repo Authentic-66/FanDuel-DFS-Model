@@ -619,6 +619,25 @@ lineups unchanged, Raridon 6 / K. Williams 3, Chism 10 -> 1; control mean 117.2 
 counts unchanged. Rules checked, uploads deleted. Review sheet rebuilt (237 rows, Lineups 1,350) with **RoleDrop**
 (E. Wilson, Lambert-Smith; Cody White is still guarded so not listed) and **Promoted** columns.
 
+## Week 9 review applied (Thu Nov 5) — sheet loaded, pool built
+Doug's sheet `data/2026-w09/review_sheet_reviewed.xlsx` (typed colours, no fills; his notes in Rank / an unnamed column).
+**7 red, 0 yellow, 0 green, 0 DST red:** QB Darnold ("Darnold is out"), Brissett (typed "red0": "No longer starter");
+RB Jeanty, Ollie Gordon II, Braelon Allen, Hampton (run-defence notes), Emanuel Wilson ("third on the depth chart").
+Notes applied as statuses: `[status] out` + Darnold, `[status.starting_qb]` SEA = Drew Lock, ARI = Gardner Minshew II
+(Minshew 13.0, Lock 9.5; SEA receivers unchanged: only lines move them). **Lock is still FanDuel Q (elbow) -> SEA 0
+stacks**, as LAR (Stafford Q): Friday decides both. Charbonnet ("now listed as the starter") is SEA RB1 only because he
+projects 11.0 vs Wilson 10.9 (reds don't free depth). **Doug, Nov 5: `[prefs.starter_override] SEA = Charbonnet`**
+added (prelim rebuilt byte-identical: he was already RB1). Doug confirmed: no greens (intentional), Darnold / Lock /
+Minshew status calls kept, all 5 RB reds kept.
+**Pool: 94 Y = QB 21, RB 18, WR 27, TE 18, DST 10; no ranks (Doug: membership only) -> `[pool] ranked = false`.**
+Held out Q: Stafford, Lock, McCaffrey, Watson, M. Wilson. Short of two pool receivers: Purdy, Cousins, Willis,
+Herbert, Minshew (1 each), Geno Smith (0: NYJ dropped). Pool 150 at cap 25, mean 116.3, 136 lineups use a filler
+(Watkins 17, M. Washington 12, Flournoy 10, ...; week 8: 10), 4 identical to the model.
+Rebuilt after model.py: model `prelim/` 150 (mean 115.5, FLEX TE 75 / WR 43 / RB 32; relief to 27), control 150 (117.2),
+flex shadow 150 (116.3); rules checked, uploads deleted. Reds' own effect (statuses-only build vs with reds): stacks
+unchanged; Jeanty 25 / Gordon 24 / Allen 14 / Hampton 8 -> 0, to R. White +10, Barkley +8, Judkins +7, Marks +6, Black +5,
+Singletary +5; 69 of 150 lineups unchanged. LV / MIA / NYJ / LAC have no model-set RB (red holds the RB1 slot).
+
 ## Week 9 run checklist (2026-w09) — START HERE when FanDuel releases the week-9 player list
 **State end of Nov 3 (all committed and pushed, head 7698fda):** Nov 3 additions: exact Pooch Punt money grading
 (`data/2026-w09/prizes_pooch-punt.csv`), cash shadows `--no-draw` / `--median70`, and the **entered set = 75 median-70
@@ -679,7 +698,9 @@ built for week 9 yet: `config/2026-w09/` and `data/2026-w09/` do not exist.**
    set gets exact cashed / won / net as if entered), `learn_from_winners.py --week 2026-w09` and `--compare
    2026-w05,...,2026-w09`, `docs/week9_review.md`. **Must include: Doug's RB greens vs projection and vs salary-matched
    non-green RBs** (plus the shadow-green lineup re-run), flex shadow vs entered, cap 45 vs 25, pool review, the
-   carry-over calls (step 3), and winnings (ask; check the entry-history xlsx; running total -$6.53 after week 8).
+   carry-over calls (step 3), **Doug's RB reds split by reason (Doug, Nov 5): role/news = Jeanty, E. Wilson, Hampton;
+   matchup = Ollie Gordon II (vs DET run D), Braelon Allen (vs KC run D): each group's actual vs projected, and what
+   removing each group alone changed (lineup re-run with only that group red vs no reds)**, and winnings (ask; check the entry-history xlsx; running total -$6.53 after week 8).
    **Also the promotion kill-rule check** (Doug, Nov 3): every player in the final proj.csv with `GuardRescue` set and
    Proj 4+, projected vs actual FanDuel points (and the role-drop flags vs actual). Kill rule: if over weeks 9-10
    combined they under-score their projection by 1.5+ points on average, set `promotion = false` in defaults.toml and
