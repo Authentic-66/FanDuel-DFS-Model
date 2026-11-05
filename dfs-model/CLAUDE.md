@@ -639,6 +639,11 @@ unchanged; Jeanty 25 / Gordon 24 / Allen 14 / Hampton 8 -> 0, to R. White +10, B
 Singletary +5; 69 of 150 lineups unchanged. LV / MIA / NYJ / LAC have no model-set RB (red holds the RB1 slot).
 
 ## Week 9 run checklist (2026-w09) — START HERE when FanDuel releases the week-9 player list
+**State end of Nov 5 (pushed, d7f2ca1): step 4 DONE** (see "Week 9 review applied"): 7 reds, no greens, pool 94 Y
+(ranked = false), SEA = Lock (Q), ARI = Minshew II, Charbonnet override; prelim / control / flex shadow / pool rebuilt.
+**Friday (Nov 6) order:** Stafford status (LAR 0 stacks while Q), **Lock status (SEA 0 stacks while Q; if Lock is out
+too, ask Doug who starts)**, re-download fd_players.csv + diff vs the Nov 3 file, statuses from the injury report,
+save fdr_projections_fri.csv, rerun model.py and all sets (check Charbonnet stays eligible).
 **State end of Nov 3 (all committed and pushed, head 7698fda):** Nov 3 additions: exact Pooch Punt money grading
 (`data/2026-w09/prizes_pooch-punt.csv`), cash shadows `--no-draw` / `--median70`, and the **entered set = 75 median-70
 + 74 model via `src/combine_entry.py`** (step 5). Sunday order: final model build, median70, nodraw, cap 45, flex
