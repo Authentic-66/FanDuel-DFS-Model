@@ -677,7 +677,11 @@ Record only.
 ## Week 9 run checklist (2026-w09) — START HERE when FanDuel releases the week-9 player list
 **State Fri Nov 6: Friday DONE (see "Week 9 Friday run"). Next = Sunday: re-download fd_players.csv (diff vs
 `fd_players_fri.csv`), save fdr_projections_sun.csv, FINAL lines + weights (SEA moved -4), inactives (Sunday rule;
-Doug's calls on Nabers / Diggs), CLE QB read from Doug (Shedeur 0), then the six builds + combine_entry (step 5).**
+Doug's calls on Nabers / Diggs), then the six builds + combine_entry (step 5).**
+**Doug, Nov 6: (1) Shedeur gets NO projection: CLE stays at 0 stacks; CLE's other players (Judkins 14 Friday
+lineups, Boston, Fannin) stay eligible as normal players. (2) Sunday, after inactives and BEFORE the final run,
+confirm and report: Skattebo (D; drives Singletary's 43% exposure), St. Brown (Q), Pickens (Q), Nabers (knee DNP, no
+designation).** Apply the Sunday status rule to each, then rebuild.
 **State end of Nov 5 (pushed, d7f2ca1): step 4 DONE** (see "Week 9 review applied"): 7 reds, no greens, pool 94 Y
 (ranked = false), SEA = Lock (Q), ARI = Minshew II, Charbonnet override; prelim / control / flex shadow / pool rebuilt.
 **Friday (Nov 6) order:** Stafford status (LAR 0 stacks while Q), **Lock status (SEA 0 stacks while Q; if Lock is out
