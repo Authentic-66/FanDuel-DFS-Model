@@ -14,33 +14,39 @@
 # So BAL (Lamar) and TB are not on the slate: no starting-QB call needed for either.
 # Player list: re-download Friday and Sunday morning and diff (python src/diff_players.py <old> <new>).
 
-# PRELIMINARY (Tue Nov 3): FanDuel's Nov 3 tags (O / D -> out, Q -> questionable) + IR players with 3+ targets +
-# carries a game in 2026. Friday's report replaces this; Sunday: active Q players come off the Q list (Doug's rule).
+# FRIDAY (Fri Nov 6): FanDuel's Friday list (data/2026-w09/fd_players.csv, downloaded Nov 6 17:32; Nov 3 file kept as
+# fd_players_nov03.csv) O / D -> out, Q -> questionable, + IR players with 3+ targets + carries a game in 2026.
+# Rotowire (data/2026-w09/injuries_rotowire_2026-11-06.txt) agrees with every FanDuel tag on the slate except Kenny
+# Yeboah (FanDuel O, no Rotowire entry: kept out). Cleared since Nov 3 (no designation on either): Stafford, Lock,
+# McCaffrey, M. Wilson, Breece Hall, Christian Watson, Theo Johnson, Anthony Gould.
+# Sunday: active Q players come off the Q list, inactive -> out (Doug's rule).
 [status]
 out = [
   "Sam Darnold",                                                         # Doug, review sheet Nov 5: "Darnold is out"
-  "Kendrick Bourne",                                                     # FanDuel O
-  "Jeremy McNichols",                                                    # FanDuel D
-  # IR with real 2026 volume (targets + carries a game)
+  # FanDuel O / D, Nov 6 (Skattebo and Brenen Thompson D)
+  "Mike Evans", "DeVonta Smith", "Garrett Wilson", "A.J. Brown", "David Montgomery", "Deebo Samuel Sr.",
+  "Cam Skattebo", "Dontayvion Wicks", "TreVeyon Henderson", "Rashid Shaheed", "Christian Kirk", "Treylon Burks",
+  "Dyami Brown", "Bam Knight", "CJ Donaldson", "KaVontae Turpin", "Britain Covey", "Josh Whyle", "Brenen Thompson",
+  "Kenny Yeboah",
+  # IR with real 2026 volume (targets + carries a game); Jeremiyah Love new (Q -> IR Nov 3)
   "Dameon Pierce", "De'Von Achane", "Jacory Croskey-Merritt", "RJ Harvey", "Davante Adams", "Tank Bigsby",
   "Ronnie Rivers", "Jonathon Brooks", "Will Shipley", "Jaxson Dart", "Terry McLaurin", "Chris Brooks",
   "Mack Hollins", "Jalen Hurts", "Raheim Sanders", "Terrance Ferguson", "Jayden Reed", "David Njoku",
   "Romeo Doubs", "Jaylin Noel", "Tyquan Thornton", "Tyrone Tracy Jr.", "Alec Pierce", "Pat Bryant",
-  "Demarcus Robinson", "Xavier Legette",
+  "Demarcus Robinson", "Xavier Legette", "Kendrick Bourne", "Jeremy McNichols", "Jeremiyah Love",
 ]
 questionable = [
-  # FanDuel Q, Nov 3 (30)
-  "Breece Hall", "Cam Skattebo", "Christian McCaffrey", "Jeremiyah Love", "David Montgomery", "Michael Wilson",
-  "DeVonta Smith", "TreVeyon Henderson", "Christian Watson", "Bam Knight", "A.J. Brown", "Mike Evans",
-  "Deebo Samuel Sr.", "Dontayvion Wicks", "Rashid Shaheed", "Hunter Henry", "CJ Donaldson", "Jake Ferguson",
-  "Velus Jones Jr.", "Colby Parkinson", "Brenen Thompson", "Theo Johnson", "Matthew Stafford", "KaVontae Turpin",
-  "Drew Lock", "Luke Schoonmaker", "Britain Covey", "Anthony Gould", "Dean Connors", "Jacob Saylors",
+  # FanDuel Q, Nov 6 (16; all also Q on Rotowire)
+  "Amon-Ra St. Brown", "George Pickens", "Deshaun Watson", "Tanner McKee", "MarShawn Lloyd", "Jake Ferguson",
+  "Hunter Henry", "Colby Parkinson", "Sione Vaki", "Jaylen Wright", "Kaytron Allen", "Luke Schoonmaker",
+  "Jordan Whittington", "Velus Jones Jr.", "Jacob Saylors", "Charlie Jones",
 ]
 active = []
 
 [status.starting_qb]
-SEA = "Drew Lock"              # Doug, sheet Nov 5: Darnold out, Lock in his pool. Lock is still Q (FanDuel, elbow):
-                               # held out until Friday clears him, so SEA has no usable QB / stacks until then
+SEA = "Drew Lock"              # Doug, sheet Nov 5: Darnold out, Lock in his pool. Nov 6: Lock cleared (no designation)
+CLE = "Shedeur Sanders"        # Rotowire Nov 6: "Shedeur Sanders will start even if Watson is active" (Watson Q,
+                               # concussion). Default would start Watson (last game's attempts). Remove to revert.
 ARI = "Gardner Minshew II"     # Doug, sheet Nov 5: "Named started this week" (Brissett: "No longer starter")
 
 # Traded players. Houston IS on the main slate (HOU@LAC), so the Houston side runs for the first time since week 7.

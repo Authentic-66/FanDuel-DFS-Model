@@ -638,7 +638,46 @@ flex shadow 150 (116.3); rules checked, uploads deleted. Reds' own effect (statu
 unchanged; Jeanty 25 / Gordon 24 / Allen 14 / Hampton 8 -> 0, to R. White +10, Barkley +8, Judkins +7, Marks +6, Black +5,
 Singletary +5; 69 of 150 lineups unchanged. LV / MIA / NYJ / LAC have no model-set RB (red holds the RB1 slot).
 
+## Week 9 Friday run (Fri Nov 6) — statuses applied; preview sets built (not committed)
+`fd_players.csv` = Friday's download (Doug saved it as `fd_players_fri.csv`, kept; Nov 3 file kept as
+`fd_players_nov03.csv`). Diff: 0 added, 0 salary changes; removed Brissett (ARI QB) and Slovis; 44 tag changes.
+**Cleared (no designation on FanDuel or Rotowire): Stafford, Lock, McCaffrey, M. Wilson, Breece Hall, C. Watson,
+Theo Johnson, Gould.** New O: Evans, Deebo, **Christian Kirk** (knee, meniscus), DeVonta Smith, Garrett Wilson,
+A.J. Brown, Montgomery, Henderson, Shaheed, Wicks, Burks, Dyami Brown, Bam Knight, Donaldson, Turpin, Covey, Whyle,
+Yeboah; D: Skattebo, Brenen Thompson; Love Q -> IR. New Q: St. Brown (ribs), Pickens, Deshaun Watson, McKee, Lloyd,
+Vaki, J. Wright, Kaytron Allen, Whittington, Charlie Jones. Rotowire (`injuries_rotowire_2026-11-06.txt`, now a tab
+text file, not .docx) agrees with every FanDuel tag on the slate except Yeboah (FanDuel O, kept out).
+`[status]` = Darnold + FanDuel O / D (21) + IR with 3+ targets + carries a game (29) out; FanDuel Q (16) questionable.
+**`[status.starting_qb] CLE = "Shedeur Sanders"`** (Rotowire Nov 6: he starts even if Watson is active). He projects
+**0** (no 2026 data, 3 attempts) -> CLE 0 stacks either way (weight 9); needs a Doug [overrides] read to be used.
+Projections: Stafford 12.0 -> 20.0, Lock 9.5 -> 16.8, McCaffrey 12.7 -> 19.5, C. Watson 8.8 -> 15.7, Allgeier 10.0 ->
+15.7, Singletary 10.7 -> 16.1, Breece Hall 7.0 -> 12.3, M. Wilson 6.7 -> 12.0; St. Brown 16.0 -> 9.4, Pickens 12.7 ->
+7.1 (Q discount; held out). SF WRs: Watkins 5.2, Cooks 3.8 (promoted), Cowing 3.1 (promoted).
+Practice (nflverse injuries_2026.csv week 9, undated = latest report): **Nabers DNP (knee), no designation anywhere**;
+Diggs DNP (rest). Both active.
+Lines NOT refreshed (Tuesday's file; Sunday pulls FINAL). nflverse Nov 6 vs Tuesday: **ARI@SEA total 44.5 -> 39.5,
+SEA -11.5 -> -8.5 (SEA implied 28.0 -> 24.0, weight 24 -> 16)**; NYJ@KC 46.5 -> 48.5; GB@NE 46.5 -> 44.5; NYG@PHI
+40.5 -> 38.5 (NYG -3.5 -> PHI -3); HOU -4.5 -> -6; CLE@NO 43.5 -> 42.5 (NO -3.5); DEN@CAR 44.5; DET@MIA 49.5.
+Preview sets (untracked, uploads deleted; all rules checked: slots, $59-60K, no out / Q / red / tagged, no duplicates,
+stack + bring-back, DST): model `friday/` 150 at cap 25 (5 relief to 27), mean 120.0, FLEX RB 63 / TE 59 / WR 28;
+`friday_cap45/` 122.5; `pool/friday/` 120.3 (131 fillers; NYJ no pool receivers); `friday_flex/` 120.9;
+`friday_nodraw/` 122.5; `friday_median70/` 117.9 (FLEX RB 133). Stacks (model): SF 16, DET 14, DAL 13, KC 13, **SEA 11,
+LAR 10**, NE 9, ... CLE 0. SF stacks all Purdy + Kittle + Watkins (McCaffrey not an extra receiver). LAR = Stafford +
+Nacua + Higbee; SEA = Lock + JSN / Horton / Kupp.
+**Dry run 75 median70 + 74 model** (`combine_entry.py --a friday_median70:75 --b friday:74`, files moved to
+`friday_entry_dryrun/`, upload deleted): 149, 0 duplicates, all checks passed; top: **Allgeier 45.6%, Singletary 43.0%**,
+Gibbs 40.3, Nacua 32.2, JSN 29.5, C. Watson 27.5, Jacobs 27.5, Kittle 24.2, NO DST 18.1, Stevenson 18.1, LaPorta
+17.4, Kelce 15.4, Bowers 14.1, Lamb 14.1, Kyren 13.4. **None over 50%** (Kyren / Jacobs down from 44 / 45 on Tuesday).
+Non-practisers with exposure in the dry run: Nabers 18 (12.1%), Diggs 11 (7.4%). Doug decides Sunday after inactives.
+FDR Friday file (476 rows): 86 names not on FanDuel's list = 41 kickers / D/ST ("Seattle D/ST" vs "Seattle
+Seahawks"), ~20 suffix / nickname forms (Deebo Samuel, Gardner Minshew, Zonovan Knight = Bam, Marquise Brown =
+Hollywood, Tre Harris, Chigoziem Okonkwo, Andrew Ogletree = Drew, Velus Jones, ... Jr. / II), rest not on the list.
+Record only.
+
 ## Week 9 run checklist (2026-w09) — START HERE when FanDuel releases the week-9 player list
+**State Fri Nov 6: Friday DONE (see "Week 9 Friday run"). Next = Sunday: re-download fd_players.csv (diff vs
+`fd_players_fri.csv`), save fdr_projections_sun.csv, FINAL lines + weights (SEA moved -4), inactives (Sunday rule;
+Doug's calls on Nabers / Diggs), CLE QB read from Doug (Shedeur 0), then the six builds + combine_entry (step 5).**
 **State end of Nov 5 (pushed, d7f2ca1): step 4 DONE** (see "Week 9 review applied"): 7 reds, no greens, pool 94 Y
 (ranked = false), SEA = Lock (Q), ARI = Minshew II, Charbonnet override; prelim / control / flex shadow / pool rebuilt.
 **Friday (Nov 6) order:** Stafford status (LAR 0 stacks while Q), **Lock status (SEA 0 stacks while Q; if Lock is out
