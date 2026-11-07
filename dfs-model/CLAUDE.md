@@ -880,6 +880,18 @@ RB in FLEX and cheap DST (top 10% beyond the field the same way); QB+2 / bring-b
 hits (+2.2); lineups +1.4 avg, top-1% 1 vs 1; it changes ownership ~1/5 of the gap and none of the RB / TE / DST gap.
 Weeks 5-6 controls were scratch builds at cap 45 (not in weeks/).
 
+## Top finishers and max-entrants (Nov 6) — docs/top_finishers.md, docs/max_entrants.md; analysis only
+**NFL and NBA are kept COMPLETELY SEPARATE (Doug, Nov 6): no pooled numbers across sports, ever.** The NBA repo has
+its own copy of top_finishers.py (copy, don't link). Aggregated only: never write other users' names (anon user_001).
+`python src/top_finishers.py` (weeks 5-8 exports; cash via the week-9 Pooch Punt prize table, which reproduces Doug's
+weeks 5/7/8 winnings exactly): max-entry (150) users 49% of entries, 63% of top-1%, cash 51.8% vs 41.4% (one entry),
+return 1.43 vs 1.05 (field 1.26, overlay every week); us 0.73; top-1% clusters are one lineup entered 150 times.
+`python src/max_entrants.py --builds <scratch>` (model / no-draw / median-70 / cap 45 rebuilt for weeks 5-8 into a
+scratch folder with `optimize.py --subdir <absolute scratch path>`; model matched archived uploads 150/150 each
+week; no-draw can't build week 7): **median-70 looks most like the max-entrants every week, the model least.** Gaps
+no build closes: RB in FLEX (theirs 72%, top-1% 84%; model 26%, median-70 46%), the QB + 2 + bring-back rule (theirs
+43-55%), lineup repeats (106 distinct per 150). Nothing changed; each would be its own test (Doug decides).
+
 ## History refits (Oct 12) — see docs/phase2_history.md
 `fetch_stats.py --seasons 2020-2025 --history` puts player stats, team stats and schedules with Vegas lines in
 `data/cache` (untracked); `fit_history.py` refits DST, injury share, spread and calibration on 2021-2025, leave-one-season-out,
