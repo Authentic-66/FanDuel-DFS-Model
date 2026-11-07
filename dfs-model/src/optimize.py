@@ -26,7 +26,20 @@ week, cfg, args = config.cli(__doc__, [(('--subdir',), dict(default='', help='wr
                                        (('--no-draw',), dict(action='store_true',
                                                              help='shadow: projection-only objective -> nodraw/')),
                                        (('--median70',), dict(action='store_true',
-                                                              help='shadow: median objective, cap 105, overlap 7 -> median70/'))])
+                                                              help='shadow: median objective, cap 105, overlap 7 -> median70/')),
+                                       (('--exclude',), dict(default='',
+                                                             help='"Name, Name": left out of this run only, like a red '
+                                                                  '(combine_entry exposure rule, Doug Nov 6); needs --subdir'))])
+if args.exclude:
+    if not args.subdir:
+        raise SystemExit('--exclude: give a --subdir so the graded model folder is not overwritten')
+    names = [n.strip() for n in args.exclude.split(',') if n.strip()]
+    known = set(project.load(week)[0].Name)
+    unknown = [n for n in names if n not in known]
+    if unknown:
+        raise SystemExit(f'--exclude: not in proj.csv: {unknown}')
+    cfg['prefs']['red'] = sorted(set(cfg['prefs']['red']) | set(names))
+    print('excluded for this run only:', ', '.join(names))
 if (args.no_draw or args.median70) and (args.pool or args.flex_shadow or (args.no_draw and args.median70)):
     raise SystemExit('--no-draw / --median70: one at a time, model build only')
 if args.no_draw:
