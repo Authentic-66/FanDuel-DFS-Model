@@ -677,7 +677,7 @@ Record only.
 ## Week 9 run checklist (2026-w09) — START HERE when FanDuel releases the week-9 player list
 **State Fri Nov 6: Friday DONE (see "Week 9 Friday run"). Next = Sunday: re-download fd_players.csv (diff vs
 `fd_players_fri.csv`), save fdr_projections_sun.csv, FINAL lines + weights (SEA moved -4), inactives (Sunday rule;
-Doug's calls on Nabers / Diggs), then the six builds + combine_entry (step 5).**
+Doug's calls on Nabers / Diggs), then the six builds + combine_entry (step 5): **100 median-70 + 49 model, flag over 70%** (Doug, Nov 6).**
 **Doug, Nov 6: (1) Shedeur gets NO projection: CLE stays at 0 stacks; CLE's other players (Judkins 14 Friday
 lineups, Boston, Fannin) stay eligible as normal players. (2) Sunday, after inactives and BEFORE the final run,
 confirm and report: Skattebo (D; drives Singletary's 43% exposure), St. Brown (Q), Pickens (Q), Nabers (knee DNP, no
@@ -731,11 +731,13 @@ built for week 9 yet: `config/2026-w09/` and `data/2026-w09/` do not exist.**
    `optimize.py --week 2026-w09 --flex-shadow` (cap 25, not entered), and the **cash-style shadows (Doug, Nov 3;
    weeks 9-10, not entered)** `optimize.py --week 2026-w09 --no-draw` (projection-only objective, cap 25 -> nodraw/)
    and `--median70` (median objective, cap 105, overlap 7 -> median70/).
-   **ENTERED SET CHANGED (Doug, Nov 3 evening): 75 median-70 + 74 current-model lineups, no duplicates, free entry as
+   **ENTERED SET CHANGED (Doug, Nov 3 evening): 75 median-70 + 74 current-model lineups; Doug, Nov 6: SUNDAY SPLIT
+   100 median-70 + 49 model (his call; combine_entry defaults now 100 / 49), no duplicates, free entry as
    usual** -> `python src/combine_entry.py --week 2026-w09` (after the main and median70 builds) writes
    `entered_upload_149.csv` / `entered_readable_149.csv` / `entered_exposure.csv` / `entered_source.csv` (lineups
    evenly spaced through each build so each half keeps its stack mix; checks slots, cap, player list, out / Q / reds,
-   duplicates; prints combined exposure top 15 and flags players over 50%: **report both to Doug**). All five full
+   duplicates; prints combined exposure top 15 and flags players over **70%** (Doug, Nov 6: over 50% is acceptable
+   at 100 / 49, max-entrants run their top player ~66%): **report both to Doug**). All five full
    150 sets stay in their folders for grading (model = main folder, median70, nodraw, model_cap45, flex_shadow).
    Dry run on the prelim (Nov 3, scratch): 149 built, 0 duplicates, all checks passed, top Jacobs 45% / Kyren 44% /
    NO DST 37% (median70 alone has both RBs at 105 of 150), none over 50%. If a set stalls at cap 25, stop and ask
@@ -879,6 +881,14 @@ RB in FLEX and cheap DST (top 10% beyond the field the same way); QB+2 / bring-b
 -12.2). Cap: binds (28 of 40 most-owned at the cap), but cap 45 adds more to the chalk that missed (+4.0) than to the
 hits (+2.2); lineups +1.4 avg, top-1% 1 vs 1; it changes ownership ~1/5 of the gap and none of the RB / TE / DST gap.
 Weeks 5-6 controls were scratch builds at cap 45 (not in weeks/).
+
+## Week-10 build tests (Doug, Nov 6) — AFTER Sunday's slate, not before; analysis only
+Variants of median-70 on weeks 5-9 rebuilds (scratch, `optimize.py --median70 --subdir <absolute scratch path>`;
+week 9 once graded), **one change at a time** vs plain median-70: (1) more RB in the FLEX (e.g. TE in the FLEX only
+for top-5 TEs by salary, the flex-shadow rule); (2) relaxed stack rule (QB + 1 allowed, bring-back optional); (3)
+repeats of the top lineups allowed (up to ~30% of 150, like max-entrants' 106 distinct per 150). Report per week:
+cash rate, money as-if (Pooch Punt prize table), average, top 1% (plus top 10% and best, the standing rule). Doug
+decides the week-10 build from it. Note no-draw / some caps can't build week 7: report any variant that stalls.
 
 ## Top finishers and max-entrants (Nov 6) — docs/top_finishers.md, docs/max_entrants.md; analysis only
 **NFL and NBA are kept COMPLETELY SEPARATE (Doug, Nov 6): no pooled numbers across sports, ever.** The NBA repo has

@@ -1,16 +1,17 @@
-"""Entered set made from two builds (Doug, Nov 3, week 9): 75 lineups from the median-70 shadow build + 74 from the
-current model build (cap 25), no duplicates, = the 149 files (free entry as usual). Both full builds of 150 stay in
+"""Entered set made from two builds (Doug, Nov 3, week 9): 100 lineups from the median-70 shadow build + 49 from the
+current model build (cap 25; Doug, Nov 6: was 75 + 74), no duplicates, = the 149 files (free entry as usual). Both full builds of 150 stay in
 their folders and are graded on their own.
 
-    python src/combine_entry.py --week 2026-w09                      # median70/ x 75 + main folder x 74
-    python src/combine_entry.py --week 2026-w09 --a median70:75 --b :74
+    python src/combine_entry.py --week 2026-w09                      # median70/ x 100 + main folder x 49
+    python src/combine_entry.py --week 2026-w09 --a median70:100 --b :49
 
 Picking: lineups are taken evenly spaced through each build (1, 3, 5, ... for 75 of 150), so each half keeps its
 build's stack-team mix (the builds run team by team). From the second build, lineups identical to one already taken
 are skipped first. Writes weeks/<week>/entered_upload_149.csv, entered_readable_149.csv (projections are the model's,
 also for median-70 lineups), entered_exposure.csv and entered_source.csv (which build and lineup each came from).
 Checks every lineup (slots, salary cap, player list, Out / IR / reds, duplicates) and stops on any problem.
-Prints combined exposure (top 15) and flags any player over 50%."""
+Prints combined exposure (top 15) and flags any player over 70% (Doug, Nov 6: over 50% is acceptable at 100 / 49;
+max-entrants run their top player at ~66%)."""
 import os
 
 import numpy as np
@@ -77,9 +78,9 @@ def check(rows, header, fd, cfg):
 
 def main():
     week, cfg, args = config.cli(__doc__, [
-        (('--a',), dict(default='median70:75', help='first build folder:count (default median70:75)')),
-        (('--b',), dict(default=':74', help='second build folder:count (default :74 = main folder)')),
-        (('--flag',), dict(type=float, default=50.0, help='flag players above this exposure %% (default 50)'))])
+        (('--a',), dict(default='median70:100', help='first build folder:count (default median70:100)')),
+        (('--b',), dict(default=':49', help='second build folder:count (default :49 = main folder)')),
+        (('--flag',), dict(type=float, default=70.0, help='flag players above this exposure %% (default 70)'))])
     na, ka, header, ra = pick(week, args.a)
     nb, kb, hb, rb = pick(week, args.b)
     if header != hb:
