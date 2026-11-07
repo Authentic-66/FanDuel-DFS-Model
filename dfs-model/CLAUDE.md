@@ -680,11 +680,11 @@ Record only.
 Doug's calls on Nabers / Diggs), then the six builds + combine_entry (step 5): **100 median-70 + 49 model, flag over 70%** (Doug, Nov 6).**
 **EXPOSURE RULE (Doug, Nov 6, built into combine_entry.py):** elite players have NO exposure cap = top 5 at their
 position (QB/RB/WR/TE/DST) by FanDuel 2026 FPPG among players with 4+ games played, with no FanDuel injury tag and their
-normal role (RoutingBump < 1.0, no RoleDrop, no GuardRescue, QB = starter); a top-5 player who fails a test is not
-elite and nobody moves up. Any non-elite player over 70% of the 149 (104 lineups): the model is rebuilt without him
+normal role (RoutingBump < 1.0, no RoleDrop, no GuardRescue, QB = starter); **BACKFILL (Doug, Nov 6, later): a
+player who fails is skipped and the next eligible moves up, so each position has 5 elite when available.** Any non-elite player over 70% of the 149 (104 lineups): the model is rebuilt without him
 into `weeks/2026-w09/model_excl/` (`optimize.py --exclude`, needs --subdir; main model folder untouched and still
 graded) and recombined until all non-elite are <= 70%. **Report the elite table and any rebuild to Doug.** Friday
-data: 24 elite (St. Brown out: Q); Allgeier 54% / Singletary 52% top non-elite, no rebuild needed (forced test at
+data: 25 elite (St. Brown Q skipped, Olave moves up); Allgeier 54% / Singletary 52% top non-elite, no rebuild needed (forced test at
 50% rebuilt without both, 0 of 150 in model_excl, each 70 lineups = their median-70 share).
 **Doug, Nov 6: (1) Shedeur gets NO projection: CLE stays at 0 stacks; CLE's other players (Judkins 14 Friday
 lineups, Boston, Fannin) stay eligible as normal players. (2) Sunday, after inactives and BEFORE the final run,

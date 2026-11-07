@@ -11,10 +11,11 @@ are skipped first. Writes weeks/<week>/entered_upload_149.csv, entered_readable_
 also for median-70 lineups), entered_exposure.csv and entered_source.csv (which build and lineup each came from).
 Checks every lineup (slots, salary cap, player list, Out / IR / reds, duplicates) and stops on any problem.
 
-Exposure rule (Doug, Nov 6): ELITE players have no exposure cap. Elite = top 5 at his position (QB, RB, WR, TE, DST)
-by FanDuel's 2026 points per game (FPPG; ranked among players with 4+ games played), with no FanDuel injury tag and
-his normal role (not lifted 1+ point by teammates out [RoutingBump], no role-drop flag, not promoted by the role
-guard, QB = his team's starter). A top-5 player who fails a test is not elite; nobody below moves up. Anyone else over
+Exposure rule (Doug, Nov 6): ELITE players have no exposure cap. Elite = the top 5 at each position (QB, RB, WR, TE,
+DST) by FanDuel's 2026 points per game (FPPG; players with 4+ games played) AMONG players who pass the other tests: no
+FanDuel injury tag and his normal role (not lifted 1+ point by teammates out [RoutingBump], no role-drop flag, not
+promoted by the role guard, QB = his team's starter). Backfill: a player who fails is skipped and the next eligible
+player moves up, so each position has 5 elite when available. Anyone else over
 70% of the entered lineups: the second build (the model, main folder) is rebuilt WITHOUT him into weeks/<week>/
 model_excl/ (optimize.py --exclude; the graded main folder is untouched) and the entry recombined, repeated until
 every non-elite player is at or under 70%. --no-rebuild only reports. Prints the elite list, any rebuild, combined
@@ -89,13 +90,17 @@ def check(rows, header, fd, cfg):
 
 
 def elite_table(fd, proj):
-    """Top ELITE_TOP per position by FanDuel FPPG (ELITE_MIN_GAMES+ played) with the tests; column Elite = passes all."""
+    """Per position, players by FanDuel FPPG (ELITE_MIN_GAMES+ played) down to the ELITE_TOP-th who passes every test
+    (backfill: failing players are listed with the reason and skipped). Column Elite = passes all."""
     cols = [c for c in ['Id', 'RoutingBump', 'RoleDrop', 'GuardRescue', 'StartingQB'] if c in proj]
     x = fd.merge(proj[cols], on='Id', how='left')
     out = []
     for pos in ['QB', 'RB', 'WR', 'TE', 'D']:
-        s = x[(x.Position == pos) & (x.Played >= ELITE_MIN_GAMES)].sort_values('FPPG', ascending=False).head(ELITE_TOP)
+        s = x[(x.Position == pos) & (x.Played >= ELITE_MIN_GAMES)].sort_values('FPPG', ascending=False)
+        found = 0
         for _, r in s.iterrows():
+            if found >= ELITE_TOP:
+                break
             why = []
             tag = r.get('Injury Indicator')
             if isinstance(tag, str) and tag.strip():
@@ -109,6 +114,7 @@ def elite_table(fd, proj):
                 why.append('promoted by the role guard')
             if pos == 'QB' and r.get('StartingQB') is not True and str(r.get('StartingQB')) != 'True':
                 why.append('not the starting QB')
+            found += not why
             out.append(dict(Id=r.Id, Player=r.Nickname, Pos=pos, Team=r.Team, Played=int(r.Played),
                             FPPG=round(float(r.FPPG), 2), Elite=not why, Why_not='; '.join(why)))
     return pd.DataFrame(out)
