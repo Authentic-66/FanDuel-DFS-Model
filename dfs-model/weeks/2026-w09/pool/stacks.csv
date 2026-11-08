@@ -1,19 +1,20 @@
 Team,Our_share_pct,Field_QB_own,Top_receivers,Receiver_own,Chalk,Leverage
-SF,11.6,11.67,"George Kittle 13%, Jordan Watkins 2%",14.3,CHALK,0.99
-DET,10.0,11.1,"Amon-Ra St. Brown 16%, Jameson Williams 8%",23.3,CHALK,0.9
-DAL,10.0,8.74,"CeeDee Lamb 17%, George Pickens 8%",24.5,,1.14
-NE,6.9,8.12,"DeMario Douglas 4%, Kyle Williams 1%",5.2,,0.85
-KC,9.3,7.42,"Rashee Rice 8%, Travis Kelce 6%",14.2,,1.25
-NO,5.4,5.36,"Chris Olave 13%, Devaughn Vele 4%",17.2,,1.01
-LV,3.9,5.26,"Brock Bowers 13%, Tre Tucker 4%",17.4,,0.74
-GB,4.6,5.12,"Matthew Golden 10%, Tucker Kraft 4%",13.5,,0.9
-HOU,5.0,4.86,"Nico Collins 5%, Marvin Harrison Jr. 2%",7.4,,1.03
-CAR,3.5,3.98,"Tetairoa McMillan 8%, Jalen Coker 5%",12.8,,0.88
-WAS,3.9,3.5,"Stefon Diggs 6%, Antonio Williams 2%",8.4,,1.11
-DEN,5.8,3.12,"Jaylen Waddle 4%, Courtland Sutton 2%",5.6,,1.86
-CLE,3.5,3.1,"Denzel Boston 4%, Harold Fannin Jr. 3%",6.7,,1.13
-MIA,4.6,2.86,"Caleb Douglas 3%, Malik Washington 3%",5.9,,1.61
-IND,5.4,2.07,"Tyler Warren 4%, Keenan Allen 4%",7.9,,2.61
-LAC,1.5,1.57,"Ladd McConkey 2%, Quentin Johnston 2%",3.3,,0.96
-NYG,4.6,1.26,"Malik Nabers 11%, Isaiah Likely 6%",17.6,,3.65
-ARI,0.4,1.23,"Trey McBride 9%, Reggie Virgil 1%",9.7,,0.33
+SF,10.4,11.2,"George Kittle 14%, Demarcus Robinson 2%",16.4,CHALK,0.93
+DET,8.6,10.16,"Amon-Ra St. Brown 16%, Jameson Williams 7%",22.9,CHALK,0.85
+DAL,8.6,8.16,"CeeDee Lamb 21%, Ryan Flournoy 4%",24.6,,1.05
+KC,9.0,7.73,"Rashee Rice 8%, Travis Kelce 6%",14.8,,1.16
+NE,5.8,7.37,"DeMario Douglas 4%, Eli Raridon 1%",5.1,,0.79
+LAR,7.2,7.34,"Puka Nacua 23%, Tyler Higbee 3%",25.2,,0.98
+NO,5.0,5.32,"Chris Olave 13%, Devaughn Vele 4%",17.1,,0.94
+LV,3.6,5.32,"Brock Bowers 13%, Tre Tucker 5%",17.7,,0.68
+HOU,5.0,4.85,"Nico Collins 5%, Dalton Schultz 2%",7.3,,1.03
+GB,3.6,4.63,"Christian Watson 13%, Matthew Golden 8%",21.1,,0.78
+CAR,3.6,4.15,"Tetairoa McMillan 9%, Jalen Coker 5%",13.9,,0.87
+WAS,4.0,3.6,"Stefon Diggs 8%, Antonio Williams 2%",10.4,,1.11
+DEN,5.4,3.12,"Jaylen Waddle 3%, Courtland Sutton 2%",5.3,,1.73
+SEA,5.8,2.78,"Jaxon Smith-Njigba 37%, Cooper Kupp 2%",38.8,,2.09
+MIA,4.0,2.73,"Caleb Douglas 3%, Malik Washington 3%",5.7,,1.47
+IND,5.4,2.13,"Tyler Warren 4%, Keenan Allen 4%",8.1,,2.54
+LAC,1.1,1.46,"Ladd McConkey 2%, Quentin Johnston 2%",3.2,,0.75
+NYG,3.6,1.1,"Malik Nabers 10%, Isaiah Likely 6%",15.8,,3.27
+ARI,0.4,1.08,"Trey McBride 8%, Michael Wilson 6%",13.9,,0.37

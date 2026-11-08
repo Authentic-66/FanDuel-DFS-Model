@@ -6,7 +6,7 @@ week's review (`docs/week<N>_review.md`); this tally starts with week 9. NBA kee
 
 | Week | Contest | Entry | Lineup | Salary | Our proj | Score | Rank | Won | Net |
 |---|---|---|---|---|---|---|---|---|---|
-| 9 (Nov 8) | Pooch Punt | free | Goff, Gibbs, Allgeier, DeMario Douglas, Golden, Lamb, Likely (TE), Kaelon Black (FLEX, RB), Saints DST | $59,300 | 123.4 | Monday | | | |
+| 9 (Nov 8) | Pooch Punt | free | Goff, Gibbs, Allgeier, DeMario Douglas, Golden, Lamb, Likely (TE), Kaelon Black (FLEX, RB), Saints DST | $59,300 | 123.7 | Monday | | | |
 
 DeMario Douglas = NE WR, $5,400 (Doug confirmed Nov 8; Caleb Douglas MIA was the other D. Douglas).
 
