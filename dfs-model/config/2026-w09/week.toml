@@ -23,6 +23,7 @@
 [status]
 out = [
   # Sunday Nov 8: Friday list + Sunday rule (see CLAUDE.md "Week 9 final run")
+  "George Pickens",  # Doug, Nov 8 ~10:50 CT: inactive
   "Sam Darnold",
   "Mike Evans",
   "DeVonta Smith",
@@ -74,7 +75,6 @@ out = [
 ]
 questionable = [
   # Sunday Nov 8: still Q on FanDuel 10:30 CT list / not yet confirmed active
-  "George Pickens",
   "Tanner McKee",
   "MarShawn Lloyd",
   "Jake Ferguson",
