@@ -689,6 +689,10 @@ KC 25, DAL / DET 24, LAR 20, NE / SEA 16 ... ARI 1. `model.py` rerun, then all s
 model_cap45, pool, flex_shadow). combine_entry 100 median-70 + 49 model: 149, 0 duplicates, all checks passed; 25 elite
 (St. Brown skipped: FanDuel Q tag -> Olave); top Allgeier 53.0%, JSN 52.3, Singletary 51.7; **none over 70%, no rebuild**.
 Combined stacks SF 17, KC 15, DAL 13, DET 13, LAR 10, ... CLE / PHI / ARI 0. First kickoff 12:00 CT.
+**Free entry = Doug's HAND-BUILT lineup (Nov 8):** Goff, Gibbs, Allgeier, D. Douglas, Golden, Lamb, Likely, Kaelon Black
+(FLEX), Saints DST, logged in `docs/my_own_lineups.md` (new NFL own-lineups tally; never in model grades / totals).
+**Monday review: grade it separately** (score, rank, won, from his entry in the results export; settle which Douglas from
+the ids: DeMario NE or Caleb MIA), split his winnings between the 149 and the free entry, update the tally.
 
 ## Week 9 run checklist (2026-w09) — START HERE when FanDuel releases the week-9 player list
 **State Fri Nov 6: Friday DONE (see "Week 9 Friday run"). Next = Sunday: re-download fd_players.csv (diff vs
