@@ -674,6 +674,22 @@ Seahawks"), ~20 suffix / nickname forms (Deebo Samuel, Gardner Minshew, Zonovan 
 Hollywood, Tre Harris, Chigoziem Okonkwo, Andrew Ogletree = Drew, Velus Jones, ... Jr. / II), rest not on the list.
 Record only.
 
+## Week 9 final run (Sun Nov 8, done ~10:45 CT) — entry file: weeks/2026-w09/entered_upload_149.csv (free entry separate)
+`fd_players.csv` = Sunday 10:30 CT download (`fd_players_sun.csv`, kept; Friday's `fd_players_fri.csv`). Doug saved the
+list under the FDR name first and renamed it: **no `fdr_projections_sun.csv` this week** (FDR test: week 9 Friday only).
+Diff vs Friday: 0 added / removed / salary; 10 tag changes (Hollins, Pat Bryant, Pierce IR -> Q; Tyson IR -> Q; Remigio
+new Q; Demarcus Robinson, Rivers IR cleared; Velus Jones Q cleared; Kirk, Dyami Brown O -> IR).
+**Statuses set BEFORE official inactives were posted (news only, ~10:35 CT):** St. Brown ACTIVE (Pelissero: "officially
+good to go"; still Q on FanDuel's list, 17 lineups); **Pickens kept Q** (Dallas only "hopeful"; 0 lineups); Skattebo
+out (D, no practice); Nabers active (no tag); Hunter Henry, Deshaun Watson, Jaylen Wright out (reported); Velus Jones
+active; Robinson / Rivers off `out`; Hollins / Bryant / Pierce / Tyson / Remigio Q. PHI starts Joe Milton III (no 2026
+data, projects 0 -> PHI 0 stacks).
+Lines FINAL (nflverse games.csv, Sunday): SEA -8.5 / 39.5, NYG -3 / 38.5 at PHI, HOU -5.5, DAL -4.5 ... weights SF 29,
+KC 25, DAL / DET 24, LAR 20, NE / SEA 16 ... ARI 1. `model.py` rerun, then all six sets 150 each (model, median70, nodraw,
+model_cap45, pool, flex_shadow). combine_entry 100 median-70 + 49 model: 149, 0 duplicates, all checks passed; 25 elite
+(St. Brown skipped: FanDuel Q tag -> Olave); top Allgeier 53.0%, JSN 52.3, Singletary 51.7; **none over 70%, no rebuild**.
+Combined stacks SF 17, KC 15, DAL 13, DET 13, LAR 10, ... CLE / PHI / ARI 0. First kickoff 12:00 CT.
+
 ## Week 9 run checklist (2026-w09) — START HERE when FanDuel releases the week-9 player list
 **State Fri Nov 6: Friday DONE (see "Week 9 Friday run"). Next = Sunday: re-download fd_players.csv (diff vs
 `fd_players_fri.csv`), save fdr_projections_sun.csv, FINAL lines + weights (SEA moved -4), inactives (Sunday rule;

@@ -22,24 +22,74 @@
 # Sunday: active Q players come off the Q list, inactive -> out (Doug's rule).
 [status]
 out = [
-  "Sam Darnold",                                                         # Doug, review sheet Nov 5: "Darnold is out"
-  # FanDuel O / D, Nov 6 (Skattebo and Brenen Thompson D)
-  "Mike Evans", "DeVonta Smith", "Garrett Wilson", "A.J. Brown", "David Montgomery", "Deebo Samuel Sr.",
-  "Cam Skattebo", "Dontayvion Wicks", "TreVeyon Henderson", "Rashid Shaheed", "Christian Kirk", "Treylon Burks",
-  "Dyami Brown", "Bam Knight", "CJ Donaldson", "KaVontae Turpin", "Britain Covey", "Josh Whyle", "Brenen Thompson",
+  # Sunday Nov 8: Friday list + Sunday rule (see CLAUDE.md "Week 9 final run")
+  "Sam Darnold",
+  "Mike Evans",
+  "DeVonta Smith",
+  "Garrett Wilson",
+  "A.J. Brown",
+  "David Montgomery",
+  "Deebo Samuel Sr.",
+  "Cam Skattebo",
+  "Dontayvion Wicks",
+  "TreVeyon Henderson",
+  "Rashid Shaheed",
+  "Christian Kirk",
+  "Treylon Burks",
+  "Dyami Brown",
+  "Bam Knight",
+  "CJ Donaldson",
+  "KaVontae Turpin",
+  "Britain Covey",
+  "Josh Whyle",
+  "Brenen Thompson",
   "Kenny Yeboah",
-  # IR with real 2026 volume (targets + carries a game); Jeremiyah Love new (Q -> IR Nov 3)
-  "Dameon Pierce", "De'Von Achane", "Jacory Croskey-Merritt", "RJ Harvey", "Davante Adams", "Tank Bigsby",
-  "Ronnie Rivers", "Jonathon Brooks", "Will Shipley", "Jaxson Dart", "Terry McLaurin", "Chris Brooks",
-  "Mack Hollins", "Jalen Hurts", "Raheim Sanders", "Terrance Ferguson", "Jayden Reed", "David Njoku",
-  "Romeo Doubs", "Jaylin Noel", "Tyquan Thornton", "Tyrone Tracy Jr.", "Alec Pierce", "Pat Bryant",
-  "Demarcus Robinson", "Xavier Legette", "Kendrick Bourne", "Jeremy McNichols", "Jeremiyah Love",
+  "De'Von Achane",
+  "Jacory Croskey-Merritt",
+  "RJ Harvey",
+  "Davante Adams",
+  "Tank Bigsby",
+  "Jonathon Brooks",
+  "Will Shipley",
+  "Jaxson Dart",
+  "Terry McLaurin",
+  "Chris Brooks",
+  "Jalen Hurts",
+  "Raheim Sanders",
+  "Terrance Ferguson",
+  "Jayden Reed",
+  "David Njoku",
+  "Romeo Doubs",
+  "Jaylin Noel",
+  "Tyquan Thornton",
+  "Tyrone Tracy Jr.",
+  "Alec Pierce",
+  "Xavier Legette",
+  "Kendrick Bourne",
+  "Jeremy McNichols",
+  "Jeremiyah Love",
+  "Hunter Henry",
+  "Deshaun Watson",
+  "Jaylen Wright",
 ]
 questionable = [
-  # FanDuel Q, Nov 6 (16; all also Q on Rotowire)
-  "Amon-Ra St. Brown", "George Pickens", "Deshaun Watson", "Tanner McKee", "MarShawn Lloyd", "Jake Ferguson",
-  "Hunter Henry", "Colby Parkinson", "Sione Vaki", "Jaylen Wright", "Kaytron Allen", "Luke Schoonmaker",
-  "Jordan Whittington", "Velus Jones Jr.", "Jacob Saylors", "Charlie Jones",
+  # Sunday Nov 8: still Q on FanDuel 10:30 CT list / not yet confirmed active
+  "George Pickens",
+  "Tanner McKee",
+  "MarShawn Lloyd",
+  "Jake Ferguson",
+  "Colby Parkinson",
+  "Sione Vaki",
+  "Kaytron Allen",
+  "Luke Schoonmaker",
+  "Jordan Whittington",
+  "Jacob Saylors",
+  "Charlie Jones",
+  "Mack Hollins",
+  "Pat Bryant",
+  "Dameon Pierce",
+  "Jordyn Tyson",
+  "Nikko Remigio",
 ]
 active = []
 
@@ -126,27 +176,27 @@ extra_receivers = []
 # Stack QB-team weights: weight = round(2 * (implied total - 16)), min 1, round half up.
 # PRELIMINARY (nflverse lines, Tue Nov 3 14:02 UTC; data/2026-w09/lines.csv).
 [stacks.weights]
-SF = 30
-DAL = 26
-DET = 26
-KC = 24
-SEA = 24
-LAR = 21
-NE = 18
+SF = 29
+KC = 25
+DAL = 24
+DET = 24
+LAR = 20
+NE = 16
+SEA = 16
 DEN = 15
+IND = 15
 NO = 14
-IND = 14
-HOU = 13
-NYG = 12
-MIA = 12
-GB = 12
-WAS = 10
+HOU = 14
+MIA = 11
+WAS = 11
+CAR = 10
+NYG = 10
 LV = 10
-CLE = 9
-CAR = 9
-NYJ = 5
-PHI = 5
-LAC = 4
+GB = 10
+CLE = 7
+NYJ = 6
+PHI = 4
+LAC = 3
 ARI = 1
 
 [stacks.rules]
