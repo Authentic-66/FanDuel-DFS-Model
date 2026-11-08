@@ -704,7 +704,21 @@ flex_shadow, entered_*_149) = AS ENTERED = graded. The Pickens-out rebuild (all 
 **Monday review: grade it separately** (score, rank, won, from his entry in the results export; split his winnings between the 149 and the free entry, update the tally.
 
 ## Week 9 run checklist (2026-w09) — START HERE when FanDuel releases the week-9 player list
-**State Fri Nov 6: Friday DONE (see "Week 9 Friday run"). Next = Sunday: re-download fd_players.csv (diff vs
+**State Sun Nov 8 (pushed, 465946f): FINAL DONE and ENTERED (see "Week 9 final run"). NEXT = step 6, the week-9
+review, once Doug drops the results export (Mon Nov 9 or later).** Week-9 review extras on top of step 6:
+(a) Doug's entries = `entered_upload_149.csv` (the FIRST 149, regenerated and verified; report any mismatch);
+(b) score `rebuild_pickens_out/entered_upload_149.csv` (and its six sets) beside the entered 149 as a comparison;
+(c) Doug's hand-built free entry graded separately -> `docs/my_own_lineups.md` (DeMario Douglas), split his reported
+winnings between the 149 and the free entry; only the 149 go in the running total (-$6.53 after week 8);
+(d) Sunday status calls made BEFORE official inactives: St. Brown taken active on news while FanDuel still had Q (17
+lineups), Pickens kept Q (was inactive: right), Skattebo out, Nabers active, H. Henry / D. Watson / J. Wright out on
+news; report how those players scored; (e) PHI started Joe Milton III (projected 0, PHI 0 stacks): note;
+(f) no FDR Sunday file this week (FDR test has week 9 Friday only). Then the "Week-10 build tests" (median-70
+variants) and week-10 prep (step 0: week 9's week.toml copied, then DELETE the week-4-8-style pins and keep no
+`promotion = false`).
+**Lesson (Nov 8):** once Doug may have uploaded, copy the entered file aside BEFORE any rebuild (the Pickens rebuild
+overwrote the uploaded 149; it had to be regenerated).
+Earlier: **State Fri Nov 6: Friday DONE (see "Week 9 Friday run"). Next = Sunday: re-download fd_players.csv (diff vs
 `fd_players_fri.csv`), save fdr_projections_sun.csv, FINAL lines + weights (SEA moved -4), inactives (Sunday rule;
 Doug's calls on Nabers / Diggs), then the six builds + combine_entry (step 5): **100 median-70 + 49 model, flag over 70%** (Doug, Nov 6).**
 **EXPOSURE RULE (Doug, Nov 6, built into combine_entry.py):** elite players have NO exposure cap = top 5 at their
