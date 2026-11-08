@@ -1,20 +1,20 @@
 Team,Our_share_pct,Field_QB_own,Top_receivers,Receiver_own,Chalk,Leverage
-SF,10.4,11.2,"George Kittle 14%, Demarcus Robinson 2%",16.4,CHALK,0.93
-DET,8.6,10.16,"Amon-Ra St. Brown 16%, Jameson Williams 7%",22.9,CHALK,0.85
-DAL,8.6,8.16,"CeeDee Lamb 21%, Ryan Flournoy 4%",24.6,,1.05
-KC,9.0,7.73,"Rashee Rice 8%, Travis Kelce 6%",14.8,,1.16
-NE,5.8,7.37,"DeMario Douglas 4%, Eli Raridon 1%",5.1,,0.79
-LAR,7.2,7.34,"Puka Nacua 23%, Tyler Higbee 3%",25.2,,0.98
-NO,5.0,5.32,"Chris Olave 13%, Devaughn Vele 4%",17.1,,0.94
-LV,3.6,5.32,"Brock Bowers 13%, Tre Tucker 5%",17.7,,0.68
-HOU,5.0,4.85,"Nico Collins 5%, Dalton Schultz 2%",7.3,,1.03
-GB,3.6,4.63,"Christian Watson 13%, Matthew Golden 8%",21.1,,0.78
-CAR,3.6,4.15,"Tetairoa McMillan 9%, Jalen Coker 5%",13.9,,0.87
+SF,10.4,11.21,"George Kittle 14%, Demarcus Robinson 2%",16.1,CHALK,0.93
+DET,8.6,10.18,"Amon-Ra St. Brown 16%, Jameson Williams 7%",23.1,CHALK,0.84
+DAL,8.6,8.06,"CeeDee Lamb 18%, Ryan Flournoy 3%",21.4,,1.07
+KC,9.0,7.74,"Rashee Rice 8%, Travis Kelce 6%",14.5,,1.16
+LAR,7.2,7.36,"Puka Nacua 23%, Tyler Higbee 3%",25.3,,0.98
+NE,5.8,7.33,"DeMario Douglas 4%, Eli Raridon 1%",5.1,,0.79
+NO,5.0,5.33,"Chris Olave 13%, Devaughn Vele 4%",17.2,,0.94
+LV,3.6,5.29,"Brock Bowers 13%, Tre Tucker 4%",17.6,,0.68
+HOU,5.0,4.86,"Nico Collins 5%, Dalton Schultz 2%",7.4,,1.03
+GB,3.6,4.71,"Christian Watson 13%, Matthew Golden 8%",21.5,,0.76
+CAR,3.6,4.19,"Tetairoa McMillan 9%, Jalen Coker 5%",14.0,,0.86
 WAS,4.0,3.6,"Stefon Diggs 8%, Antonio Williams 2%",10.4,,1.11
-DEN,5.4,3.12,"Jaylen Waddle 3%, Courtland Sutton 2%",5.3,,1.73
-SEA,5.8,2.78,"Jaxon Smith-Njigba 37%, Cooper Kupp 2%",38.8,,2.09
+DEN,5.4,3.05,"Jaylen Waddle 4%, Courtland Sutton 2%",5.4,,1.77
+SEA,5.8,2.79,"Jaxon Smith-Njigba 37%, Cooper Kupp 2%",38.9,,2.08
 MIA,4.0,2.73,"Caleb Douglas 3%, Malik Washington 3%",5.7,,1.47
-IND,5.4,2.13,"Tyler Warren 4%, Keenan Allen 4%",8.1,,2.54
-LAC,1.1,1.46,"Ladd McConkey 2%, Quentin Johnston 2%",3.2,,0.75
+IND,5.4,2.13,"Tyler Warren 5%, Keenan Allen 4%",8.3,,2.54
+LAC,1.1,1.46,"Ladd McConkey 2%, Quentin Johnston 2%",3.3,,0.75
 NYG,3.6,1.1,"Malik Nabers 10%, Isaiah Likely 6%",15.8,,3.27
-ARI,0.4,1.08,"Trey McBride 8%, Michael Wilson 6%",13.9,,0.37
+ARI,0.4,1.09,"Trey McBride 8%, Michael Wilson 6%",14.0,,0.37

@@ -1,23 +1,23 @@
 Team,Our_share_pct,Field_QB_own,Top_receivers,Receiver_own,Chalk,Leverage
-SF,9.8,11.2,"George Kittle 14%, Demarcus Robinson 2%",16.4,CHALK,0.88
-DET,8.1,10.16,"Amon-Ra St. Brown 16%, Jameson Williams 7%",22.9,CHALK,0.8
-DAL,8.1,8.16,"CeeDee Lamb 21%, Ryan Flournoy 4%",24.6,,0.99
-KC,8.5,7.73,"Rashee Rice 8%, Travis Kelce 6%",14.8,,1.1
-NE,5.4,7.37,"DeMario Douglas 4%, Eli Raridon 1%",5.1,,0.73
-LAR,6.8,7.34,"Puka Nacua 23%, Tyler Higbee 3%",25.2,,0.93
-NO,4.7,5.32,"Chris Olave 13%, Devaughn Vele 4%",17.1,,0.88
-LV,3.4,5.32,"Brock Bowers 13%, Tre Tucker 5%",17.7,,0.64
-HOU,4.7,4.85,"Nico Collins 5%, Dalton Schultz 2%",7.3,,0.97
-GB,3.4,4.63,"Christian Watson 13%, Matthew Golden 8%",21.1,,0.73
-CAR,3.4,4.15,"Tetairoa McMillan 9%, Jalen Coker 5%",13.9,,0.82
+SF,9.8,11.21,"George Kittle 14%, Demarcus Robinson 2%",16.1,CHALK,0.87
+DET,8.1,10.18,"Amon-Ra St. Brown 16%, Jameson Williams 7%",23.1,CHALK,0.8
+DAL,8.1,8.06,"CeeDee Lamb 18%, Ryan Flournoy 3%",21.4,,1.0
+KC,8.5,7.74,"Rashee Rice 8%, Travis Kelce 6%",14.5,,1.1
+LAR,6.8,7.36,"Puka Nacua 23%, Tyler Higbee 3%",25.3,,0.92
+NE,5.4,7.33,"DeMario Douglas 4%, Eli Raridon 1%",5.1,,0.74
+NO,4.7,5.33,"Chris Olave 13%, Devaughn Vele 4%",17.2,,0.88
+LV,3.4,5.29,"Brock Bowers 13%, Tre Tucker 4%",17.6,,0.64
+HOU,4.7,4.86,"Nico Collins 5%, Dalton Schultz 2%",7.4,,0.97
+GB,3.4,4.71,"Christian Watson 13%, Matthew Golden 8%",21.5,,0.72
+CAR,3.4,4.19,"Tetairoa McMillan 9%, Jalen Coker 5%",14.0,,0.81
 WAS,3.7,3.6,"Stefon Diggs 8%, Antonio Williams 2%",10.4,,1.03
-DEN,5.1,3.12,"Jaylen Waddle 3%, Courtland Sutton 2%",5.3,,1.63
-SEA,5.4,2.78,"Jaxon Smith-Njigba 37%, Cooper Kupp 2%",38.8,,1.94
+DEN,5.1,3.05,"Jaylen Waddle 4%, Courtland Sutton 2%",5.4,,1.67
+SEA,5.4,2.79,"Jaxon Smith-Njigba 37%, Cooper Kupp 2%",38.9,,1.94
 MIA,3.7,2.73,"Caleb Douglas 3%, Malik Washington 3%",5.7,,1.36
-NYJ,2.0,2.33,"Omar Cooper Jr. 6%, Adonai Mitchell 3%",9.3,,0.86
-IND,5.1,2.13,"Tyler Warren 4%, Keenan Allen 4%",8.1,,2.39
-LAC,1.0,1.46,"Ladd McConkey 2%, Quentin Johnston 2%",3.2,,0.68
+NYJ,2.0,2.36,"Omar Cooper Jr. 6%, Adonai Mitchell 3%",9.2,,0.85
+IND,5.1,2.13,"Tyler Warren 5%, Keenan Allen 4%",8.3,,2.39
+LAC,1.0,1.46,"Ladd McConkey 2%, Quentin Johnston 2%",3.3,,0.68
 NYG,3.4,1.1,"Malik Nabers 10%, Isaiah Likely 6%",15.8,,3.09
-ARI,0.3,1.08,"Trey McBride 8%, Michael Wilson 6%",13.9,,0.28
-CLE,2.4,,"Denzel Boston 3%, Harold Fannin Jr. 3%",6.1,,
+ARI,0.3,1.09,"Trey McBride 8%, Michael Wilson 6%",14.0,,0.28
+CLE,2.4,,"Denzel Boston 3%, Harold Fannin Jr. 3%",6.2,,
 PHI,1.4,,"Dallas Goedert 2%, Makai Lemon 2%",4.3,,

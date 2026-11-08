@@ -23,7 +23,6 @@
 [status]
 out = [
   # Sunday Nov 8: Friday list + Sunday rule (see CLAUDE.md "Week 9 final run")
-  "George Pickens",  # Doug, Nov 8 ~10:50 CT: inactive
   "Sam Darnold",
   "Mike Evans",
   "DeVonta Smith",
@@ -73,8 +72,11 @@ out = [
   "Deshaun Watson",
   "Jaylen Wright",
 ]
+# AS ENTERED (Doug, Nov 8): Pickens stays Q here. He was inactive; Doug kept the pre-rebuild 149 (Pickens in 0 lineups
+# either way). The Pickens-out rebuild is in weeks/2026-w09/rebuild_pickens_out/ (comparison only).
 questionable = [
   # Sunday Nov 8: still Q on FanDuel 10:30 CT list / not yet confirmed active
+  "George Pickens",
   "Tanner McKee",
   "MarShawn Lloyd",
   "Jake Ferguson",

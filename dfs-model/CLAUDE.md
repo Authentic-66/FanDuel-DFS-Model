@@ -689,10 +689,16 @@ KC 25, DAL / DET 24, LAR 20, NE / SEA 16 ... ARI 1. `model.py` rerun, then all s
 model_cap45, pool, flex_shadow). combine_entry 100 median-70 + 49 model: 149, 0 duplicates, all checks passed; 25 elite
 (St. Brown skipped: FanDuel Q tag -> Olave); top Allgeier 53.0%, JSN 52.3, Singletary 51.7; **none over 70%, no rebuild**.
 Combined stacks SF 17, KC 15, DAL 13, DET 13, LAR 10, ... CLE / PHI / ARI 0. First kickoff 12:00 CT.
-**Doug, ~10:45 CT: Pickens OUT (inactive), St. Brown IN (confirmed).** Pickens Q -> out, `model.py` + all six sets +
+**Doug, ~10:45 CT: Pickens OUT (inactive), St. Brown IN (confirmed).** Comparison rebuild (NOT entered, see below): Pickens Q -> out, `model.py` + all six sets +
 combine rerun: Mingo 0 -> 3.7, Flournoy +0.4, Lamb +0.3 (other moves +-0.1, sim noise). 149 = 100 median-70 + 49 model,
 all checks passed, none over 70%, no rebuild; elite: Hubbard dropped (lifted +1.0 by teammates out), Kyren Williams in;
 top JSN 55.0, Singletary 53.7, Allgeier 52.3; St. Brown 14, Pickens 0; stacks unchanged (SF 17, KC 15, DAL 13, DET 13 ...).
+**ENTERED = the FIRST 149 (pre-Pickens rebuild; Doug had already uploaded it and kept it, Nov 8).** The rebuild
+overwrote it; it was regenerated from the pre-Pickens week.toml (04c7574 settings): proj.csv byte-identical to the saved
+copy, entered_exposure.csv identical, same build messages. Main folders (model, median70, nodraw, model_cap45, pool,
+flex_shadow, entered_*_149) = AS ENTERED = graded. The Pickens-out rebuild (all six sets + its 149) is kept in
+`weeks/2026-w09/rebuild_pickens_out/` as a comparison only: Monday, score its entered_upload_149.csv on the same results
+(avg, top-10%, top-1%, best, cashed / won as if entered) beside the entered 149. Check Doug's entries = entered_upload_149.csv.
 **Free entry = Doug's HAND-BUILT lineup (Nov 8):** Goff, Gibbs, Allgeier, DeMario Douglas (NE; Doug confirmed), Golden, Lamb, Likely, Kaelon Black
 (FLEX), Saints DST, logged in `docs/my_own_lineups.md` (new NFL own-lineups tally; never in model grades / totals).
 **Monday review: grade it separately** (score, rank, won, from his entry in the results export; split his winnings between the 149 and the free entry, update the tally.
