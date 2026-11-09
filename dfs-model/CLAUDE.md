@@ -703,8 +703,27 @@ flex_shadow, entered_*_149) = AS ENTERED = graded. The Pickens-out rebuild (all 
 (FLEX), Saints DST, logged in `docs/my_own_lineups.md` (new NFL own-lineups tally; never in model grades / totals).
 **Monday review: grade it separately** (score, rank, won, from his entry in the results export; split his winnings between the 149 and the free entry, update the tally.
 
+## Week 9 (2026-w09) result — see docs/week9_review.md
+149 entered (100 median-70 + 49 model; all 149 matched `entered_upload_149.csv`) + 1 free entry (Doug's own, 128.7,
+rank 124,634, $0.10, docs/my_own_lineups.md) in the Pooch Punt (524,339 entries). Entered avg 103.6 vs field 113.5;
+41 cashed (27.5%; cash line 112.6); best 183.3 (GB stack, rank 1,201); 1 top-1%, 7 top-10%; winner 215.58. **Won $5.03
+on the 149 (export; Doug said $5.12 total vs export $5.13: ask), net -$2.42, running total -$8.95.** Halves: median-70
+100.7 / -$2.41, model 109.4 / -$0.01. Full sets (avg / cash / net / top-1%): model 108.7 / 38.7% / -$0.10 / 3; no-draw
+109.6 / 43.3% / +$0.07 / 2; pool 110.3 / 42% / -$0.22 / 2; cap 45 109.3 / -$0.86 / 0; flex shadow 107.7 / -$1.59 / 0;
+median-70 101.1 / 24% / -$3.54 / 0; Pickens-out 149 101.7 / -$3.02 (keeping the first upload was right). Median-70's
+70% cap went to Allgeier / JSN / Singletary (5.6 / 8.6 / 4.9; both RBs routing-bumped). Reds: E. Wilson (role) no effect
+(Charbonnet override already kept him out); matchup RBs (12.3 proj / 5.5 actual) +1.1 a lineup, +$0.64. Promotion
+4+: 5.0 proj / 2.8 actual (n 3; kill rule likely to fire after week 10). Jonah Coleman 0 lineups (Dobbins DEN RB1 by
+0.2; Coleman 16.8, 25% owned, 42% of top 1%). FLEX RB 71% = top 10% (first time), but RB points -22. Max-entrants:
+median-70 still most similar (0.37). **Week-10 build tests (section 7): no variant clearly beats the model over weeks
+5-9; v2 (QB + 1, bring-back optional) best money (-$6.71 vs model -$8.59) but fewest top finishes; recommended week 10
+= model-led (100 model + 49 v1 flex median-70, or model 149). Doug decides.** Tables: weeks/2026-w09/grade_all_sets.csv,
+red_split.csv, week10_build_tests.csv.
+
 ## Week 9 run checklist (2026-w09) — START HERE when FanDuel releases the week-9 player list
-**State Sun Nov 8 (pushed, 465946f): FINAL DONE and ENTERED (see "Week 9 final run"). NEXT = step 6, the week-9
+**State Mon Nov 9: step 6 (review) DONE, docs/week9_review.md; week-10 build tests DONE (review section 7). NEXT =
+Doug's week-10 build call, then week-10 prep (copy week 9's week.toml; remove the Harrison trade entry; DEN RB check).**
+Earlier: **State Sun Nov 8 (pushed, 465946f): FINAL DONE and ENTERED (see "Week 9 final run"). NEXT = step 6, the week-9
 review, once Doug drops the results export (Mon Nov 9 or later).** Week-9 review extras on top of step 6:
 (a) Doug's entries = `entered_upload_149.csv` (the FIRST 149, regenerated and verified; report any mismatch);
 (b) score `rebuild_pickens_out/entered_upload_149.csv` (and its six sets) beside the entered 149 as a comparison;
@@ -940,6 +959,12 @@ for top-5 TEs by salary, the flex-shadow rule); (2) relaxed stack rule (QB + 1 a
 repeats of the top lineups allowed (up to ~30% of 150, like max-entrants' 106 distinct per 150). Report per week:
 cash rate, money as-if (Pooch Punt prize table), average, top 1% (plus top 10% and best, the standing rule). Doug
 decides the week-10 build from it. Note no-draw / some caps can't build week 7: report any variant that stalls.
+**DONE Nov 9 (docs/week9_review.md section 7; weeks/2026-w09/week10_build_tests.csv).** v3 = plain's top 105 by its
+objective + top 45 repeated. All built 150 every week. Weeks 5-9 net / top-10% / top-1%: model -8.59 / 42 / 4; plain
+-10.96 / 35 / 3; v1 -8.77 / 38 / 2; v2 -6.71 / 26 / 1; v3 -10.85 / 34 / 5; model 100 + v1 49 -8.38 / 36 / 4; week 9's
+plain 100 + model 49 -10.53 / 36 / 4. Gaps under $4.30 over 5 weeks vs $5-7 single-week swings: noise-level.
+Scratch scripts (gone next session): in-process build = eligible_pool + Proj = median of sims + build_lineups with
+mean_weight 1, cap 105, overlap 7 (skip ownership.attach: it writes weeks/<w>/ownership_train.csv).
 
 ## Top finishers and max-entrants (Nov 6) — docs/top_finishers.md, docs/max_entrants.md; analysis only
 **NFL and NBA are kept COMPLETELY SEPARATE (Doug, Nov 6): no pooled numbers across sports, ever.** The NBA repo has

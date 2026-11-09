@@ -247,5 +247,6 @@ DST = [  # 10
 extra_sets = ["model_cap45", "flex_shadow", "nodraw", "median70"]
 
 [contest]
+field_size = 524339             # week-9 Pooch Punt All Entries export (Nov 9)
 
 [contest.guru]

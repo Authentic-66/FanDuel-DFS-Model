@@ -25,7 +25,8 @@ from learn_from_winners import ID_RE, features, players_table, read_set, to_inde
 
 DOUG = 'gst1999'
 EXPORTS = {'2026-w05': '10.11.2026_35k_Pooch_Punt_All_Entries.csv', '2026-w06': '135326-281053769.csv',
-           '2026-w07': '135562-281154846.csv', '2026-w08': '135859-281259493.csv'}
+           '2026-w07': '135562-281154846.csv', '2026-w08': '135859-281259493.csv',
+           '2026-w09': '136184-281370292.csv'}
 BUILDS = ['model', 'nodraw', 'median70', 'cap45']
 LINEUP_METRICS = [  # (label, function of the features frame -> per-lineup series)
     ('salary QB', lambda f: f.sal_QB), ('salary RB', lambda f: f.sal_RB), ('salary WR', lambda f: f.sal_WR),
@@ -113,7 +114,7 @@ def md(df, fmt='{:.1f}'):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--builds', required=True, help='scratch folder holding w05_nodraw/upload.csv etc.')
-    ap.add_argument('--weeks', default=','.join(EXPORTS), help='comma list, default weeks 5-8')
+    ap.add_argument('--weeks', default=','.join(EXPORTS), help='comma list, default weeks 5-9')
     a = ap.parse_args()
     sys.stdout.reconfigure(encoding='utf-8')
     allT, gaps = [], []
