@@ -723,6 +723,12 @@ red_split.csv, week10_build_tests.csv.
 ## Week 9 run checklist (2026-w09) — START HERE when FanDuel releases the week-9 player list
 **State Mon Nov 9: step 6 (review) DONE, docs/week9_review.md; week-10 build tests DONE (review section 7). NEXT =
 Doug's week-10 build call, then week-10 prep (copy week 9's week.toml; remove the Harrison trade entry; DEN RB check).**
+**Doug, Nov 9: thinking it over; back Thursday afternoon Nov 12 (near weekly session limits). Open for him then:
+(1) week-10 entered build (recommended: 100 model + 49 v1-flex median-70, or model 149; options in week9_review s8);
+(2) winnings $5.12 (his) vs $5.13 (export; total -$8.95 uses the export); (3) push c671b38 + this note (not pushed).
+Nothing for week 10 built yet: if FanDuel's week-10 list is out by Thursday, start the week-10 checklist steps 0-2
+(copy week 9's week.toml, delete the pins, Harrison entry removed, `[grading] extra_sets` incl. the median-70 variants
+as shadows once the build is picked).**
 Earlier: **State Sun Nov 8 (pushed, 465946f): FINAL DONE and ENTERED (see "Week 9 final run"). NEXT = step 6, the week-9
 review, once Doug drops the results export (Mon Nov 9 or later).** Week-9 review extras on top of step 6:
 (a) Doug's entries = `entered_upload_149.csv` (the FIRST 149, regenerated and verified; report any mismatch);
