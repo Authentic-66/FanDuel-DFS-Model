@@ -1,0 +1,7 @@
+Idea to test (analysis only): defense vs position. For each position,
+compute how many FanDuel points each defense allows vs league average,
+using only games before that week (no lookahead), shrunk toward
+average early in the season. Test on past seasons: does it predict
+actual points beyond our current projection (which already includes
+Vegas implied totals)? Report by position. If yes, propose a blended
+adjustment and test it on held-out seasons.
