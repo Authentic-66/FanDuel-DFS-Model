@@ -746,6 +746,13 @@ cap45 117.3; flex 115.3; nodraw 116.7; median70 (cap 45) 111.6; plain 112.3; v1 
 distinct). Median sets: Cook / C. Watson / MIA DST / Javonte at 105 (cap moves Javonte 105 -> under 45).
 Review sheet `data/2026-w10/review_sheet.xlsx` (212 rows, Lineups 1,350; Color, Pool, RoleDrop, Promoted, RB_trend;
 builder = scratch sheet_w10.py, recipe in the week-7 checklist + week-9 notes).
+**TRADES APPLIED (Doug approved, Nov 12):** Keenan Allen IND -> SF 0.18 / 0.8 (**0.15 if Evans or Deebo plays: set
+from Friday's report**), Downs IND -> KC 0.12 / 0.8, Cousins LV -> MIN 0.0 / 1.0. Projections: IND Dulin 0 -> 5.6,
+Burks 0 -> 4.6, Treadwell 3.4 -> 5.9, Warren 9.8 -> 10.8, Taylor +0.4; KC Downs 7.8 -> 4.1, Rice -1.3, Kelce -1.1;
+SF Allen 8.9 -> 6.7, **Kittle 14.9 -> 12.6** (the share comes off every SF target-getter pro rata), CMC -0.7,
+Watkins -0.9. Sets rebuilt (rules checked): model 113.9, **IND 0 -> 6 stacks** (Jones + Warren + Dulin / Burks; the
+top six teams -1 each), Warren +16, McBride +9, Rice -9, Kraft -9; cap45 115.8; median sets: Kittle -40 to -81,
+Warren +17 to +36 (he is now RoutingBump 1.1, so the 45 injury cap holds him in median70). Sheet rebuilt (unmarked).
 **Next:** Doug's calls above + sheet (red / Pool) -> pool build; Friday diff + statuses; Sunday final: all sets,
 then model `entered_upload_149.csv` (drop lowest projected). Promotion kill rule in the week-10 review.
 

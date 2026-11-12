@@ -93,6 +93,33 @@ active = []
 
 [status.starting_qb]
 
+# Traded players (Doug approved Nov 12; shares proposed from 2026 target shares and the new teams' depth).
+# Keenan Allen: 0.18 if Evans AND Deebo are both out Friday, 0.15 if either plays (Doug). Both FanDuel Q on Nov 12:
+# 0.18 for the prelim; set from Friday's report.
+[[status.trade]]
+player = "Keenan Allen"
+position = "WR"
+from = "IND"
+to = "SF"
+new_target_share = 0.18       # 22.5% of IND targets in 2026; SF WRs without Evans / Deebo: Watkins 9%, Cooks 8%
+first_week_factor = 0.8
+
+[[status.trade]]
+player = "Josh Downs"
+position = "WR"
+from = "IND"
+to = "KC"
+new_target_share = 0.12        # 19.9% at IND; KC: Kelce 20%, Worthy 19.5%, Walker 13%, Rice back (~17%)
+first_week_factor = 0.8
+
+[[status.trade]]
+player = "Kirk Cousins"
+position = "QB"
+from = "LV"
+to = "MIN"
+new_target_share = 0.0         # QB: records the move (LV rushing volume to LV mates); MIN starter = Friday's call
+first_week_factor = 1.0
+
 # Doug's projection reads: new mean FanDuel points.
 [overrides]
 
