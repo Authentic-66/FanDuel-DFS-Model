@@ -12,8 +12,9 @@ Built at the final run, not entered, graded beside the entered set ([grading] ex
 With --median70 (week 10 on, Doug Nov 12; docs/week9_review.md section 7): --variant flex = v1, the flex-shadow rule
 (-> median70_v1/); --variant stack = v2, QB + 1 receiver, bring-back optional (-> median70_v2/); --variant repeats =
 v3, the plain build's 150 ranked by projected (median) score, top 105 kept and the top 45 entered twice (->
-median70_v3/). --injury-cap N: players lifted by injured teammates (RoutingBump 1+ or GuardRescue set: the elite
-rule's "not normal role" test) are capped at N lineups (Doug, Nov 12: 30% = 45).
+median70_v3/). --injury-cap N: players lifted by injured teammates (RoutingBump minus TradeBump 1+, or GuardRescue
+set: the elite rule's "not normal role" test; trade boosts are permanent and don't count) are capped at N lineups
+(Doug, Nov 12: 30% = 45).
 --pool builds Doug's pool lineups from [pool] in week.toml instead (docs/pool_mode.md) and writes them to
 weeks/<week>/pool/ (or pool/<subdir>/), plus pool.csv: every listed player, his rank, status and lineups."""
 import os
@@ -101,8 +102,7 @@ if args.pool:
 else:
     df = opt.eligible_pool(proj, cfg['prefs'], o)
     if args.injury_cap:
-        rescue = df.GuardRescue.fillna('').astype(str).str.len() > 0 if 'GuardRescue' in df else False
-        lifted = df[(df.RoutingBump >= 1) | rescue]
+        lifted = df[project.injury_lifted(df).values]   # trade boosts are permanent: not counted (Doug, Nov 12)
         for name in lifted.Name:
             cfg['prefs']['player_cap'][name] = min(args.injury_cap, cfg['prefs']['player_cap'].get(name, args.injury_cap))
         print(f'injury cap {args.injury_cap}: ' + ', '.join(f'{r.Name} ({r.Proj})' for r in

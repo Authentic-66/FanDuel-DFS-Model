@@ -141,7 +141,7 @@ def redistribute_out(agg, out_players, active_fd, share, st=None, mode='skip', r
     return extra['tgt'], extra['car']
 
 
-def trade_volume(agg, trades, active_fd, share, routing=None, st=None, old_team='full'):
+def trade_volume(agg, trades, active_fd, share, routing=None, st=None, old_team='full', take_from='all'):
     """Volume changes for [[status.trade]] players (rows from data.trades; active_fd already lists them on the new
     team). Returns ({key: extra targets/g}, {key: extra carries/g}) to add to redistribute_out's.
     Old team: his per-game targets and carries go to his old teammates (`share` pro rata, or by position with
@@ -151,7 +151,12 @@ def trade_volume(agg, trades, active_fd, share, routing=None, st=None, old_team=
       "present_share" = like an OUT player under absent_mode "present_share" (needs `st`): each old teammate's gain is
           scaled by the share of his sample the traded player was still there for, so it fades game by game.
     New team (only if he is active): he gets share * factor of the team's targets per game, taken from his new
-    teammates in proportion to their own targets, so the team total is unchanged. His carries stay his own."""
+    teammates in proportion to their own targets, so the team total is unchanged. His carries stay his own.
+    take_from ([model.injury] trade_take_from): "all" = from every RB / WR / TE teammate (weeks 6-9); "position" =
+    only from teammates at his own position (Doug, Nov 12: Allen's share from SF's WRs, not Kittle / McCaffrey);
+    the share is still of the whole team's targets."""
+    if take_from not in ('all', 'position'):
+        raise ValueError(f'[model.injury] trade_take_from must be "all" or "position", not {take_from!r}')
     xt, xc = {}, {}
     for t in trades.itertuples():
         if t.Key not in agg.index:
@@ -172,8 +177,15 @@ def trade_volume(agg, trades, active_fd, share, routing=None, st=None, old_team=
         if tgt.sum() <= 0:
             raise ValueError(f'[[status.trade]] {t.Name}: no {t.To} targets to take a share of')
         take = t.share * t.factor
-        for k, v in zip(mates, tgt):
-            xt[k] = xt.get(k, 0) - take * v
+        if take_from == 'position' and take > 0:
+            group = active_fd.set_index('Key').Position.reindex(mates).values == t.Pos
+            if tgt[group].sum() <= 0:
+                raise ValueError(f'[[status.trade]] {t.Name}: no {t.To} {t.Pos} targets to take a share of')
+            for k, v in zip(mates[group], tgt[group]):
+                xt[k] = xt.get(k, 0) - take * tgt.sum() * v / tgt[group].sum()
+        else:
+            for k, v in zip(mates, tgt):
+                xt[k] = xt.get(k, 0) - take * v
         xt[t.Key] = xt.get(t.Key, 0) + take * tgt.sum() - per_game(agg, t.Key, 'tgt')
     return xt, xc
 

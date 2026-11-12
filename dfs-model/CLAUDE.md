@@ -753,6 +753,16 @@ SF Allen 8.9 -> 6.7, **Kittle 14.9 -> 12.6** (the share comes off every SF targe
 Watkins -0.9. Sets rebuilt (rules checked): model 113.9, **IND 0 -> 6 stacks** (Jones + Warren + Dulin / Burks; the
 top six teams -1 each), Warren +16, McBride +9, Rice -9, Kraft -9; cap45 115.8; median sets: Kittle -40 to -81,
 Warren +17 to +36 (he is now RoutingBump 1.1, so the 45 injury cap holds him in median70). Sheet rebuilt (unmarked).
+**Doug, Nov 12 (later): (1) trade share comes from the incoming player's OWN POSITION only** (`[model.injury]
+trade_take_from = "position"`, new default; weeks 6-9 pinned "all"; proven: weeks 6-9 proj + sims bit-identical to
+the old code). Week 10 now: Kittle 12.6 -> 14.8, Kelce 9.6 -> 10.7, CMC 18.8, Walker 18.6 (back to pre-trade); the
+WRs pay: Rice 12.6 -> 10.3, Worthy 7.3 -> 6.1, Watkins 6.0 -> 4.5, D. Robinson 4.8 -> 3.7, Allen 6.7. **(2) Trade
+boosts are permanent: not injury-promoted.** New report-only proj.csv columns TradeBump (points from trades) and
+TradeVol (volume from trades); `project.injury_lifted` = RoutingBump - TradeBump >= 1, or a GuardRescue that holds
+without trade volume; used by `--injury-cap` and combine_entry's elite rule. Off the 45 cap now: Warren, Treadwell,
+Dulin, Burks (Dulin / Burks were role-guard "inherits" on Downs' volume only). Sets rebuilt (rules checked): model
+114.5 (stacks BUF 20, SF 17, JAC 15, NO 12, DAL / LAR / KC 11, HOU 9, GB / CAR 8, ATL 7, NYJ / IND 6, MIN 4, CLE 3,
+TEN 2; Kittle 26, Kelce 21, Warren 22); median70 Kittle 62, Kelce 25. 142 tests OK. Sheet rebuilt (unmarked).
 **Next:** Doug's calls above + sheet (red / Pool) -> pool build; Friday diff + statuses; Sunday final: all sets,
 then model `entered_upload_149.csv` (drop lowest projected). Promotion kill rule in the week-10 review.
 

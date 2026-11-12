@@ -117,6 +117,7 @@ first_week_factor = 0.9        # Doug, Oct 26 (0.7 in week 7)
 
 # Depth split for WRs only (Doug, Oct 12), kept. bump_scale NOT set: the week-9 default (RB 0.8 / WR 0.45 / TE 0.3) runs.
 [model.injury]
+trade_take_from = "all"   # as entered: trade share taken from every teammate pro rata ("position" default from week 10)
 within_position = "depth_rank"
 depth_rank_positions = ["WR"]
 

@@ -45,8 +45,9 @@ def build(week, cfg, agg=None, st=None):
                                     st if absent_mode == 'present_share' or inj.get('skip_already_absent', True) else None,
                                     absent_mode, routing, inj.get('bump_scale'))
     moved = data.trades(fd_all, cfg['status'])
-    for extra, gained in zip((xt, xc), usage.trade_volume(agg, moved, fd, inj['redistribute_share'], routing, st,
-                                                          inj.get('trade_old_team', 'full'))):
+    tx, tc = usage.trade_volume(agg, moved, fd, inj['redistribute_share'], routing, st, inj.get('trade_old_team', 'full'),
+                                inj.get('trade_take_from', 'all'))
+    for extra, gained in zip((xt, xc), (tx, tc)):
         for k, v in gained.items():
             extra[k] = extra.get(k, 0) + v
     for name, fd_team, stat_team in usage.team_mismatches(agg, fd, moved):
@@ -57,7 +58,7 @@ def build(week, cfg, agg=None, st=None):
     league_dst = fd[fd.Position == 'D'].FPPG.mean()
 
     role = role_volume(st)                       # [model.role_guard]: 2026 targets + carries per game, before routing
-    rows, sims, unrouted, q_bump = [], [], {}, {}
+    rows, sims, unrouted, q_bump, untraded = [], [], {}, {}, {}
     for r in fd.itertuples():
         t, k, pos = r.Team, r.Key, r.Position
         fallback = False
@@ -81,6 +82,11 @@ def build(week, cfg, agg=None, st=None):
                 twin = np.random.default_rng()  # volume, on a copy of the generator so the main draws are untouched
                 twin.bit_generator.state = before
                 unrouted[len(sims)] = (pts.mean(), sim.sim_skill(twin, agg.loc[k], pos, scale, f, 0, 0, m, sc, n).mean())
+                if tx.get(k, 0) or tc.get(k, 0):    # report only (TradeBump): the same player without the trade volume
+                    twin = np.random.default_rng()
+                    twin.bit_generator.state = before
+                    untraded[len(sims)] = (pts.mean(), sim.sim_skill(twin, agg.loc[k], pos, scale, f, xt.get(k, 0) - tx.get(k, 0),
+                                                                     xc.get(k, 0) - tc.get(k, 0), m, sc, n).mean())
         else:
             pts = sim.sim_fallback(rng, r.FPPG, scale, f, m, n)
             fallback = True
@@ -103,6 +109,9 @@ def build(week, cfg, agg=None, st=None):
             raise ValueError(f'[status.starting_qb] {team}: {name!r} is not an active {team} QB on the slate')
         proj.loc[qbs, 'StartingQB'] = proj.Name[qbs] == name
     proj['RoutingBump'] = routing_bump(proj, unrouted, m)
+    if untraded:    # report only: the part of RoutingBump that comes from [[status.trade]] (permanent, not injury)
+        proj['TradeBump'] = routing_bump(proj, untraded, m)
+        proj['TradeVol'] = np.round([tx.get(k, 0) + tc.get(k, 0) for k in proj.Key], 2)   # part of GainedVol
     if q_gain:      # report only: raw points each player gains from questionable teammates sitting (before calibration)
         proj['QBump'] = np.round([q_bump.get(i, 0.0) for i in range(len(proj))], 1)
     sims = np.array(sims)
@@ -175,6 +184,19 @@ def snap_features(week, cfg, st, rg):
     pf = snaps.path(week.cache, week.season - 1)
     prior = snaps.load(pf, cfg) if os.path.exists(pf) else None
     return snaps.features(sn, st, prior, games=rg.get('promotion_games', 2))
+
+
+def injury_lifted(proj, min_bump=1.0, min_volume=3.0):
+    """The elite rule's "not normal role" test (combine_entry) and optimize.py --injury-cap (Doug, Nov 6 / Nov 12):
+    lifted min_bump+ points by teammates OUT (RoutingBump minus TradeBump), or kept by the role guard (GuardRescue).
+    Trade boosts are permanent, not injury (Doug, Nov 12): TradeBump doesn't count, and a role-guard rescue that holds
+    only through inherited trade volume ('inherits' with RoleVol + GainedVol - TradeVol under min_volume) doesn't
+    either. Returns a boolean Series."""
+    col = lambda c: proj[c].fillna(0) if c in proj else pd.Series(0.0, index=proj.index)
+    bump = col('RoutingBump') - col('TradeBump')
+    label = proj.GuardRescue.fillna('').astype(str) if 'GuardRescue' in proj else pd.Series('', index=proj.index)
+    trade_only = (label == 'promoted: inherits') & (col('RoleVol') + col('GainedVol') - col('TradeVol') < min_volume)
+    return (bump >= min_bump) | ((label != '') & ~trade_only)
 
 
 def guard_rescue(proj, rg):

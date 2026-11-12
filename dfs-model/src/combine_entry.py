@@ -13,7 +13,7 @@ Checks every lineup (slots, salary cap, player list, Out / IR / reds, duplicates
 
 Exposure rule (Doug, Nov 6): ELITE players have no exposure cap. Elite = the top 5 at each position (QB, RB, WR, TE,
 DST) by FanDuel's 2026 points per game (FPPG; players with 4+ games played) AMONG players who pass the other tests: no
-FanDuel injury tag and his normal role (not lifted 1+ point by teammates out [RoutingBump], no role-drop flag, not
+FanDuel injury tag and his normal role (not lifted 1+ point by teammates out [RoutingBump minus TradeBump: trades are permanent, Doug Nov 12], no role-drop flag, not
 promoted by the role guard, QB = his team's starter). Backfill: a player who fails is skipped and the next eligible
 player moves up, so each position has 5 elite when available. Anyone else over
 70% of the entered lineups: the second build (the model, main folder) is rebuilt WITHOUT him into weeks/<week>/
@@ -92,8 +92,10 @@ def check(rows, header, fd, cfg):
 def elite_table(fd, proj):
     """Per position, players by FanDuel FPPG (ELITE_MIN_GAMES+ played) down to the ELITE_TOP-th who passes every test
     (backfill: failing players are listed with the reason and skipped). Column Elite = passes all."""
-    cols = [c for c in ['Id', 'RoutingBump', 'RoleDrop', 'GuardRescue', 'StartingQB'] if c in proj]
+    cols = [c for c in ['Id', 'RoutingBump', 'TradeBump', 'RoleDrop', 'GuardRescue', 'StartingQB'] if c in proj]
     x = fd.merge(proj[cols], on='Id', how='left')
+    # the same test as project.injury_lifted: a role-guard rescue held up only by trade volume doesn't count
+    x['TradeOnlyRescue'] = x.Id.map(dict(zip(proj.Id, project.injury_lifted(proj, min_bump=float('inf')) == False)))  # noqa: E712
     out = []
     for pos in ['QB', 'RB', 'WR', 'TE', 'D']:
         s = x[(x.Position == pos) & (x.Played >= ELITE_MIN_GAMES)].sort_values('FPPG', ascending=False)
@@ -106,11 +108,13 @@ def elite_table(fd, proj):
             if isinstance(tag, str) and tag.strip():
                 why.append(f'FanDuel tag {tag.strip()}')
             bump = r.get('RoutingBump')
+            if pd.notna(bump) and pd.notna(r.get('TradeBump')):   # trade boosts are permanent: not injury (Doug, Nov 12)
+                bump -= r.get('TradeBump')
             if pd.notna(bump) and bump >= ELITE_MAX_BUMP:
                 why.append(f'lifted +{bump:.1f} by teammates out')
             if isinstance(r.get('RoleDrop'), str) and r.get('RoleDrop').strip():
                 why.append('role-drop flag')
-            if isinstance(r.get('GuardRescue'), str) and r.get('GuardRescue').strip():
+            if isinstance(r.get('GuardRescue'), str) and r.get('GuardRescue').strip() and not r.get('TradeOnlyRescue'):
                 why.append('promoted by the role guard')
             if pos == 'QB' and r.get('StartingQB') is not True and str(r.get('StartingQB')) != 'True':
                 why.append('not the starting QB')

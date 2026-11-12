@@ -69,6 +69,7 @@ promotion = false              # as entered: role-guard promotion became the def
 
 # Week 6 ran the depth split for WRs only (Doug, Oct 12). Kept for week 7 unless Doug says otherwise.
 [model.injury]
+trade_take_from = "all"   # as entered: trade share taken from every teammate pro rata ("position" default from week 10)
 bump_scale = { RB = 1.0, WR = 1.0, TE = 1.0 }   # as entered: the position-scaled injury bump became the default Nov 2 (week 9)
 within_position = "depth_rank"
 depth_rank_positions = ["WR"]

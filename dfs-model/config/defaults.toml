@@ -161,6 +161,8 @@ questionable_routing = true        # in the draws where an RB / WR / TE marked Q
 trade_old_team = "present_share"   # [[status.trade]], old team: "present_share" = his volume goes to old teammates like an
                                    # OUT player's under absent_mode present_share, fading as they play games without him
                                    # (Doug, Oct 26: fixes the ARI double count); "full" = in full every week (weeks 6-7)
+trade_take_from = "position"       # [[status.trade]], new team: the incoming player's share comes only from teammates
+                                   # at his position (Doug, Nov 12); "all" = from every RB / WR / TE pro rata (weeks 6-9)
 absent_mode = "present_share"      # OUT players who already missed games (Oct 12 2026, docs/week6_prep.md):
                                    # "present_share" = hand out their volume for the share of each teammate's usage
                                    #   sample (current games + prior pseudo-games) they played in; fades as they stay out
