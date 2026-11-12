@@ -766,6 +766,18 @@ TEN 2; Kittle 26, Kelce 21, Warren 22); median70 Kittle 62, Kelce 25. 142 tests 
 **Next:** Doug's calls above + sheet (red / Pool) -> pool build; Friday diff + statuses; Sunday final: all sets,
 then model `entered_upload_149.csv` (drop lowest projected). Promotion kill rule in the week-10 review.
 
+**State end of Thu Nov 12 (pushed): week-10 prelim DONE; Doug back FRIDAY Nov 13.** Friday order:
+(1) re-download `fd_players.csv` (keep Nov 12's as `fd_players_nov12.csv`), `diff_players.py`, Rotowire report;
+(2) **Evans + Deebo status -> Keenan Allen's trade share: 0.18 if BOTH out, 0.15 if either plays** (week.toml
+`[[status.trade]]`); (3) **propose starting QBs for ARI (Minshew IR), MIA (Willis IR), LV (Cousins traded), SEA
+(Darnold O, Lock Q), MIN (Murray D, Wentz Q, Cousins default)** from the reports: Doug approves; any team still
+unclear stays at 0 stacks; (4) `[status]` from Friday tags (O/D out, Q questionable, IR 3+ vol out); save
+`fdr_projections_fri.csv` if Doug drops it; (5) rerun model.py + all nine sets (commands in week.toml [grading]
+comment), rule check, rebuild the review sheet only if Doug hasn't marked it (check mtime / ask); (6) Doug's sheet
+(red / Pool) -> `[prefs] red`, `[pool]`, pool build. Sunday final: FINAL lines + weights, inactives (Sunday rule),
+all sets, then **model `entered_upload_149.csv` (drop lowest projected; free entry separate)**. Week-10 review:
+promotion kill rule (weeks 9-10 combined), all shadow sets with exact money ($30K table), learn-from-winners.
+
 ## Week 9 run checklist (2026-w09) — START HERE when FanDuel releases the week-9 player list
 **State Mon Nov 9: step 6 (review) DONE, docs/week9_review.md; week-10 build tests DONE (review section 7). NEXT =
 Doug's week-10 build call, then week-10 prep (copy week 9's week.toml; remove the Harrison trade entry; DEN RB check).**
