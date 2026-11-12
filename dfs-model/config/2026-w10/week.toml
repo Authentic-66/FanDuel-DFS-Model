@@ -1,0 +1,184 @@
+# Week 10 settings (2026-w10). Made Nov 12 from 2026-w09's week.toml with the week-specific parts emptied.
+# Overrides any key in config/defaults.toml. Standing rules come from defaults: starters only, 25-lineup cap, leverage off,
+# salary floor $59,000 with cap relief +2, role guard (promotion ON), questionable routing ON at 0.45, WR one-sided
+# implied correction -0.57, bump_scale RB 0.8 / WR 0.45 / TE 0.3. NO as-entered pins here (none carried over).
+# ENTRY (Doug, Nov 12): model 149 (model-led), free entry separate. Shadows graded, not entered: median-70 (with a
+# 30% cap on injury-promoted players), plain median-70 and its three variants (v1 flex, v2 stack, v3 repeats), no-draw,
+# cap 45, pool, flex shadow.
+# Harrison trade entry REMOVED (Doug, Nov 9/12: three HOU games played; he is now a normal HOU player).
+# READS: red applied ([prefs] red); yellow and green shadow-only ([shadow.yellow], [shadow.green]).
+# Schedule (nflverse games.csv, Nov 12). Main slate = Sunday 1:00 / 4:05 / 4:25 ET, 10 games / 20 teams
+# (matches FanDuel's list, 503 players):
+#   KC@ATL, HOU@CLE, MIN@GB, MIA@IND, CAR@NO, BUF@NYJ, JAC@TEN, LAR@ARI, SEA@LV, SF@DAL.
+# Off the main slate: WAS@NYG (Thu), NE@DET (London, 9:30 ET), PIT@CIN (SNF), LAC@BAL (MNF). Byes: CHI, DEN, PHI, TB.
+# DEN is on bye: the Coleman vs Dobbins check waits for week 11.
+# Player list: re-download Friday and Sunday morning and diff (python src/diff_players.py <old> <new>).
+
+# PRELIM (Thu Nov 12): FanDuel's list (data/2026-w10/fd_players.csv, downloaded Nov 12 07:56) O / D -> out, Q ->
+# questionable, + IR players with 3+ targets + carries a game in 2026 (so their volume is routed).
+# Sunday: active Q players come off the Q list, inactive -> out (Doug's rule).
+[status]
+out = [
+  # FanDuel O
+  "Puka Nacua",
+  "Sam Darnold",
+  "Josh Jacobs",
+  "Jake Ferguson",
+  "Tyler Goodson",
+  "Ihmir Smith-Marsette",
+  "Stone Smartt",
+  # FanDuel D
+  "Kyler Murray",
+  "Zachariah Branch",
+  # FanDuel IR with 3+ targets + carries a game in 2026
+  "Malik Willis",
+  "Michael Wilson",
+  "Travis Etienne Jr.",
+  "Alec Pierce",
+  "Jonathon Brooks",
+  "Terrance Ferguson",
+  "Xavier Legette",
+  "Raheim Sanders",
+  "Chris Brooks",
+  "Tyquan Thornton",
+  "Jayden Reed",
+  "Kendrick Bourne",
+  "Brian Robinson Jr.",
+  "Jaylin Noel",
+  "De'Von Achane",
+  "Jeremiyah Love",
+  "Davante Adams",
+]
+questionable = [
+  # FanDuel Q (Nov 12 list)
+  "Mike Evans",
+  "Garrett Wilson",
+  "Carson Wentz",
+  "Drew Lock",
+  "George Pickens",
+  "Bhayshul Tuten",
+  "Deebo Samuel Sr.",
+  "Woody Marks",
+  "David Montgomery",
+  "Omar Cooper Jr.",
+  "Jakobi Meyers",
+  "Tank Dell",
+  "Carnell Tate",
+  "Harold Fannin Jr.",
+  "Alvin Kamara",
+  "Dalton Kincaid",
+  "Chris Rodriguez Jr.",
+  "Denzel Boston",
+  "T.J. Hockenson",
+  "Marvin Harrison Jr.",
+  "Jauan Jennings",
+  "Bam Knight",
+  "Colby Parkinson",
+  "CJ Donaldson",
+  "Tyjae Spears",
+  "Savion Williams",
+  "Noah Fant",
+  "KaVontae Turpin",
+  "Chris Bell",
+  "Jonathan Mingo",
+  "Davis Allen",
+  "Bo Melton",
+  "Mo Alie-Cox",
+  "Will Kacmarek",
+  "Josh Whyle",
+  "Michael Burton",
+  "Brevin Jordan",
+]
+active = []
+
+[status.starting_qb]
+
+# Doug's projection reads: new mean FanDuel points.
+[overrides]
+
+# Depth split for WRs only (Doug, Oct 12), kept.
+[model.injury]
+within_position = "depth_rank"
+depth_rank_positions = ["WR"]
+
+[optimizer]
+stack_allocation = "proportional"   # stack counts follow the weights exactly instead of random draws
+
+[prefs]
+starters_only = true
+red_teams = []
+red = []
+
+[prefs.yellow]                 # empty: yellow is shadow-only (Doug, Oct 26)
+
+[prefs.green]                  # empty: green is shadow-only
+
+[prefs.green_floor]
+
+[prefs.starter_override]
+
+[prefs.player_cap]
+
+# Record only: NOT applied.
+[shadow]
+red = []
+
+[shadow.red_lineups]
+
+[shadow.yellow]
+
+[shadow.green]
+
+[shadow.green_floor]
+
+# Doug adds extra stack receivers per week (none carried over).
+[stacks]
+extra_receivers = []
+
+# Stack QB-team weights: weight = round(2 * (implied total - 16)), min 1, round half up.
+# PRELIMINARY (nflverse lines, Thu Nov 12 14:00 UTC; data/2026-w10/lines.csv).
+[stacks.weights]
+BUF = 27
+SF = 27
+JAC = 25
+DAL = 20
+NO = 19
+KC = 18
+LAR = 17
+SEA = 15
+HOU = 14
+CAR = 14
+GB = 14
+ATL = 12
+IND = 10
+NYJ = 10
+MIN = 8
+CLE = 5
+TEN = 4
+MIA = 3
+LV = 2
+ARI = 1
+
+[stacks.rules]
+
+# Doug's pool (shadow): lists come from his week-10 review sheet (Pool column).
+[pool]
+
+# Shadow sets graded beside the entered model (none entered; entry = model 149):
+#   python src/optimize.py --week 2026-w10 --subdir model_cap45 --cap 45
+#   python src/optimize.py --week 2026-w10 --flex-shadow
+#   python src/optimize.py --week 2026-w10 --no-draw
+#   python src/optimize.py --week 2026-w10 --median70 --injury-cap 45      (-> median70/, the 30% cap)
+#   python src/optimize.py --week 2026-w10 --median70 --subdir median70_plain
+#   python src/optimize.py --week 2026-w10 --median70 --variant flex       (-> median70_v1/)
+#   python src/optimize.py --week 2026-w10 --median70 --variant stack      (-> median70_v2/)
+#   python src/optimize.py --week 2026-w10 --median70 --variant repeats    (-> median70_v3/)
+#   python src/optimize.py --week 2026-w10 --pool
+[grading]
+extra_sets = ["model_cap45", "flex_shadow", "nodraw", "median70", "median70_plain", "median70_v1", "median70_v2",
+              "median70_v3"]
+
+[contest]
+field_size = 0                  # from the week-10 All Entries export after the slate
+
+[contest.guru]

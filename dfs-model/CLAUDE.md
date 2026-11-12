@@ -720,6 +720,32 @@ median-70 still most similar (0.37). **Week-10 build tests (section 7): no varia
 = model-led (100 model + 49 v1 flex median-70, or model 149). Doug decides.** Tables: weeks/2026-w09/grade_all_sets.csv,
 red_split.csv, week10_build_tests.csv.
 
+## Week 10 preliminary run (Thu Nov 12) — inputs only; sheet out to Doug
+**Doug, Nov 12: ENTRY = model 149 (model-led), free entry separate.** Shadows graded (not entered): median-70 with a
+**30% cap (45) on injury-promoted players**, plain median-70 + v1 flex / v2 stack / v3 repeats (now CLI:
+`optimize.py --median70 --variant flex|stack|repeats`, `--injury-cap 45`; week9_review s7 definitions), no-draw,
+cap 45, pool, flex shadow. "Injury-promoted" read as RoutingBump 1+ OR GuardRescue set (the elite rule's not-normal-role
+test): catches Bijan (+2.0, B. Robinson IR) and Javonte (+1.8) as well as depth players. **ASKED Doug to confirm.**
+Week-9 winnings $5.13 confirmed by Doug (export); running total -$8.95 stands. Harrison trade entry removed.
+Slate: 10 games / 20 teams, 503 players (`fd_players.csv` Nov 12 07:56; keep as Friday's diff base): KC@ATL, HOU@CLE,
+MIN@GB, MIA@IND, CAR@NO, BUF@NYJ, JAC@TEN, LAR@ARI, SEA@LV, SF@DAL. Off: WAS@NYG Thu, NE@DET London, PIT@CIN SNF, LAC@BAL
+MNF; byes CHI/DEN/PHI/TB (**DEN on bye: Coleman/Dobbins check moves to week 11**). Stats through week 9 (30 teams).
+Lines PRELIMINARY (nflverse Nov 12 14:00 UTC): BUF / SF 29.5, JAC 28.5, DAL 26 ... ARI 15. `[status]` = FanDuel O/D (9)
++ IR with 3+ vol (17) out; 37 Q. Prize table `data/2026-w10/prizes_pooch-punt.csv` ($30K, pays 1-215,100, sums
+$30,000; screenshot beside it).
+**Open for Doug (model warnings):** trades not entered: **Kirk Cousins LV -> MIN, Keenan Allen IND -> SF, Josh Downs
+IND -> KC** (each keeps old-team volume; IND then has only Warren eligible -> **IND 0 stacks**); no starting QB for
+**ARI** (Minshew IR), **MIA** (Willis IR), **LV** (Cousins gone) -> 0 stacks; **SEA** Darnold O, Lock Q -> 0 stacks;
+MIN: Murray D, Wentz Q, Cousins defaults to starter (16.9). Role drop: Holani (SEA). 
+Prelim sets (all rules checked; 150 each): model `prelim/` mean 114.8 (4 relief to 27), FLEX TE 55 / RB 54 / WR 41,
+stacks BUF 20, SF 18, JAC 16, DAL / NO 13, KC 12, LAR 11, HOU 9, GB / CAR 8, ATL 7, NYJ 6, MIN 4, CLE 3, TEN 2;
+cap45 117.3; flex 115.3; nodraw 116.7; median70 (cap 45) 111.6; plain 112.3; v1 113.5; v2 115.5; v3 114.6 (105
+distinct). Median sets: Cook / C. Watson / MIA DST / Javonte at 105 (cap moves Javonte 105 -> under 45).
+Review sheet `data/2026-w10/review_sheet.xlsx` (212 rows, Lineups 1,350; Color, Pool, RoleDrop, Promoted, RB_trend;
+builder = scratch sheet_w10.py, recipe in the week-7 checklist + week-9 notes).
+**Next:** Doug's calls above + sheet (red / Pool) -> pool build; Friday diff + statuses; Sunday final: all sets,
+then model `entered_upload_149.csv` (drop lowest projected). Promotion kill rule in the week-10 review.
+
 ## Week 9 run checklist (2026-w09) — START HERE when FanDuel releases the week-9 player list
 **State Mon Nov 9: step 6 (review) DONE, docs/week9_review.md; week-10 build tests DONE (review section 7). NEXT =
 Doug's week-10 build call, then week-10 prep (copy week 9's week.toml; remove the Harrison trade entry; DEN RB check).**

@@ -9,6 +9,11 @@ for this run only, written to weeks/<week>/flex_shadow/ unless --subdir is given
 NBA repo): --no-draw = objective is the projection only (mean_weight 1), same caps -> nodraw/; --median70 = objective
 is each player's median sim score, mean_weight 1, exposure cap 105 (70% of 150), max overlap 7 -> median70/.
 Built at the final run, not entered, graded beside the entered set ([grading] extra_sets).
+With --median70 (week 10 on, Doug Nov 12; docs/week9_review.md section 7): --variant flex = v1, the flex-shadow rule
+(-> median70_v1/); --variant stack = v2, QB + 1 receiver, bring-back optional (-> median70_v2/); --variant repeats =
+v3, the plain build's 150 ranked by projected (median) score, top 105 kept and the top 45 entered twice (->
+median70_v3/). --injury-cap N: players lifted by injured teammates (RoutingBump 1+ or GuardRescue set: the elite
+rule's "not normal role" test) are capped at N lineups (Doug, Nov 12: 30% = 45).
 --pool builds Doug's pool lineups from [pool] in week.toml instead (docs/pool_mode.md) and writes them to
 weeks/<week>/pool/ (or pool/<subdir>/), plus pool.csv: every listed player, his rank, status and lineups."""
 import os
@@ -27,6 +32,11 @@ week, cfg, args = config.cli(__doc__, [(('--subdir',), dict(default='', help='wr
                                                              help='shadow: projection-only objective -> nodraw/')),
                                        (('--median70',), dict(action='store_true',
                                                               help='shadow: median objective, cap 105, overlap 7 -> median70/')),
+                                       (('--variant',), dict(default='', choices=['', 'flex', 'stack', 'repeats'],
+                                                             help='with --median70: v1 flex / v2 stack / v3 repeats')),
+                                       (('--injury-cap',), dict(type=int, default=0,
+                                                                help='with --median70: cap (lineups) for RoutingBump 1+ / '
+                                                                     'GuardRescue players')),
                                        (('--exclude',), dict(default='',
                                                              help='"Name, Name": left out of this run only, like a red '
                                                                   '(combine_entry exposure rule, Doug Nov 6); needs --subdir'))])
@@ -50,6 +60,17 @@ if args.median70:
     cfg['optimizer'].update(mean_weight=1.0, exposure_cap=105, max_overlap=7)
     args.subdir = args.subdir or 'median70'
     print('median-70 shadow: objective = median sim score, cap 105, overlap 7; ->', args.subdir)
+if (args.variant or args.injury_cap) and not args.median70:
+    raise SystemExit('--variant / --injury-cap: only with --median70')
+if args.variant:
+    v = {'flex': 'v1', 'stack': 'v2', 'repeats': 'v3'}[args.variant]
+    if args.subdir == 'median70':
+        args.subdir = 'median70_' + v
+    if args.variant == 'flex':
+        cfg['optimizer'].update(rb_stack_pieces=True, flex_te_top_salary=5)
+    elif args.variant == 'stack':
+        cfg['optimizer']['stack'] = dict(cfg['optimizer']['stack'], receivers=1, bring_back=0)
+    print(f'median-70 {v} ({args.variant}); ->', args.subdir)
 if args.flex_shadow:
     if args.pool:
         raise SystemExit('--flex-shadow is for the model build, not --pool')
@@ -79,9 +100,27 @@ if args.pool:
     print(tab.to_string(index=False))
 else:
     df = opt.eligible_pool(proj, cfg['prefs'], o)
+    if args.injury_cap:
+        rescue = df.GuardRescue.fillna('').astype(str).str.len() > 0 if 'GuardRescue' in df else False
+        lifted = df[(df.RoutingBump >= 1) | rescue]
+        for name in lifted.Name:
+            cfg['prefs']['player_cap'][name] = min(args.injury_cap, cfg['prefs']['player_cap'].get(name, args.injury_cap))
+        print(f'injury cap {args.injury_cap}: ' + ', '.join(f'{r.Name} ({r.Proj})' for r in
+                                                           lifted.sort_values('Proj', ascending=False).itertuples()))
     if args.median70:
         df = df.assign(Proj=np.median(sims, axis=1)[df.row.values])   # pool chosen on projections, built on medians
     lineups, use = opt.build_lineups(df, sims, cfg)
+    if args.variant == 'repeats':   # v3: top 105 by projected (median) score kept, the top 45 entered twice
+        n = cfg['optimizer']['n_lineups']
+        keep, rep = round(n * 0.7), n - round(n * 0.7)
+        order = sorted(range(len(lineups)), key=lambda k: -df.Proj[lineups[k]].sum())
+        top = [lineups[k] for k in order[:keep]]
+        lineups = top + top[:rep]
+        use = {}
+        for lp in lineups:
+            for i in lp:
+                use[i] = use.get(i, 0) + 1
+        print(f'v3 repeats: {keep} distinct, top {rep} twice')
     upload, readable, exposure = opt.outputs(df, sims, lineups, use, cfg)
 opt.write_upload(out('upload.csv'), upload, cfg['roster']['slots'])
 readable.to_csv(out('readable.csv'), index=False)

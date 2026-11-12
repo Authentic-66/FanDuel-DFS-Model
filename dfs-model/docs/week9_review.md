@@ -28,7 +28,7 @@ All 149 lineups in `entered_upload_149.csv` (the first build, before the Pickens
 ## Money
 
 The export's Won column: **149 lineups $5.03, free entry $0.10, total $5.13** (Doug wrote $5.12: one cent apart;
-the export is used here, ASK). 41 of the 149 cashed. **Week 9 net (149 paid, $7.45): -$2.42. Running total since
+**Doug confirmed $5.13 from the export, Nov 12**). 41 of the 149 cashed. **Week 9 net (149 paid, $7.45): -$2.42. Running total since
 week 4: -$8.95** (week 4 +$2.35, week 5 -$4.74, week 6 -$1.49, week 7 +$0.23, week 8 -$2.88, week 9 -$2.42).
 The free entry goes in `docs/my_own_lineups.md` only (+$0.10).
 
