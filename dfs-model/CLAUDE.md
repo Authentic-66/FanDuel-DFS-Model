@@ -725,7 +725,10 @@ red_split.csv, week10_build_tests.csv.
 **30% cap (45) on injury-promoted players**, plain median-70 + v1 flex / v2 stack / v3 repeats (now CLI:
 `optimize.py --median70 --variant flex|stack|repeats`, `--injury-cap 45`; week9_review s7 definitions), no-draw,
 cap 45, pool, flex shadow. "Injury-promoted" read as RoutingBump 1+ OR GuardRescue set (the elite rule's not-normal-role
-test): catches Bijan (+2.0, B. Robinson IR) and Javonte (+1.8) as well as depth players. **ASKED Doug to confirm.**
+test): catches Bijan (+2.0, B. Robinson IR) and Javonte (+1.8) as well as depth players. **CONFIRMED by Doug Nov 12.**
+**Doug, Nov 12 (later):** trades = Claude proposes share + first-week factor (Cousins / K. Allen / Downs), Doug approves
+before anything goes in week.toml; QBs ARI / MIA / LV / SEA / MIN wait for Friday's reports (Claude proposes starters;
+unclear teams stay at 0 stacks); 3 commits pushed; defence-vs-position idea = low priority, later if usage allows.
 Week-9 winnings $5.13 confirmed by Doug (export); running total -$8.95 stands. Harrison trade entry removed.
 Slate: 10 games / 20 teams, 503 players (`fd_players.csv` Nov 12 07:56; keep as Friday's diff base): KC@ATL, HOU@CLE,
 MIN@GB, MIA@IND, CAR@NO, BUF@NYJ, JAC@TEN, LAR@ARI, SEA@LV, SF@DAL. Off: WAS@NYG Thu, NE@DET London, PIT@CIN SNF, LAC@BAL
