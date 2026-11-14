@@ -829,6 +829,13 @@ cap45 118.8; flex 117.7; nodraw 118.0 (**7 lineups under $59K**: floor fallback)
 114.9; v2 117.6; v3 115.7; pool 116.5 (83 fillers, **1 lineup $54,300**). Open for Doug: KC RB (Walker Q, Emmett
 Johnson red -> no KC RB), GB RB (Lloyd un-red but Strong (red, 8.7) holds GB's RB1 slot: Lloyd 0 lineups unless a
 starter override), SF stacks use Keenan Allen 4.6 (19 lineups; Deebo red, Evans O).
+**Doug, Fri Nov 13 (later):** `[stacks] extra_receivers` + **Christian McCaffrey** (SF stacks = Purdy + CMC +
+Kittle / a WR); **Deebo red CLEARED** (93 red; sheet still shows him red); **KC RB: wait for Sunday**; Lloyd: Doug's
+reply left "[override / leave]" unfilled -> left as is (no override, 0 lineups), ASKED. Preview rebuilt (rules
+checked; nodraw 3 / pool 1 lineups under $59K, floor fallback): model 116.5, stacks SF 20, BUF 18, JAC 17, DAL 13, NO
+12, KC 11, LAR 10, HOU / CAR / GB / SEA 8, ATL 7, IND 6, MIN 4; SF mix Deebo + Kittle 8, Deebo + Allen 5, CMC + Kittle
+4, CMC + Deebo 2, Kittle + Allen 1 (CMC / Kittle at 27 overall); pool SF 18 (CMC + Kittle 7, Deebo + Kittle 6,
+Kittle + Allen 4, CMC + Deebo 1). Pushed.
 
 ## Week 9 run checklist (2026-w09) — START HERE when FanDuel releases the week-9 player list
 **State Mon Nov 9: step 6 (review) DONE, docs/week9_review.md; week-10 build tests DONE (review section 7). NEXT =

@@ -182,7 +182,7 @@ red = [
   "Kalel Mullings",           # TEN 0
   "Kene Nwangwu",             # NYJ 0
   "Julius Chestnut",          # TEN 0
-  # WR (32)
+  # WR (31; Deebo Samuel Sr. red on the sheet, CLEARED by Doug in chat Fri Nov 13)
   "Xavier Hutchinson",        # HOU 10 "no interest"
   "Jordyn Tyson",             # NO 8 "no interest"
   "Keon Coleman",             # BUF 10 "no interest"
@@ -200,7 +200,6 @@ red = [
   "Jordan Watkins",           # SF 7
   "Jakobi Meyers",            # JAC 0
   "Jalen Nailor",             # LV 0 "no interest"
-  "Deebo Samuel Sr.",         # SF 0
   "Kevin Coleman Jr.",        # MIA 0
   "Tim Patrick",              # NYJ 0
   "Demarcus Robinson",        # SF 0
@@ -266,7 +265,7 @@ red = []
 
 # Doug adds extra stack receivers per week (none carried over).
 [stacks]
-extra_receivers = ["Javonte Williams"]   # Doug, Nov 13: DAL stackable (Lamb his only other receiver after reds / Q)
+extra_receivers = ["Javonte Williams", "Christian McCaffrey"]   # Doug, Nov 13: Javonte = DAL stackable (Lamb his only other receiver after reds / Q); McCaffrey = SF stacks Purdy + CMC + Kittle / a WR
 
 # Stack QB-team weights: weight = round(2 * (implied total - 16)), min 1, round half up.
 # PRELIMINARY (nflverse lines, Thu Nov 12 14:00 UTC; data/2026-w10/lines.csv).
