@@ -831,7 +831,7 @@ Johnson red -> no KC RB), GB RB (Lloyd un-red but Strong (red, 8.7) holds GB's R
 starter override), SF stacks use Keenan Allen 4.6 (19 lineups; Deebo red, Evans O).
 **Doug, Fri Nov 13 (later):** `[stacks] extra_receivers` + **Christian McCaffrey** (SF stacks = Purdy + CMC +
 Kittle / a WR); **Deebo red CLEARED** (93 red; sheet still shows him red); **KC RB: wait for Sunday**; Lloyd: Doug's
-reply left "[override / leave]" unfilled -> left as is (no override, 0 lineups), ASKED. Preview rebuilt (rules
+reply left "[override / leave]" unfilled -> left as is (no override, 0 lineups); **Doug decides Lloyd Sunday morning** (override = `[prefs.starter_override] GB = ["MarShawn Lloyd"]`). Preview rebuilt (rules
 checked; nodraw 3 / pool 1 lineups under $59K, floor fallback): model 116.5, stacks SF 20, BUF 18, JAC 17, DAL 13, NO
 12, KC 11, LAR 10, HOU / CAR / GB / SEA 8, ATL 7, IND 6, MIN 4; SF mix Deebo + Kittle 8, Deebo + Allen 5, CMC + Kittle
 4, CMC + Deebo 2, Kittle + Allen 1 (CMC / Kittle at 27 overall); pool SF 18 (CMC + Kittle 7, Deebo + Kittle 6,
