@@ -778,6 +778,58 @@ comment), rule check, rebuild the review sheet only if Doug hasn't marked it (ch
 all sets, then **model `entered_upload_149.csv` (drop lowest projected; free entry separate)**. Week-10 review:
 promotion kill rule (weeks 9-10 combined), all shadow sets with exact money ($30K table), learn-from-winners.
 
+## Week 10 review applied (Fri Nov 13) — sheet loaded, prelim + pool built (statuses still Nov 12's)
+Doug's sheet `data/2026-w10/review_sheet_reviewed.xlsx` (second save 10:55; first pass had 99 red and no notes).
+**96 red (QB 5, RB 47, WR 33, TE 11), 0 yellow / green / DST red** -> `[prefs] red` with his notes as comments
+(Rank / unnamed column; most reds have none) + `[shadow.red_lineups]`. Second pass: Penix (now Pool Y), Dulin,
+Demercado cleared; **Flournoy kept red (Doug, chat; the sheet had cleared him)**; **Shedeur red** (typed "red" in the
+Pool column, note "no interest"). Notes: matchup = Ward, Dotson, Ayomanor; role/news = Wentz ("Cousins will likely
+start"), Strong ("running back by committee"); "no interest" = Shedeur, Watson, Strand, Z. White, Hutchinson, Tyson,
+K. Coleman, Jeudy, Metchie, Virgil, Burks, Nailor, Mason Taylor. Treadwell (6) and Watkins (7) had lineups, no note.
+**`[stacks] extra_receivers = ["Javonte Williams"]` (Doug, Nov 13): DAL stackable** (Lamb was Dak's only receiver:
+Ferguson O, Pickens Q, Flournoy / Spann-Ford red). CLE, TEN (QB red) and NYJ (Mitchell only) 0 stacks. No usable RB:
+GB, HOU (Marks / Montgomery Q), JAC, NO (Kamara Q).
+**Pool: 90 Y = QB 14, RB 16, WR 22, TE 18, DST 20 (every DST); no ranks -> `ranked = false`.** Harrison note "only if
+playing" (Q, held out). Held out Q: Pickens, Harrison, Kincaid, Fannin, Hockenson, Parkinson. Geno: 0 (NYJ unstackable).
+Built (rules checked: slots, $59-60K, no red/out/Q/tagged, stack 2+1, DST, no dups): model `prelim/` 150, mean
+114.5 -> 115.2, stacks BUF 24, JAC 19, SF 16, NO 14, KC / DAL 12, LAR 11, HOU 9, CAR / GB 8, ATL 7, IND 6, MIN 4
+(CLE / NYJ / TEN 0); pool `pool/` 150 at cap 25 (10 relief to 27), mean 115.6, 86 fillers. Other shadow sets NOT
+rebuilt: the Friday run (statuses) rebuilds all nine. **Doug: commit after Friday's run.**
+**Sheet re-saved 11:05 (Shedeur red and notes now in the right columns): matches the config except Flournoy (red by
+chat, blank on the sheet). ON HOLD until Friday afternoon's final injury report:** Doug decides the RB situations and
+whether Flournoy goes in the pool; then the Friday run (player-list diff, Allen share, QB starters, statuses, all
+nine sets) and the commit.
+
+## Week 10 Friday run (Fri Nov 13, evening) — statuses applied; all nine sets + pool built as a Friday preview
+Files (Doug): `fd_players_friday.csv` (20:16; copied to `fd_players.csv`; Nov 12 list kept as `fd_players_nov12.csv`),
+`nfl-injury-report.csv` (Rotowire, CSV this week: Player, Team, Pos, Injury, Status, Est. Return; NO practice notes /
+comments; the first save had 5 rows, re-saved full at 20:27), `fdr_projections_fri.csv` (431 rows; 85 names not on
+FanDuel's list = kickers, D/ST, suffix / nickname forms as week 9; record only).
+Diff vs Nov 12: 0 added / removed / salary; 42 tag changes. **Cleared:** Wentz, Lock, Pickens, Tuten, Deebo, Marks,
+Meyers, Dell, Fannin, Kamara, Kincaid, Rodriguez, Knight, Parkinson, Savion Williams, Fant, Turpin, Melton, Kacmarek.
+**New O:** Evans, Tate, Hockenson, Harrison, Jennings, Donaldson, Branch, Mingo, Wayne, Alie-Cox, Whyle, Burton,
+B. Jordan, Murray (D -> O); Bell D; Nacua O -> IR (kept out: volume routed). **New Q: Kenneth Walker III (groin)**,
+Addison, Mitchell, Thornton, Mallory, Ott, Collier (IR -> Q). Rotowire agrees with every FanDuel skill tag on the slate
+(suffix names matched by hand).
+`[status]` = FanDuel O (20) + D (1) + IR with 3+ vol (17, + Nacua) out; FanDuel Q (13) questionable.
+**Keenan Allen 0.15** (Evans O, Deebo cleared: Doug's rule). **`[status.starting_qb] MIN = "Kirk Cousins"`** (Doug's
+sheet note; without it Wentz, cleared, was also flagged starter at 11.7). Defaults: SEA = Lock (week-9 starter,
+cleared), proposed to Doug with MIN; ARI (Beck / Aguilar), MIA (McCord / Cook) no 2026 passing data -> 0 even if named;
+LV rookie (Mendoza) 0 stacks per Doug.
+Sheet re-saved Fri 20:25 and re-applied: **94 red (QB 5, RB 46, WR 32, TE 11)**: Flournoy cleared (sheet: "relegated
+to WR3 or 4 with Pickens starting"), MarShawn Lloyd cleared (note "matchup"); Shedeur red in the Color column. **Pool 93
+Y = QB 14, RB 19, WR 22, TE 18, DST 20** (+ Tuten, Kamara, Marks: "Not listed on injury report"). Javonte stays a DAL
+extra receiver.
+Projections vs Nov 12: Lock 8.8 -> 15.8, Kamara +6.7, Pickens +6.0, Tuten / Kincaid / E. Johnson / Marks +4.7,
+Fannin +4.2, Dell +4.4, Deebo +3.6, Meyers +3.6; Walker 18.6 -> 12.2 (Q), Mitchell -3.8, Addison -3.1, Allen 6.7 -> 4.6.
+Sets (rules checked: slots, no red / out / Q / tagged, stack 2+1 (RB counts in flex / v1; v2 QB + 1), DST, dups (v3
+105 distinct)): model `prelim/` 116.7 (11 relief to 27), FLEX TE 83 / RB 47 / WR 20, stacks BUF 20, JAC 19, SF 16,
+DAL 13, NO 12, KC 11, LAR 10, HOU / CAR / GB / SEA 8, ATL 7, IND 6, MIN 4 (CLE / TEN / NYJ / ARI / MIA / LV 0);
+cap45 118.8; flex 117.7; nodraw 118.0 (**7 lineups under $59K**: floor fallback); median70 112.2; plain 113.3; v1
+114.9; v2 117.6; v3 115.7; pool 116.5 (83 fillers, **1 lineup $54,300**). Open for Doug: KC RB (Walker Q, Emmett
+Johnson red -> no KC RB), GB RB (Lloyd un-red but Strong (red, 8.7) holds GB's RB1 slot: Lloyd 0 lineups unless a
+starter override), SF stacks use Keenan Allen 4.6 (19 lineups; Deebo red, Evans O).
+
 ## Week 9 run checklist (2026-w09) — START HERE when FanDuel releases the week-9 player list
 **State Mon Nov 9: step 6 (review) DONE, docs/week9_review.md; week-10 build tests DONE (review section 7). NEXT =
 Doug's week-10 build call, then week-10 prep (copy week 9's week.toml; remove the Harrison trade entry; DEN RB check).**

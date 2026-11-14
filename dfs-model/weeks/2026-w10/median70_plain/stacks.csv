@@ -1,21 +1,21 @@
 Team,Our_share_pct,Field_QB_own,Top_receivers,Receiver_own,Chalk,Leverage
-BUF,10.2,17.24,"DJ Moore 4%, Khalil Shakir 4%",8.2,CHALK,0.59
-SF,10.2,11.17,"George Kittle 14%, Keenan Allen 3%",16.6,CHALK,0.91
-JAC,9.4,8.32,"Parker Washington 9%, Brenton Strange 4%",12.5,,1.13
-DAL,7.5,7.52,"CeeDee Lamb 25%, Ryan Flournoy 4%",28.9,,1.0
-NO,7.2,7.24,"Chris Olave 16%, Devaughn Vele 5%",20.6,,0.99
-HOU,5.3,6.93,"Nico Collins 10%, Xavier Hutchinson 3%",12.8,,0.76
-GB,5.3,6.42,"Christian Watson 21%, Matthew Golden 15%",36.7,,0.83
-LAR,6.4,6.4,"Tyler Higbee 3%, Konata Mumpfield 2%",5.1,,1.0
-KC,6.8,5.91,"Travis Kelce 6%, Rashee Rice 6%",11.9,,1.15
-CAR,5.3,5.23,"Tetairoa McMillan 12%, Jalen Coker 7%",18.7,,1.01
-MIN,3.0,4.48,"Justin Jefferson 5%, Jordan Addison 2%",7.6,,0.67
-NYJ,3.8,2.63,"Adonai Mitchell 3%, Mason Taylor 2%",4.9,,1.44
-ATL,4.5,2.31,"Drake London 8%, Kyle Pitts Sr. 2%",10.6,,1.95
-IND,3.8,1.69,"Tyler Warren 6%, Laquon Treadwell 2%",8.7,,2.25
-CLE,1.9,1.56,"KC Concepcion Jr. 3%, Jerry Jeudy 1%",4.5,,1.22
-TEN,1.5,1.23,"Wan'Dale Robinson 3%, Elic Ayomanor 1%",4.5,,1.22
-SEA,5.7,,"Jaxon Smith-Njigba 34%, AJ Barner 2%",35.8,,
-MIA,1.1,,"Caleb Douglas 3%, Malik Washington 2%",5.8,,
-LV,0.8,,"Brock Bowers 13%, Tre Tucker 4%",16.9,,
-ARI,0.4,,"Trey McBride 9%, Reggie Virgil 1%",10.2,,
+BUF,10.2,17.16,"Dalton Kincaid 6%, DJ Moore 4%",9.7,CHALK,0.59
+SF,10.2,10.96,"George Kittle 14%, Keenan Allen 2%",15.7,CHALK,0.93
+JAC,9.4,8.1,"Parker Washington 8%, Brenton Strange 4%",12.0,,1.16
+DAL,7.5,7.37,"Javonte Williams 25%, CeeDee Lamb 24%",49.0,,1.02
+NO,7.2,7.1,"Chris Olave 16%, Devaughn Vele 4%",20.1,,1.01
+HOU,5.3,6.9,"Nico Collins 10%, Dalton Schultz 3%",13.2,,0.77
+GB,5.3,6.39,"Christian Watson 21%, Matthew Golden 14%",34.9,,0.83
+LAR,6.4,6.18,"Tyler Higbee 3%, Konata Mumpfield 2%",4.7,,1.04
+KC,6.8,5.83,"Travis Kelce 6%, Rashee Rice 6%",11.6,,1.17
+CAR,5.3,5.09,"Tetairoa McMillan 12%, Jalen Coker 6%",18.2,,1.04
+MIN,3.0,4.39,"Justin Jefferson 6%, Gavin Bartholomew 1%",6.9,,0.68
+SEA,5.7,2.61,"Jaxon Smith-Njigba 34%, AJ Barner 2%",35.3,,2.18
+NYJ,3.8,2.53,,0.0,,1.5
+ATL,4.5,2.26,"Drake London 8%, Kyle Pitts Sr. 2%",10.4,,1.99
+IND,3.8,1.66,"Tyler Warren 7%, Ashton Dulin 2%",8.6,,2.29
+CLE,1.9,,"KC Concepcion Jr. 3%, Harold Fannin Jr. 3%",6.7,,
+TEN,1.5,,"Wan'Dale Robinson 4%, Gunnar Helm 1%",4.8,,
+MIA,1.1,,"Caleb Douglas 4%, Malik Washington 3%",6.4,,
+LV,0.8,,"Brock Bowers 12%, Tre Tucker 4%",16.5,,
+ARI,0.4,,Trey McBride 9%,8.7,,

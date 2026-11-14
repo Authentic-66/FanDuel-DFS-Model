@@ -1,0 +1,94 @@
+Name,Pos,Rank,Listed,Ranked,Note,Usable,Proj,Mult,Lineups
+Josh Allen,QB,1,14,True,,True,24.1,1.0,18
+Brock Purdy,QB,2,14,True,,True,21.7,1.0,18
+Trevor Lawrence,QB,3,14,True,,True,19.8,1.0,17
+Dak Prescott,QB,4,14,True,,True,19.6,1.0,14
+Tyler Shough,QB,5,14,True,,True,19.2,1.0,13
+Matthew Stafford,QB,6,14,True,,True,19.0,1.0,11
+Jordan Love,QB,7,14,True,,True,18.8,1.0,9
+Patrick Mahomes,QB,8,14,True,,True,18.7,1.0,12
+C.J. Stroud,QB,9,14,True,,True,18.8,1.0,9
+Bryce Young,QB,10,14,True,,True,17.8,1.0,9
+Kirk Cousins,QB,11,14,True,,True,16.8,1.0,5
+Geno Smith,QB,12,14,True,,True,14.7,1.0,0
+Michael Penix Jr.,QB,13,14,True,,True,14.4,1.0,8
+Daniel Jones,QB,14,14,True,,True,13.8,1.0,7
+Bijan Robinson,RB,1,19,True,,True,19.4,1.0,27
+James Cook III,RB,2,19,True,,True,19.3,1.0,27
+Christian McCaffrey,RB,3,19,True,,True,18.9,1.0,27
+Kenneth Walker III,RB,4,19,True,questionable,False,12.2,,0
+Javonte Williams,RB,5,19,True,,True,18.2,1.0,27
+Jonathan Taylor,RB,6,19,True,,True,16.8,1.0,27
+Kyren Williams,RB,7,19,True,,True,16.5,1.0,27
+Chuba Hubbard,RB,8,19,True,,True,15.6,1.0,27
+Tony Pollard,RB,9,19,True,,True,13.2,1.0,27
+Breece Hall,RB,10,19,True,,True,13.0,1.0,26
+Ashton Jeanty,RB,11,19,True,,True,12.7,1.0,14
+Quinshon Judkins,RB,12,19,True,,True,11.5,1.0,10
+Tyler Allgeier,RB,13,19,True,,True,10.3,1.0,7
+Ollie Gordon II,RB,14,19,True,,True,10.8,1.0,12
+Zach Charbonnet,RB,15,19,True,,True,10.6,1.0,3
+Bhayshul Tuten,RB,16,19,True,,True,13.5,1.0,21
+Alvin Kamara,RB,17,19,True,,True,13.9,1.0,26
+Kaelon Black,RB,18,19,True,,True,7.1,1.0,8
+Woody Marks,RB,19,19,True,,True,10.6,1.0,6
+Jaxon Smith-Njigba,WR,1,22,True,,True,20.0,1.0,27
+CeeDee Lamb,WR,2,22,True,,True,17.7,1.0,27
+Christian Watson,WR,3,22,True,,True,16.6,1.0,27
+Chris Olave,WR,4,22,True,,True,15.5,1.0,27
+Matthew Golden,WR,5,22,True,,True,14.5,1.0,27
+Tetairoa McMillan,WR,6,22,True,,True,14.1,1.0,27
+Nico Collins,WR,7,22,True,,True,13.5,1.0,27
+Drake London,WR,8,22,True,,True,12.8,1.0,26
+Parker Washington,WR,9,22,True,,True,11.5,1.0,25
+Justin Jefferson,WR,10,22,True,,True,11.3,1.0,21
+Jalen Coker,WR,11,22,True,,True,10.4,1.0,18
+Rashee Rice,WR,12,22,True,,True,10.4,1.0,15
+Tre Tucker,WR,13,22,True,,True,9.2,1.0,9
+Devaughn Vele,WR,14,22,True,,True,9.0,1.0,16
+KC Concepcion Jr.,WR,15,22,True,,True,8.8,1.0,12
+Caleb Douglas,WR,16,22,True,,True,8.9,1.0,9
+DJ Moore,WR,17,22,True,,True,8.5,1.0,11
+Kayshon Boutte,WR,18,22,True,,True,7.0,1.0,7
+George Pickens,WR,19,22,True,,True,13.1,1.0,27
+Jordan Addison,WR,20,22,True,questionable,False,3.9,,0
+Keenan Allen,WR,21,22,True,,True,4.6,1.0,18
+Marvin Harrison Jr.,WR,22,22,True,not in projections (out),False,,,0
+Brock Bowers,TE,1,18,True,,True,15.5,1.0,16
+George Kittle,TE,2,18,True,,True,14.9,1.0,27
+Trey McBride,TE,3,18,True,,True,13.8,1.0,12
+Tyler Warren,TE,4,18,True,,True,11.1,1.0,21
+Travis Kelce,TE,5,18,True,,True,10.7,1.0,22
+Tucker Kraft,TE,6,18,True,,True,10.0,1.0,16
+Juwan Johnson,TE,7,18,True,,True,8.9,1.0,12
+Brenton Strange,TE,8,18,True,,True,8.7,1.0,20
+Dalton Schultz,TE,9,18,True,,True,8.5,1.0,9
+Darren Waller,TE,10,18,True,,True,8.1,1.0,8
+Tyler Higbee,TE,11,18,True,,True,7.8,1.0,8
+Kyle Pitts Sr.,TE,12,18,True,,True,7.2,1.0,9
+AJ Barner,TE,13,18,True,,True,6.4,1.0,1
+Greg Dulcich,TE,14,18,True,,True,5.8,1.0,1
+Dalton Kincaid,TE,15,18,True,,True,10.3,1.0,23
+Harold Fannin Jr.,TE,16,18,True,,True,9.2,1.0,6
+T.J. Hockenson,TE,17,18,True,not in projections (out),False,,,0
+Colby Parkinson,TE,18,18,True,,True,6.1,1.0,4
+Los Angeles Rams,D,1,20,True,,True,8.9,1.0,26
+Seattle Seahawks,D,2,20,True,,True,8.3,1.0,14
+Jacksonville Jaguars,D,3,20,True,,True,8.0,1.0,7
+Indianapolis Colts,D,4,20,True,,True,7.9,1.0,21
+Houston Texans,D,5,20,True,,True,7.8,1.0,7
+Green Bay Packers,D,6,20,True,,True,7.1,1.0,16
+Buffalo Bills,D,7,20,True,,True,6.8,1.0,8
+Kansas City Chiefs,D,8,20,True,,True,6.6,1.0,1
+Miami Dolphins,D,9,20,True,,True,6.4,1.0,23
+Minnesota Vikings,D,10,20,True,,True,6.1,1.0,3
+Cleveland Browns,D,11,20,True,,True,5.9,1.0,5
+New Orleans Saints,D,12,20,True,,True,5.9,1.0,3
+Las Vegas Raiders,D,13,20,True,,True,5.7,1.0,1
+Arizona Cardinals,D,14,20,True,,True,5.2,1.0,6
+Atlanta Falcons,D,15,20,True,,True,5.2,1.0,3
+San Francisco 49ers,D,16,20,True,,True,5.0,1.0,0
+Carolina Panthers,D,17,20,True,,True,4.9,1.0,0
+Tennessee Titans,D,18,20,True,,True,3.7,1.0,2
+Dallas Cowboys,D,19,20,True,,True,3.5,1.0,2
+New York Jets,D,20,20,True,,True,3.3,1.0,2
