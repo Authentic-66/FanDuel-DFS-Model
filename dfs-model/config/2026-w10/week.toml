@@ -47,13 +47,10 @@ out = [
   "Puka Nacua",                # O on Nov 12, IR on Friday
   "Malik Willis",
   "Michael Wilson",
-  "Travis Etienne Jr.",
   "Alec Pierce",
   "Jonathon Brooks",
   "Terrance Ferguson",
-  "Xavier Legette",
   "Raheim Sanders",
-  "Chris Brooks",
   "Tyquan Thornton",
   "Jayden Reed",
   "Kendrick Bourne",
@@ -62,27 +59,43 @@ out = [
   "De'Von Achane",
   "Jeremiyah Love",
   "Davante Adams",
+  # SUNDAY (Nov 15, FanDuel 11:11 CT list): official inactives (NA)
+  "Kenneth Walker III",
+  "Max Brosmer",
+  "David Montgomery",
+  "Jack Strand",
+  "Shane Buechele",
+  "Garrett Nussmeier",
+  "Taylen Green",
+  "Dillon Gabriel",
+  "Zach Wilson",
+  "Riley Leonard",
+  "Andy Dalton",
+  "Haynes King",
+  "Jordan Addison",
+  "Pierre Strong Jr.",
+  "Tim Patrick",
+  "Will Mallory",
+  "AJ Dillon",
+  "CJ Williams",
+  "Jaydn Ott",
+  "Ja'Tavion Sanders",
+  "Jelani Woods",
+  "Justin Joly",
+  "Nick Singleton",
 ]
 questionable = [
-  # FanDuel Q (Friday list)
-  "Kenneth Walker III",
-  "Garrett Wilson",
-  "David Montgomery",
-  "Omar Cooper Jr.",
-  "Jordan Addison",
-  "Denzel Boston",
-  "Adonai Mitchell",
-  "Tyjae Spears",
+  # SUNDAY 11:11 CT list: FanDuel Q still on 4pm games (inactives not out before upload; Q kept on FanDuel tag)
   "Davis Allen",
   "Dont'e Thornton Jr.",
-  "Will Mallory",
-  "Jaydn Ott",
+  "Hunter Long",
   "Chris Collier",
 ]
 active = []
 
 [status.starting_qb]
 MIN = "Kirk Cousins"        # Doug sheet note Nov 13: "Cousins will likely start after the trade" (Wentz cleared Friday; otherwise both flagged)
+SEA = "Drew Lock"           # Doug, Sun Nov 15: SEA = Lock (active on the Sunday list)
 
 # Traded players (Doug approved Nov 12; shares proposed from 2026 target shares and the new teams' depth).
 # Keenan Allen: 0.18 if Evans AND Deebo are both out Friday, 0.15 if either plays (Doug). Both FanDuel Q on Nov 12:
@@ -142,7 +155,6 @@ red = [
   "Michael Carter",           # TEN 0
   "David Montgomery",         # HOU 0
   "Chris Rodriguez Jr.",      # JAC 0
-  "Emmett Johnson",           # KC 0
   "Ty Johnson",               # BUF 0
   "Mike Washington Jr.",      # LV 0
   "Zamir White",              # NO 3 "no interest"
@@ -235,8 +247,10 @@ red = [
 [prefs.green_floor]
 
 [prefs.starter_override]
+# Doug, Sun Nov 15: Emmett Johnson red CLEARED (KC starting RB with Walker inactive)
 
 [prefs.player_cap]
+"Travis Etienne Jr." = 8       # Doug, Sun Nov 15 (after upload): first game back from IR, committee; no projection change
 
 # Record only: NOT applied.
 [shadow]
@@ -268,27 +282,27 @@ red = []
 extra_receivers = ["Javonte Williams", "Christian McCaffrey"]   # Doug, Nov 13: Javonte = DAL stackable (Lamb his only other receiver after reds / Q); McCaffrey = SF stacks Purdy + CMC + Kittle / a WR
 
 # Stack QB-team weights: weight = round(2 * (implied total - 16)), min 1, round half up.
-# PRELIMINARY (nflverse lines, Thu Nov 12 14:00 UTC; data/2026-w10/lines.csv).
+# FINAL (nflverse games.csv, Sun Nov 15; data/2026-w10/lines.csv; prelim kept as lines_prelim.csv).
 [stacks.weights]
+SF = 28
 BUF = 27
-SF = 27
-JAC = 25
-DAL = 20
-NO = 19
-KC = 18
-LAR = 17
+JAC = 24
+KC = 19
+DAL = 19
+NO = 18
+LAR = 16
+CAR = 15
 SEA = 15
 HOU = 14
-CAR = 14
-GB = 14
-ATL = 12
+ATL = 13
+GB = 13
 IND = 10
 NYJ = 10
 MIN = 8
 CLE = 5
-TEN = 4
-MIA = 3
+TEN = 3
 LV = 2
+MIA = 1
 ARI = 1
 
 [stacks.rules]

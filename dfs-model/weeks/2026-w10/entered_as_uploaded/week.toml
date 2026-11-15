@@ -1,0 +1,360 @@
+# Week 10 settings (2026-w10). Made Nov 12 from 2026-w09's week.toml with the week-specific parts emptied.
+# Overrides any key in config/defaults.toml. Standing rules come from defaults: starters only, 25-lineup cap, leverage off,
+# salary floor $59,000 with cap relief +2, role guard (promotion ON), questionable routing ON at 0.45, WR one-sided
+# implied correction -0.57, bump_scale RB 0.8 / WR 0.45 / TE 0.3. NO as-entered pins here (none carried over).
+# ENTRY (Doug, Nov 12): model 149 (model-led), free entry separate. Shadows graded, not entered: median-70 (with a
+# 30% cap on injury-promoted players), plain median-70 and its three variants (v1 flex, v2 stack, v3 repeats), no-draw,
+# cap 45, pool, flex shadow.
+# Harrison trade entry REMOVED (Doug, Nov 9/12: three HOU games played; he is now a normal HOU player).
+# READS: red applied ([prefs] red); yellow and green shadow-only ([shadow.yellow], [shadow.green]).
+# Schedule (nflverse games.csv, Nov 12). Main slate = Sunday 1:00 / 4:05 / 4:25 ET, 10 games / 20 teams
+# (matches FanDuel's list, 503 players):
+#   KC@ATL, HOU@CLE, MIN@GB, MIA@IND, CAR@NO, BUF@NYJ, JAC@TEN, LAR@ARI, SEA@LV, SF@DAL.
+# Off the main slate: WAS@NYG (Thu), NE@DET (London, 9:30 ET), PIT@CIN (SNF), LAC@BAL (MNF). Byes: CHI, DEN, PHI, TB.
+# DEN is on bye: the Coleman vs Dobbins check waits for week 11.
+# Player list: re-download Friday and Sunday morning and diff (python src/diff_players.py <old> <new>).
+
+# FRIDAY (Fri Nov 13): FanDuel's Friday list (data/2026-w10/fd_players_friday.csv, 20:16) O / D -> out, Q ->
+# questionable, + IR players with 3+ targets + carries a game in 2026 (Nov 12 list, still IR). Rotowire CSV this week
+# (nfl-injury-report.csv) came through with 5 rows only: no cross-check possible.
+# Sunday: active Q players come off the Q list, inactive -> out (Doug's rule).
+[status]
+out = [
+  # FanDuel O
+  "Mike Evans",
+  "Kyler Murray",
+  "Sam Darnold",
+  "Josh Jacobs",
+  "Carnell Tate",
+  "T.J. Hockenson",
+  "Marvin Harrison Jr.",
+  "Jake Ferguson",
+  "Jauan Jennings",
+  "Tyler Goodson",
+  "CJ Donaldson",
+  "Zachariah Branch",
+  "Jonathan Mingo",
+  "Jared Wayne",
+  "Mo Alie-Cox",
+  "Ihmir Smith-Marsette",
+  "Josh Whyle",
+  "Michael Burton",
+  "Stone Smartt",
+  "Brevin Jordan",
+  # FanDuel D
+  "Chris Bell",
+  # FanDuel IR with 3+ targets + carries a game in 2026
+  "Puka Nacua",                # O on Nov 12, IR on Friday
+  "Malik Willis",
+  "Michael Wilson",
+  "Alec Pierce",
+  "Jonathon Brooks",
+  "Terrance Ferguson",
+  "Raheim Sanders",
+  "Tyquan Thornton",
+  "Jayden Reed",
+  "Kendrick Bourne",
+  "Brian Robinson Jr.",
+  "Jaylin Noel",
+  "De'Von Achane",
+  "Jeremiyah Love",
+  "Davante Adams",
+  # SUNDAY (Nov 15, FanDuel 11:11 CT list): official inactives (NA)
+  "Kenneth Walker III",
+  "Max Brosmer",
+  "David Montgomery",
+  "Jack Strand",
+  "Shane Buechele",
+  "Garrett Nussmeier",
+  "Taylen Green",
+  "Dillon Gabriel",
+  "Zach Wilson",
+  "Riley Leonard",
+  "Andy Dalton",
+  "Haynes King",
+  "Jordan Addison",
+  "Pierre Strong Jr.",
+  "Tim Patrick",
+  "Will Mallory",
+  "AJ Dillon",
+  "CJ Williams",
+  "Jaydn Ott",
+  "Ja'Tavion Sanders",
+  "Jelani Woods",
+  "Justin Joly",
+  "Nick Singleton",
+]
+questionable = [
+  # SUNDAY 11:11 CT list: FanDuel Q still on 4pm games (inactives not out before upload; Q kept on FanDuel tag)
+  "Davis Allen",
+  "Dont'e Thornton Jr.",
+  "Hunter Long",
+  "Chris Collier",
+]
+active = []
+
+[status.starting_qb]
+MIN = "Kirk Cousins"        # Doug sheet note Nov 13: "Cousins will likely start after the trade" (Wentz cleared Friday; otherwise both flagged)
+SEA = "Drew Lock"           # Doug, Sun Nov 15: SEA = Lock (active on the Sunday list)
+
+# Traded players (Doug approved Nov 12; shares proposed from 2026 target shares and the new teams' depth).
+# Keenan Allen: 0.18 if Evans AND Deebo are both out Friday, 0.15 if either plays (Doug). Both FanDuel Q on Nov 12:
+# 0.18 for the prelim; set from Friday's report.
+[[status.trade]]
+player = "Keenan Allen"
+position = "WR"
+from = "IND"
+to = "SF"
+new_target_share = 0.15       # Friday: Evans O, Deebo cleared -> 0.15 (Doug's rule); was 0.18 at the prelim
+first_week_factor = 0.8
+
+[[status.trade]]
+player = "Josh Downs"
+position = "WR"
+from = "IND"
+to = "KC"
+new_target_share = 0.12        # 19.9% at IND; KC: Kelce 20%, Worthy 19.5%, Walker 13%, Rice back (~17%)
+first_week_factor = 0.8
+
+[[status.trade]]
+player = "Kirk Cousins"
+position = "QB"
+from = "LV"
+to = "MIN"
+new_target_share = 0.0         # QB: records the move (LV rushing volume to LV mates); MIN starter = Friday's call
+first_week_factor = 1.0
+
+# Doug's projection reads: new mean FanDuel points.
+[overrides]
+
+# Depth split for WRs only (Doug, Oct 12), kept.
+[model.injury]
+within_position = "depth_rank"
+depth_rank_positions = ["WR"]
+
+[optimizer]
+stack_allocation = "proportional"   # stack counts follow the weights exactly instead of random draws
+
+[prefs]
+starters_only = true
+red_teams = []
+red = [
+  # Doug (data/2026-w10/review_sheet_reviewed.xlsx, saved Fri Nov 13 20:25): 94 red, 0 yellow, 0 green,
+  # 0 DST red. His notes in quotes. Friday pass cleared Flournoy (sheet: 'relegated to WR3 or 4 with Pickens
+  # starting') and MarShawn Lloyd. Comment = team, Nov 12 prelim lineups, note.
+  # QB (5)
+  "Shedeur Sanders",          # CLE 3 "no interest"
+  "Cam Ward",                 # TEN 2 "matchup"
+  "Carson Wentz",             # MIN 0 "Cousins will likely start after the trade"
+  "Deshaun Watson",           # CLE 0 "no interest"
+  "Jack Strand",              # ATL 0 "no interest"
+  # RB (46)
+  "Pierre Strong Jr.",        # GB 3 "depth per official depth chart.  Marshawn Lloyd is RB2 behind Josh Jacobs who is out 2-3 weeks."
+  "Jadarian Price",           # SEA 0
+  "Dylan Sampson",            # CLE 0
+  "Michael Carter",           # TEN 0
+  "David Montgomery",         # HOU 0
+  "Chris Rodriguez Jr.",      # JAC 0
+  "Emmett Johnson",           # KC 0
+  "Ty Johnson",               # BUF 0
+  "Mike Washington Jr.",      # LV 0
+  "Zamir White",              # NO 3 "no interest"
+  "Kaleb Johnson",            # GB 0
+  "Seth McGowan",             # IND 0
+  "George Holani",            # SEA 0
+  "Bam Knight",               # ARI 0
+  "Ameer Abdullah",           # JAC 0
+  "Kyle Juszczyk",            # SF 0
+  "Jaylen Wright",            # MIA 0
+  "Jaleel McLaughlin",        # CLE 0
+  "Khalil Herbert",           # ATL 0
+  "CJ Donaldson",             # NO 0
+  "DJ Giddens",               # IND 0
+  "AJ Dillon",                # CAR 0
+  "DJ Herman",                # MIA 0
+  "Tyjae Spears",             # TEN 0
+  "Ray Davis",                # BUF 0
+  "Isaiah Davis",             # NYJ 0
+  "LeQuint Allen Jr.",        # JAC 0
+  "Evan Hull",                # ARI 0
+  "Hunter Luepke",            # DAL 0
+  "Nick Singleton",           # TEN 0
+  "Dare Ogunbowale",          # HOU 0
+  "Trevor Etienne",           # CAR 0
+  "Ronnie Rivers",            # LAR 0
+  "Carlos Washington Jr.",    # MIA 0
+  "Kaytron Allen",            # MIA 0
+  "Jordan James",             # SF 0
+  "DeeJay Dallas",            # MIN 0
+  "Jaydn Ott",                # KC 0
+  "Frank Gore Jr.",           # BUF 0
+  "Michael Burton",           # CLE 0
+  "Max Bredeson",             # MIN 0
+  "Dylan Laube",              # LV 0
+  "Anthony Tyus III",         # CAR 0
+  "Kalel Mullings",           # TEN 0
+  "Kene Nwangwu",             # NYJ 0
+  "Julius Chestnut",          # TEN 0
+  # WR (31; Deebo Samuel Sr. red on the sheet, CLEARED by Doug in chat Fri Nov 13)
+  "Xavier Hutchinson",        # HOU 10 "no interest"
+  "Jordyn Tyson",             # NO 8 "no interest"
+  "Keon Coleman",             # BUF 10 "no interest"
+  "Omar Cooper Jr.",          # NYJ 0
+  "Laquon Treadwell",         # IND 6
+  "Jahan Dotson",             # ATL 0 "matchup"
+  "Tank Dell",                # HOU 0
+  "Carnell Tate",             # TEN 0
+  "Tory Horton",              # SEA 0
+  "Jerry Jeudy",              # CLE 6 "no interest"
+  "Elic Ayomanor",            # TEN 3 "matchup"
+  "John Metchie III",         # CAR 2 "no interest"
+  "Reggie Virgil",            # ARI 0 "no interest"
+  "Deion Burks",              # IND 0 "no interest"
+  "Jordan Watkins",           # SF 7
+  "Jakobi Meyers",            # JAC 0
+  "Jalen Nailor",             # LV 0 "no interest"
+  "Kevin Coleman Jr.",        # MIA 0
+  "Tim Patrick",              # NYJ 0
+  "Demarcus Robinson",        # SF 0
+  "Simi Fehoko",              # ARI 0
+  "Calvin Ridley",            # TEN 0
+  "Chimere Dike",             # TEN 0
+  "Isaiah Williams",          # NYJ 0
+  "Bryce Lance",              # NO 0
+  "Savion Williams",          # GB 0
+  "Olamide Zaccheaus",        # ATL 0
+  "Chris Bell",               # MIA 0
+  "Jacob Cowing",             # SF 0
+  "Myles Price",              # MIN 0
+  "Velus Jones Jr.",          # SEA 0
+  # TE (11)
+  "Michael Mayer",            # LV 0
+  "Mason Taylor",             # NYJ 12 "no interest"
+  "Will Mallory",             # IND 0
+  "Tommy Tremble",            # CAR 0
+  "Kenyon Sadiq",             # NYJ 0
+  "Nate Boerkircher",         # JAC 0
+  "Brevyn Spann-Ford",        # DAL 0
+  "Elijah Higgins",           # ARI 0
+  "Daniel Bellinger",         # TEN 0
+  "Davis Allen",              # LAR 0
+  "Jackson Hawes",            # BUF 0
+]
+
+[prefs.yellow]                 # empty: yellow is shadow-only (Doug, Oct 26)
+
+[prefs.green]                  # empty: green is shadow-only
+
+[prefs.green_floor]
+
+[prefs.starter_override]
+
+[prefs.player_cap]
+
+# Record only: NOT applied.
+[shadow]
+red = []
+
+[shadow.red_lineups]           # lineups each red player had in the Nov 12 prelim (red is applied, so recorded here)
+"Mason Taylor" = 12
+"Keon Coleman" = 10
+"Xavier Hutchinson" = 10
+"Jordyn Tyson" = 8
+"Jordan Watkins" = 7
+"Jerry Jeudy" = 6
+"Laquon Treadwell" = 6
+"Pierre Strong Jr." = 3
+"Shedeur Sanders" = 3
+"Elic Ayomanor" = 3
+"Zamir White" = 3
+"Cam Ward" = 2
+"John Metchie III" = 2
+
+[shadow.yellow]
+
+[shadow.green]
+
+[shadow.green_floor]
+
+# Doug adds extra stack receivers per week (none carried over).
+[stacks]
+extra_receivers = ["Javonte Williams", "Christian McCaffrey"]   # Doug, Nov 13: Javonte = DAL stackable (Lamb his only other receiver after reds / Q); McCaffrey = SF stacks Purdy + CMC + Kittle / a WR
+
+# Stack QB-team weights: weight = round(2 * (implied total - 16)), min 1, round half up.
+# FINAL (nflverse games.csv, Sun Nov 15; data/2026-w10/lines.csv; prelim kept as lines_prelim.csv).
+[stacks.weights]
+SF = 28
+BUF = 27
+JAC = 24
+KC = 19
+DAL = 19
+NO = 18
+LAR = 16
+CAR = 15
+SEA = 15
+HOU = 14
+ATL = 13
+GB = 13
+IND = 10
+NYJ = 10
+MIN = 8
+CLE = 5
+TEN = 3
+LV = 2
+MIA = 1
+ARI = 1
+
+[stacks.rules]
+
+# Doug's pool (shadow): lists come from his week-10 review sheet (Pool column).
+[pool]
+ranked = false
+# Doug (review_sheet_reviewed.xlsx, saved Fri Nov 13 20:25): 93 players marked Y = the pool. No ranks:
+# membership only (ranked = false -> every pool player x 1.00). Sheet order. Harrison 'only if playing';
+# Tuten / Kamara / Marks / Pickens 'Not listed on injury report'.
+QB = [  # 14
+  "Josh Allen", "Brock Purdy", "Trevor Lawrence", "Dak Prescott", "Tyler Shough", "Matthew Stafford", "Jordan Love",
+  "Patrick Mahomes", "C.J. Stroud", "Bryce Young", "Kirk Cousins", "Geno Smith", "Michael Penix Jr.", "Daniel Jones",
+]
+RB = [  # 19
+  "Bijan Robinson", "James Cook III", "Christian McCaffrey", "Kenneth Walker III", "Javonte Williams",
+  "Jonathan Taylor", "Kyren Williams", "Chuba Hubbard", "Tony Pollard", "Breece Hall", "Ashton Jeanty",
+  "Quinshon Judkins", "Tyler Allgeier", "Ollie Gordon II", "Zach Charbonnet", "Bhayshul Tuten", "Alvin Kamara",
+  "Kaelon Black", "Woody Marks",
+]
+WR = [  # 22
+  "Jaxon Smith-Njigba", "CeeDee Lamb", "Christian Watson", "Chris Olave", "Matthew Golden", "Tetairoa McMillan",
+  "Nico Collins", "Drake London", "Parker Washington", "Justin Jefferson", "Jalen Coker", "Rashee Rice", "Tre Tucker",
+  "Devaughn Vele", "KC Concepcion Jr.", "Caleb Douglas", "DJ Moore", "Kayshon Boutte", "George Pickens",
+  "Jordan Addison", "Keenan Allen", "Marvin Harrison Jr.",
+]
+TE = [  # 18
+  "Brock Bowers", "George Kittle", "Trey McBride", "Tyler Warren", "Travis Kelce", "Tucker Kraft", "Juwan Johnson",
+  "Brenton Strange", "Dalton Schultz", "Darren Waller", "Tyler Higbee", "Kyle Pitts Sr.", "AJ Barner", "Greg Dulcich",
+  "Dalton Kincaid", "Harold Fannin Jr.", "T.J. Hockenson", "Colby Parkinson",
+]
+DST = [  # 20
+  "Los Angeles Rams", "Seattle Seahawks", "Jacksonville Jaguars", "Indianapolis Colts", "Houston Texans",
+  "Green Bay Packers", "Buffalo Bills", "Kansas City Chiefs", "Miami Dolphins", "Minnesota Vikings",
+  "Cleveland Browns", "New Orleans Saints", "Las Vegas Raiders", "Arizona Cardinals", "Atlanta Falcons",
+  "San Francisco 49ers", "Carolina Panthers", "Tennessee Titans", "Dallas Cowboys", "New York Jets",
+]
+
+# Shadow sets graded beside the entered model (none entered; entry = model 149):
+#   python src/optimize.py --week 2026-w10 --subdir model_cap45 --cap 45
+#   python src/optimize.py --week 2026-w10 --flex-shadow
+#   python src/optimize.py --week 2026-w10 --no-draw
+#   python src/optimize.py --week 2026-w10 --median70 --injury-cap 45      (-> median70/, the 30% cap)
+#   python src/optimize.py --week 2026-w10 --median70 --subdir median70_plain
+#   python src/optimize.py --week 2026-w10 --median70 --variant flex       (-> median70_v1/)
+#   python src/optimize.py --week 2026-w10 --median70 --variant stack      (-> median70_v2/)
+#   python src/optimize.py --week 2026-w10 --median70 --variant repeats    (-> median70_v3/)
+#   python src/optimize.py --week 2026-w10 --pool
+[grading]
+extra_sets = ["model_cap45", "flex_shadow", "nodraw", "median70", "median70_plain", "median70_v1", "median70_v2",
+              "median70_v3"]
+
+[contest]
+field_size = 0                  # from the week-10 All Entries export after the slate
+
+[contest.guru]

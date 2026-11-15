@@ -837,6 +837,31 @@ checked; nodraw 3 / pool 1 lineups under $59K, floor fallback): model 116.5, sta
 4, CMC + Deebo 2, Kittle + Allen 1 (CMC / Kittle at 27 overall); pool SF 18 (CMC + Kittle 7, Deebo + Kittle 6,
 Kittle + Allen 4, CMC + Deebo 1). Pushed.
 
+## Week 10 final run (Sun Nov 15) — ENTERED = weeks/2026-w10/entered_upload_149.csv (EDITED via edit-entries ~11:30 CT)
+Sunday list `fd_players_sunday.csv` (11:11 CT; copied to `fd_players.csv`, Friday's kept). **FanDuel marks official
+inactives "NA" (diff_players.py reads it as blank: check the raw tag).** Early-game inactives -> `out` (Walker III,
+Addison, Montgomery, Strong, Mallory, Ott, Patrick, Dillon, Singleton, CJ Williams, Ja'Tavion Sanders, Woods, Joly +
+backup QBs); IR -> cleared = active (**Travis Etienne Jr.**, Legette, Chris Brooks: off `out`); Q cleared (G. Wilson,
+Cooper, Boston, Mitchell, Spears); 4pm Q kept Q on FanDuel's tag (Davis Allen, Thornton, Collier, Hunter Long).
+Doug: SEA = Lock (`starting_qb`), MIN = Cousins, Lloyd left as is (Strong inactive -> Lloyd GB RB1 on his own), KC RB
+Walker inactive. FINAL lines (nflverse games.csv Sunday; prelim kept as `lines_prelim.csv`), weights SF 28, BUF 27,
+JAC 24, KC / DAL 19, NO 18 ... MIA / ARI 1.
+**Two entries:** (1) FIRST 149 (model, mean 115.7, drops lineup 149) UPLOADED by Doug -> saved in
+`weeks/2026-w10/entered_as_uploaded/` (files + week.toml as built). (2) Doug, after upload: `[prefs.player_cap]`
+Travis Etienne Jr. = 8 (first game back from IR, no projection change) and **Emmett Johnson red CLEARED** (KC starter);
+model rebuilt (mean 116.7 for the 149, drops lineup 150; Etienne 8, E. Johnson 26, Lock 9, Cousins 5, Lloyd 6) and
+written into FanDuel's edit-entries template (`data/2026-w10/FanDuel-NFL-2026-11-15-136490-entries-upload-template.csv`)
+-> `weeks/2026-w10/edit_entries_149.csv` (script `weeks/2026-w10/edit_entries_build.py`, adapted from the NBA
+edit_entries.py but matching EXACT uploaded lineups only: free entry 3767370153 (Lawrence / Cook / Taylor) untouched;
+61 of 149 entries changed; validated). **Doug uploaded the edit file: ENTERED = the edited 149** (main
+`entered_upload_149.csv` / `entered_readable_149.csv`, all in the main `upload.csv`).
+Shadows built after the edit (same settings, checked: 150 each, no tagged / out / Q / red, salary): cap45 120.6, flex
+117.7, nodraw 119.2 (4 under $59K, floor fallback), median70 (30% injury cap) 114.5, plain 117.6, v1 119.0, v2 121.7
+(QB + 1), v3 120.4 (105 distinct), pool 117.9.
+**Monday review:** grade the entered (edited) 149; score `entered_as_uploaded/entered_upload_149.csv` beside it as a
+comparison (avg, top-10%, top-1%, best, cashed / won as if entered); free entry 3767370153 graded separately
+(docs/my_own_lineups.md if hand-built: ask Doug); promotion kill rule (weeks 9-10); Etienne / E. Johnson / Lloyd results.
+
 ## Week 9 run checklist (2026-w09) — START HERE when FanDuel releases the week-9 player list
 **State Mon Nov 9: step 6 (review) DONE, docs/week9_review.md; week-10 build tests DONE (review section 7). NEXT =
 Doug's week-10 build call, then week-10 prep (copy week 9's week.toml; remove the Harrison trade entry; DEN RB check).**
