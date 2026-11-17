@@ -356,6 +356,6 @@ extra_sets = ["model_cap45", "flex_shadow", "nodraw", "median70", "median70_plai
               "median70_v3"]
 
 [contest]
-field_size = 0                  # from the week-10 All Entries export after the slate
+field_size = 515200             # week-10 All Entries export (Nov 16)
 
 [contest.guru]
