@@ -19,6 +19,11 @@ def load_slate(path, status):
     fd['FPPG'] = fd.FPPG.fillna(0)    # never-played backups have no FPPG
     tags = fd['Injury Indicator']
     fd['Inj'] = tags.where(tags.isin(['O', 'IR']), '')
+    if status.get('na_inactive', True):
+        # Sunday lists tag official inactives "NA", which pandas reads as missing: read the raw text and count them
+        # out (Nov 16, for the Doug-run Sunday routine; weeks 4 and 8 pin na_inactive = false, as entered).
+        raw = pd.read_csv(path, usecols=['Injury Indicator'], dtype=str, keep_default_na=False)['Injury Indicator']
+        fd.loc[raw.values == 'NA', 'Inj'] = 'O'
     if not status['out'] and not status['questionable']:
         fd.loc[tags.isin(['Q', 'D']), 'Inj'] = 'Q'
     fd['Full'] = fd['First Name'] + ' ' + fd['Last Name']

@@ -5,6 +5,8 @@ Doug's FanDuel NFL DFS model for the **Sunday main-slate "Pooch Punt"** GPP ($0.
 guaranteed overlay). Goal: maximize chance of top finishes, not average score. Built in a claude.ai chat Sept 30–Oct 4 2026
 (Phase 1); this repo is where Phase 2 happens. Doug also runs a Benter-style horse racing model (separate repo, Authentic-66)
 and thinks in those terms: fundamentals model + market/public overlay, calibration, backtesting.
+**Current state (Nov 16): weeks 11-12 frozen, 20-lineup entry, Doug runs Friday / Sunday himself: see the section
+'WEEKS 11-12' below and docs/commands.md.**
 
 ## Contest scoring (FanDuel, verified from contest rules screenshot)
 - Pass yd 0.04, pass TD 4, INT -1; rush/rec yd 0.1; rush/rec/return TD 6; reception 0.5 (half PPR); fumble lost -2; 2-pt 2.
@@ -861,6 +863,41 @@ Shadows built after the edit (same settings, checked: 150 each, no tagged / out 
 **Monday review:** grade the entered (edited) 149; score `entered_as_uploaded/entered_upload_149.csv` beside it as a
 comparison (avg, top-10%, top-1%, best, cashed / won as if entered); free entry 3767370153 graded separately
 (docs/my_own_lineups.md if hand-built: ask Doug); promotion kill rule (weeks 9-10); Etienne / E. Johnson / Lloyd results.
+
+## WEEKS 11-12: FROZEN, 20-LINEUP ENTRY, DOUG RUNS IT (Doug, Nov 16) — START HERE
+Decisions after the week-10 review (docs/week10_review.md):
+1. **149-lineup entries stopped. Weeks 11 and 12: 20 lineups ($1 a week) = the flex shadow's 20 highest-projected
+   lineups** -> `weeks/<week>/entry_20/upload.csv` (written by `src/weekly.py`). No 149 / free-entry file.
+2. **Model and build rules FROZEN through week 12: no rule changes, no new tests, bug fixes only.**
+3. Every set still built and graded on paper each week, plus each build's top 20, in one running table:
+   `python src/paper_results.py` -> `docs/paper_results.md` / `.csv` (weeks 5 on; sets rebuilt later live in
+   `weeks/<week>/paper/<set>.csv`; weeks 5-8 money uses week 9's prize table).
+4. Review sheet = **news calls only** (backup becomes starter, back from IR, real role change; no "no interest"
+   reds): `src/review_sheet.py build|apply` (Color red, Cap N, Note -> SHEET blocks in week.toml). Sunday late-news
+   step kept: clear (`[status] active`) or cap (`[prefs.player_cap]`) in week.toml, rerun, `src/edit_entries.py`
+   if already uploaded. No pool review -> no pool set from week 11.
+5. **Doug runs Friday and Sunday himself: docs/commands.md.** `src/weekly.py --week <w> --stage friday|sunday`: list
+   diff, fetch_stats, statuses from FanDuel tags (O / D / NA / IR 3+ vol -> out, Q -> questionable) and nflverse
+   lines + stack weights -> `config/<week>/auto.toml` (merged UNDER week.toml by config.load_config: status lists
+   joined, `active` removes), model.py, all sets (frozen list in weekly.py), rule check, entry. Tested end to end on
+   a week-10 copy (3.5 min; auto statuses = the hand-set ones except 3 O->IR low-volume players; Q list identical;
+   projections within 0.3).
+6. **After week 12: one-page summary of the paper results; Doug decides whether to continue.**
+Bug fix (Nov 16): FanDuel "NA" (official inactive) is now read as out (`[status] na_inactive`, default true; weeks
+4 and 8 pinned false; load_slate proven identical for weeks 4-10). `config/2026-w11` and `2026-w12` week.toml made
+(trades carried, no first-week factor; Doug's calls blocks empty).
+Session work in weeks 11-12 = only what Doug asks (bug fixes, the week-12 summary).
+
+## Week 10 (2026-w10) result — see docs/week10_review.md (Mon Nov 16)
+150 entries = edited 149 + free entry (all matched by entry Id). Won $3.53 (all on the 149; free entry 141.3, $0).
+**Net -$3.92, running total -$12.87.** Field mean 146.4 (cash line 154.2); entered 124.2, 31 cashed, 11 top-10%, 0
+top-1%. Every shadow set lost (best v3 repeats -$0.26, median-70 plain -$2.60, cap 45 -$2.84). Sunday calls: E. Johnson
+un-red +$1.53, Etienne cap ~$0. Low scores: nothing operational (no inactives, edit file exact); Bowers left early
+(16 lineups). Projections: ours / FDR Friday / FanDuel FPPG equally accurate (MAE 5.52 / 5.35 / 5.34, rank corr
+0.545 / 0.541 / 0.530); FDR-projection builds did worse (-$6.23 vs -$4.07, weeks 9-10). Model avg below the field
+average all six weeks (5-10): construction, not projections. Reds net +$0.35. **Promotion kill rule: weeks 9-10 n 9,
+0.74 under: does NOT fire, promotion stays ON.** Week 11: Doug enters 20 lineups; top-20 study (weeks 5-10): every
+build lost; flex shadow -$0.28, cap 45 -$0.41, model -$0.54 (noise). Doug decided Nov 16: see 'WEEKS 11-12' above. Tables + scripts in weeks/2026-w10/ (review_scripts/). field_size set in week.toml.
 
 ## Week 9 run checklist (2026-w09) — START HERE when FanDuel releases the week-9 player list
 **State Mon Nov 9: step 6 (review) DONE, docs/week9_review.md; week-10 build tests DONE (review section 7). NEXT =

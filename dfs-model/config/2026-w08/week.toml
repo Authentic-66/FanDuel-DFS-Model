@@ -18,6 +18,7 @@
 # Warren, J. Wright, Nwangwu. DJ Moore kept Q: Rotowire Oct 30 lists him questionable (shoulder) though FanDuel dropped
 # his tag. Standard Q treatment, no hand adjustments. SUNDAY: Q players ACTIVE at inactives come off this list.
 [status]
+na_inactive = false            # pin (Nov 16): as entered, FanDuel "NA" tags were not read as inactive
 out = [
   "Josh Kattus",                                                         # FanDuel O
   "Emeka Egbuka", "Brian Robinson Jr.", "Michael Briscoe",               # FanDuel O Oct 30 (Egbuka / Robinson ruled out)

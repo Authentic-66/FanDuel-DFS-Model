@@ -1,0 +1,96 @@
+# Week 12 settings (2026-w12). FROZEN (Doug, Nov 16): same model, rules and sets as week 10 through week 12; bug
+# fixes only. ENTRY = the flex shadow's 20 highest-projected lineups (weeks/2026-w12/entry_20/upload.csv), written by
+#   python src/weekly.py --week 2026-w12 --stage friday|sunday        (docs/commands.md)
+# Every other set is built and graded on paper (src/paper_results.py). No free-entry 149 file any more.
+# Statuses and stack weights are written automatically to config/2026-w12/auto.toml by weekly.py (FanDuel tags +
+# nflverse lines). This file holds only Doug's calls, which add to / override auto.toml.
+
+# ---- DOUG'S CALLS (news only, Doug Nov 16: a backup who becomes the starter, a player back from IR, a real role
+# change; no "no interest" reds) ----
+[status]
+out = []            # ruled out on news before FanDuel tags him (exact FanDuel name)
+questionable = []   # hold out of lineups on news
+active = []         # FanDuel still shows O / IR / Q but he plays (back from IR): clears the tag
+
+[status.starting_qb]
+# TEAM = "Exact FanDuel name" when the starter is not last game's QB (new starter, QB back from injury)
+
+# Traded players carried from week 10 (first_week_factor dropped: no longer their first game).
+[[status.trade]]
+player = "Keenan Allen"
+position = "WR"
+from = "IND"
+to = "SF"
+new_target_share = 0.15
+
+[[status.trade]]
+player = "Josh Downs"
+position = "WR"
+from = "IND"
+to = "KC"
+new_target_share = 0.12
+
+[[status.trade]]
+player = "Kirk Cousins"
+position = "QB"
+from = "LV"
+to = "MIN"
+new_target_share = 0.0
+
+# Doug's projection reads: new mean FanDuel points.
+[overrides]
+
+# Depth split for WRs only (Doug, Oct 12), kept.
+[model.injury]
+within_position = "depth_rank"
+depth_rank_positions = ["WR"]
+
+[optimizer]
+stack_allocation = "proportional"   # stack counts follow the weights exactly instead of random draws
+
+[prefs]
+starters_only = true
+red_teams = []
+red = [
+  # >>> SHEET (written by src/review_sheet.py apply; or type names here by hand)
+  # <<< SHEET
+]
+
+[prefs.yellow]                 # empty: yellow is shadow-only (Doug, Oct 26)
+
+[prefs.green]                  # empty: green is shadow-only
+
+[prefs.green_floor]
+
+[prefs.starter_override]
+# TEAM = ["Exact FanDuel name"]: that player takes the team's starter slot at his position (backup becomes starter)
+
+[prefs.player_cap]
+# >>> SHEET (written by src/review_sheet.py apply; or "Name" = N by hand: late-news cap, e.g. first game back)
+# <<< SHEET
+
+[shadow]
+red = []
+
+[shadow.yellow]
+
+[shadow.green]
+
+[shadow.green_floor]
+
+[stacks]
+extra_receivers = []   # RBs who count as stack receivers for their QB (week 10: Javonte Williams, McCaffrey); Doug per week
+
+[stacks.weights]
+# written to auto.toml by weekly.py (round(2 x (implied - 16)), min 1). A team set here overrides it (0 = no stacks).
+
+[stacks.rules]
+
+# No [pool] lists: the pool set needs Doug's full pool review, which stops from week 11 (news calls only).
+
+[grading]
+extra_sets = ["model_cap45", "flex_shadow", "nodraw", "median70", "median70_plain", "median70_v1", "median70_v2",
+              "median70_v3"]
+
+[contest]
+field_size = 0                  # from the All Entries export after the slate

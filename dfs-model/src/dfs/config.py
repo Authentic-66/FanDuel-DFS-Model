@@ -82,8 +82,22 @@ def load_config(week, **overrides):
     """defaults.toml <- week.toml <- keyword overrides (nested dicts, e.g. model={'prior_blend': {...}})."""
     cfg = deep_merge(_read_toml(os.path.join(week.root, 'config', 'defaults.toml')), WEEK_DEFAULTS)
     week_file = os.path.join(week.config_dir, 'week.toml')
-    if os.path.exists(week_file):
-        cfg = deep_merge(cfg, _read_toml(week_file))
+    wk = _read_toml(week_file) if os.path.exists(week_file) else {}
+    auto_file = os.path.join(week.config_dir, 'auto.toml')
+    if os.path.exists(auto_file):
+        # written by src/weekly.py (FanDuel tags -> status, nflverse lines -> stack weights). week.toml wins on any
+        # key; status out / questionable lists are joined, and week.toml's [status] active takes names off both.
+        auto = _read_toml(auto_file)
+        cfg = deep_merge(cfg, auto)
+        wk = copy.deepcopy(wk)
+        st = wk.setdefault('status', {})
+        back = set(st.get('active', []))
+        for k in ('out', 'questionable'):
+            names = list(auto.get('status', {}).get(k, [])) + list(st.get(k, []))
+            st[k] = [n for n in dict.fromkeys(names) if n not in back]
+        both = set(st['out']) & set(st['questionable'])   # week.toml out beats an auto Q
+        st['questionable'] = [n for n in st['questionable'] if n not in both]
+    cfg = deep_merge(cfg, wk)
     return deep_merge(cfg, overrides)
 
 

@@ -2,6 +2,7 @@
 
 # Friday Oct 2 official game statuses (ESPN). Skill positions only.
 [status]
+na_inactive = false            # pin (Nov 16): as entered, FanDuel "NA" tags were not read as inactive
 out = ["Justin Jefferson", "Adonai Mitchell", "Breece Hall", "Mason Taylor", "DeVonta Smith", "Dallas Goedert",
        "Marquise Brown", "Zach Charbonnet", "Jadarian Price", "Caleb Douglas", "Caleb Williams", "Terrance Ferguson"]
 questionable = ["Zay Flowers", "Ray Davis", "Kenyon Sadiq", "Ladd McConkey", "Colby Parkinson", "Mike Evans", "Tyjae Spears"]
