@@ -5,8 +5,8 @@ Doug's FanDuel NFL DFS model for the **Sunday main-slate "Pooch Punt"** GPP ($0.
 guaranteed overlay). Goal: maximize chance of top finishes, not average score. Built in a claude.ai chat Sept 30–Oct 4 2026
 (Phase 1); this repo is where Phase 2 happens. Doug also runs a Benter-style horse racing model (separate repo, Authentic-66)
 and thinks in those terms: fundamentals model + market/public overlay, calibration, backtesting.
-**Current state (Nov 16): weeks 11-12 frozen, 20-lineup entry, Doug runs Friday / Sunday himself: see the section
-'WEEKS 11-12' below and docs/commands.md.**
+**Current state (Nov 19): weeks 11-12 frozen, 20-lineup entry, Doug runs Friday / Sunday himself: see the section
+'WEEKS 11-12' below and docs/commands.md. Week 11 Friday stage DONE after a trade-code fix (section 'Week 11 Friday run').**
 
 ## Contest scoring (FanDuel, verified from contest rules screenshot)
 - Pass yd 0.04, pass TD 4, INT -1; rush/rec yd 0.1; rush/rec/return TD 6; reception 0.5 (half PPR); fumble lost -2; 2-pt 2.
@@ -887,6 +887,24 @@ Bug fix (Nov 16): FanDuel "NA" (official inactive) is now read as out (`[status]
 4 and 8 pinned false; load_slate proven identical for weeks 4-10). `config/2026-w11` and `2026-w12` week.toml made
 (trades carried, no first-week factor; Doug's calls blocks empty).
 Session work in weeks 11-12 = only what Doug asks (bug fixes, the week-12 summary).
+
+## Week 11 Friday run (Thu Nov 19) — bug fix, then Friday stage DONE (Doug ran it, it crashed; Claude fixed + reran)
+**Bug fix (7a4b8a7):** `weekly.py --stage friday` crashed in model.py (`usage.redistribute_out`: `'>' not supported
+between 'str' and 'int'`). Cause: IND (old team of the Allen / Downs trades) is off the week-11 slate, so no old
+teammates; pandas 3 maps the empty str Key Series to an empty str array whose sum is ''. Volumes now built as float
+(`redistribute_out` wts, `trade_volume` new-team tgt). Test `tests/test_trade.py` test_old_team_off_the_slate (fails
+on the old code); 147 tests OK. Weeks 9-10: proj + sims bit-identical old vs new code on the current cache.
+**Reproducibility note:** weeks 9-10 no longer match their archived proj.csv, from DATA not code: the Friday run
+refreshed the nflverse cache (2025 + 2026 stats and snaps, Nov 19 17:36) and nflverse added rows (Audric Estime now
+has a week-6 CLE row: week 9 / 10 proj 0 -> 6.4 / 10.1; ~20-40 others move 0.1-0.2). Archived proj.csv / uploads
+remain the as-entered record; prove code changes old-vs-new on the same cache, not against the archive.
+**Friday stage rerun:** completed. 20 out / 31 Q (auto.toml), stack weights DAL 32, BUF 29, CHI 28, KC 25 ...; all nine
+sets 150, 0 rule problems; entry PREVIEW `weeks/2026-w11/entry_20/upload.csv` (flex shadow top 20, proj 121.7-127.3,
+avg 123.6; stacks DAL 11, CHI 5, JAC 3, BUF 1). Open warnings for Doug: **no starting QB for ARI, LV, MIA** (0 stacks
+until `[status.starting_qb]`); **Kendre Miller on DAL per FanDuel, stats with NO** (trade entry if traded, else he
+keeps NO volume); role drops Singletary, Lambert-Smith, Hurst, Legette, Ridley (Holani in the earlier pass).
+Week-11 outputs (`config/2026-w11/auto.toml`, `data/2026-w11/`, `weeks/2026-w11/`, `weeks/2026-w10/ownership_train.csv`)
+NOT committed. **Next: Doug's Sunday stage (docs/commands.md).**
 
 ## Week 10 (2026-w10) result — see docs/week10_review.md (Mon Nov 16)
 150 entries = edited 149 + free entry (all matched by entry Id). Won $3.53 (all on the 149; free entry 141.3, $0).
