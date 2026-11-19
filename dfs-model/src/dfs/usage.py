@@ -127,7 +127,9 @@ def redistribute_out(agg, out_players, active_fd, share, st=None, mode='skip', r
         frac = {k: present_share(agg, st, o.Key, k, o.Team) if st is not None and mode == 'present_share' else 1.0
                 for k in mates}
         for col, gained in extra.items():
-            wts = mates.map(lambda k: per_game(agg, k, col)).values
+            # float: with no teammates (old team off the slate) pandas 3 maps an empty str Series to an empty str
+            # array, whose sum is '' (week 11: IND off the slate for the Allen / Downs trades)
+            wts = np.asarray([per_game(agg, k, col) for k in mates], dtype=float)
             for part, group, ranks in routes(routing, getattr(o, 'Position', None), col, share, same):
                 if ranks is not None and group.any():        # by depth rank: also reaches teammates with no volume yet
                     split = rank_weights(wts[group], ranks)
@@ -173,7 +175,7 @@ def trade_volume(agg, trades, active_fd, share, routing=None, st=None, old_team=
             continue
         mates = active_fd[(active_fd.Team == t.To) & active_fd.Position.isin(['RB', 'WR', 'TE'])]
         mates = mates[mates.Key.isin(agg.index) & (mates.Key != t.Key)].Key
-        tgt = mates.map(lambda k: per_game(agg, k, 'tgt'))
+        tgt = mates.map(lambda k: per_game(agg, k, 'tgt')).astype(float)
         if tgt.sum() <= 0:
             raise ValueError(f'[[status.trade]] {t.Name}: no {t.To} targets to take a share of')
         take = t.share * t.factor

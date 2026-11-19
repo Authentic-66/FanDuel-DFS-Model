@@ -85,6 +85,23 @@ class TradeTest(unittest.TestCase):
         xt, _ = usage.trade_volume(agg, moved, data.active(fd), 0.8)
         self.assertEqual(xt, {data.norm_name('Old Mate'): 8.0})
 
+    def test_old_team_off_the_slate(self):
+        """Week 11 crash: IND (Allen's and Downs' old team) off the slate, so no old teammates. pandas 3 mapped the
+        empty str Key Series to an empty str array whose sum is '' ('' > 0: TypeError). Now: nothing handed out on
+        the old team, new-team share as usual, with and without position routing."""
+        fd, agg = slate(), stats()
+        fd = fd[fd.Nickname != 'Old Mate'].reset_index(drop=True)
+        moved = data.trades(fd, {'trade': [trade(first_week_factor=0.5, position='WR')]})
+        fd.loc[fd.Key == moved.Key[0], 'Team'] = 'NEW'
+        k = data.norm_name
+        routing = {'WR': {'tgt_same': 0.77, 'tgt_other': 0.16}}
+        for kw in ({}, {'routing': routing}, {'routing': routing, 'take_from': 'position'}):
+            xt, xc = usage.trade_volume(agg, moved, fd, 0.8, **kw)
+            self.assertNotIn(k('Old Mate'), xt)
+            self.assertAlmostEqual(xt[k('Star WR')], 2.0 - 10)
+            self.assertAlmostEqual(-sum(v for kk, v in xt.items() if kk != k('Star WR')), 2.0)
+            self.assertEqual(xc, {})
+
 
 class InjuryLiftedTest(unittest.TestCase):
     def test_trade_boosts_do_not_count(self):
