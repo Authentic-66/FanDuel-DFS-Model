@@ -923,6 +923,14 @@ Top-1% features study (weeks 5-10, every field lineup; 2021-2025 RB1 / WR1-out h
 4. **Queued for after week 12 (with the paper summary):** cap of 2 players projected under 5% owned (lineup test);
    WR1-out bump fix (next WR gains 21% of WR1's targets, model hands 7%: depth rank 20% x bump_scale 0.45; history +
    lineup test). RB1 out is right on average (0.57 vs 0.51; 2025 0.65 vs 0.48, watch).
+5. **Queued for after week 12 (Doug, Nov 20): player-floor idea, targeting CASH RATE (about half the Pooch Punt field
+   cashes), analysis + lineup test, no change now.** (a) Weeks 5-12 field exports: cash rate of lineups whose
+   lowest-projected non-DST player (our as-entered proj.csv; field players missing from it count as 0) is below vs
+   at/above 5, 6, 7, 8 pts; and of lineups with 0 vs 1+ non-DST players whose sim 20th percentile (sims.npy) is under 3.
+   Report per week as well as pooled (weeks up, as in docs/top1_features.md). (b) Rebuild the flex shadow 150 per week
+   with a per-player floor (min projection) at the best threshold; report cash rate, money (week's prize table; weeks
+   5-8 use week 9's), top 1%, top 10%, average, best vs the current flex-shadow build (as of week 11 rules). Needs the
+   weeks 11-12 All Entries exports and prize tables.
 
 ## Week 10 (2026-w10) result — see docs/week10_review.md (Mon Nov 16)
 150 entries = edited 149 + free entry (all matched by entry Id). Won $3.53 (all on the 149; free entry 141.3, $0).

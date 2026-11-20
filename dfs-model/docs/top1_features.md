@@ -123,3 +123,8 @@ Not worth building: role-change chasing, 30%+ chalk counts, bigger game stacks, 
    sets 150, 0 rule problems; 3 flex-shadow lineups used floor cap relief (to 27).
 4. **Queued for after week 12:** (a) at most 2 players projected under 5% owned per lineup (lineup test: average,
    top-10%, top-1%, best, money); (b) WR1-out bump fix (history test as above, then lineup test).
+5. **Queued for after week 12 (Doug, Nov 20): player floor, judged on CASH RATE** (about half the field cashes), not
+   top 1%. (a) Weeks 5-12 field lineups: cash rate when the lowest-projected non-DST player is below vs at/above
+   5 / 6 / 7 / 8 pts, and with 0 vs 1+ non-DST players whose sim 20th percentile is under 3. (b) Flex shadow 150 rebuilt
+   with a per-player floor at the best threshold: cash rate, money, top 1% (plus top 10%, average, best) vs the current
+   flex-shadow build. Analysis + lineup test only.
