@@ -1,7 +1,7 @@
 stack allocation: NYJ cannot be stacked again; 4 lineup(s) reallocated
 stack allocation: TB cannot be stacked again; 4 lineup(s) reallocated
 stack allocation: ARI cannot be stacked again; 1 lineup(s) reallocated
-salary floor $59,000: 3 lineup(s) used cap relief (up to 27), 3 solve(s) without the floor
+salary floor $59,500: 3 lineup(s) used cap relief (up to 27), 3 solve(s) without the floor
 Empty DataFrame
 Columns: [Player, Lineups, Review]
 Index: []
@@ -23,15 +23,15 @@ NO      3
 MIA     1
 LV      1
 PHI     1
-            Player  Lineups
-      Tony Pollard       27
-       CeeDee Lamb       27
-      Cam Skattebo       27
-    George Pickens       27
-    James Cook III       26
-     Isaiah Likely       26
-     Jaylen Warren       26
-Kansas City Chiefs       26
+          Player  Lineups
+    Tony Pollard       27
+     CeeDee Lamb       27
+  George Pickens       27
+    Cam Skattebo       27
+    Travis Kelce       26
+   Jaylen Warren       26
+Javonte Williams       26
+  James Cook III       26
 
 Stacks vs field (CHALK = QB projected >= 10% owned; Leverage < 1 = we are chalkier than the field):
 Team  Our_share_pct  Field_QB_own                              Top_receivers  Receiver_own Chalk  Leverage

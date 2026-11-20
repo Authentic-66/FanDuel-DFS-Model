@@ -1,4 +1,4 @@
-# WRITTEN BY src/weekly.py --stage friday (2026-11-19 17:40); do not edit: it is
+# WRITTEN BY src/weekly.py --stage friday (2026-11-20 10:21); do not edit: it is
 # rewritten every run. Your own calls go in week.toml (they add to / override this file).
 [status]
 out = [

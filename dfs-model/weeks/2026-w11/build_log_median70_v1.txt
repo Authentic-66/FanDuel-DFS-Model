@@ -3,7 +3,7 @@ median-70 v1 (flex); -> median70_v1
 stack allocation: NYJ cannot be stacked again; 4 lineup(s) reallocated
 stack allocation: TB cannot be stacked again; 4 lineup(s) reallocated
 stack allocation: ARI cannot be stacked again; 1 lineup(s) reallocated
-salary floor $59,000: 0 lineup(s) used cap relief (up to 107), 3 solve(s) without the floor
+salary floor $59,500: 0 lineup(s) used cap relief (up to 107), 3 solve(s) without the floor
 Empty DataFrame
 Columns: [Player, Lineups, Review]
 Index: []
@@ -26,14 +26,14 @@ MIA     1
 LV      1
 PHI     1
               Player  Lineups
-      James Cook III      105
        D'Andre Swift      105
-    Javonte Williams       81
-        Tony Pollard       68
-   Amon-Ra St. Brown       65
-        Travis Kelce       55
-Los Angeles Chargers       55
-       Isaiah Likely       54
+      James Cook III      105
+    Javonte Williams       86
+        Tony Pollard       71
+   Amon-Ra St. Brown       63
+        Cam Skattebo       62
+Los Angeles Chargers       49
+      Denver Broncos       41
 
 Stacks vs field (CHALK = QB projected >= 10% owned; Leverage < 1 = we are chalkier than the field):
 Team  Our_share_pct  Field_QB_own                              Top_receivers  Receiver_own Chalk  Leverage
@@ -58,4 +58,4 @@ Team  Our_share_pct  Field_QB_own                              Top_receivers  Re
  NYJ            2.6           NaN      Garrett Wilson 8%, Adonai Mitchell 3%          11.4             NaN
  ARI            0.4           NaN          Trey McBride 7%, Reggie Virgil 1%           8.5             NaN
 
-Mean lineup projected ownership: 109%
+Mean lineup projected ownership: 108%

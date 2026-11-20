@@ -2,7 +2,7 @@ median-70 shadow: objective = median sim score, cap 105, overlap 7; -> median70_
 stack allocation: NYJ cannot be stacked again; 4 lineup(s) reallocated
 stack allocation: TB cannot be stacked again; 4 lineup(s) reallocated
 stack allocation: ARI cannot be stacked again; 1 lineup(s) reallocated
-salary floor $59,000: 0 lineup(s) used cap relief (up to 107), 3 solve(s) without the floor
+salary floor $59,500: 0 lineup(s) used cap relief (up to 107), 3 solve(s) without the floor
 Empty DataFrame
 Columns: [Player, Lineups, Review]
 Index: []
@@ -27,12 +27,12 @@ PHI     1
               Player  Lineups
       James Cook III      105
        D'Andre Swift      105
-    Javonte Williams       86
+    Javonte Williams       87
         Tony Pollard       76
-   Amon-Ra St. Brown       61
-        Cam Skattebo       58
-Los Angeles Chargers       50
+   Amon-Ra St. Brown       59
+        Cam Skattebo       57
       Denver Broncos       49
+Los Angeles Chargers       48
 
 Stacks vs field (CHALK = QB projected >= 10% owned; Leverage < 1 = we are chalkier than the field):
 Team  Our_share_pct  Field_QB_own                              Top_receivers  Receiver_own Chalk  Leverage

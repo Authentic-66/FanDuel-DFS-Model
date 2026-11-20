@@ -3,32 +3,33 @@ median-70 v3 (repeats); -> median70_v3
 stack allocation: NYJ cannot be stacked again; 4 lineup(s) reallocated
 stack allocation: TB cannot be stacked again; 4 lineup(s) reallocated
 stack allocation: ARI cannot be stacked again; 1 lineup(s) reallocated
-salary floor $59,000: 0 lineup(s) used cap relief (up to 107), 3 solve(s) without the floor
+salary floor $59,500: 0 lineup(s) used cap relief (up to 107), 3 solve(s) without the floor
 v3 repeats: 105 distinct, top 45 twice
 Empty DataFrame
 Columns: [Player, Lineups, Review]
 Index: []
 Stack
 DAL    39
-CHI    30
+CHI    29
 DET    22
-JAC    15
+JAC    16
 KC     14
-BUF    14
+BUF    13
 CAR     8
 NO      3
 NYG     3
 PHI     1
 BAL     1
+PIT     1
               Player  Lineups
-       D'Andre Swift      137
+       D'Andre Swift      136
       James Cook III       97
-        Tony Pollard       80
-    Javonte Williams       69
-Los Angeles Chargers       61
+        Tony Pollard       81
+    Javonte Williams       68
         Cam Skattebo       58
+Los Angeles Chargers       56
    Luther Burden III       55
-      Denver Broncos       52
+      Denver Broncos       54
 
 Stacks vs field (CHALK = QB projected >= 10% owned; Leverage < 1 = we are chalkier than the field):
 Team  Our_share_pct  Field_QB_own                              Top_receivers  Receiver_own Chalk  Leverage

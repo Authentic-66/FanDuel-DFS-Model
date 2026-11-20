@@ -2,13 +2,14 @@ no-draw shadow: objective = projection only (mean_weight 1); -> nodraw
 stack allocation: NYJ cannot be stacked again; 4 lineup(s) reallocated
 stack allocation: TB cannot be stacked again; 4 lineup(s) reallocated
 stack allocation: ARI cannot be stacked again; 1 lineup(s) reallocated
-salary floor $59,000: 3 lineup(s) used cap relief (up to 27), 3 solve(s) without the floor
+stack allocation: DAL cannot be stacked again; 1 lineup(s) reallocated
+salary floor $59,500: 4 lineup(s) used cap relief (up to 27), 4 solve(s) without the floor
 Empty DataFrame
 Columns: [Player, Lineups, Review]
 Index: []
 Stack
-DAL    21
-BUF    18
+DAL    20
+BUF    19
 CHI    17
 KC     16
 JAC    12
@@ -24,15 +25,15 @@ NO      3
 MIA     1
 LV      1
 PHI     1
-          Player  Lineups
-   D'Andre Swift       27
-Javonte Williams       27
-  George Pickens       27
-    Tony Pollard       27
-     CeeDee Lamb       27
-  Denver Broncos       27
-    Cam Skattebo       26
-  James Cook III       26
+              Player  Lineups
+    Javonte Williams       27
+      James Cook III       27
+         Chris Olave       27
+      George Pickens       27
+         CeeDee Lamb       27
+       D'Andre Swift       27
+        Tony Pollard       27
+Los Angeles Chargers       27
 
 Stacks vs field (CHALK = QB projected >= 10% owned; Leverage < 1 = we are chalkier than the field):
 Team  Our_share_pct  Field_QB_own                              Top_receivers  Receiver_own Chalk  Leverage
@@ -57,4 +58,4 @@ Team  Our_share_pct  Field_QB_own                              Top_receivers  Re
  NYJ            2.6           NaN      Garrett Wilson 8%, Adonai Mitchell 3%          11.4             NaN
  ARI            0.4           NaN          Trey McBride 7%, Reggie Virgil 1%           8.5             NaN
 
-Mean lineup projected ownership: 86%
+Mean lineup projected ownership: 87%

@@ -3,7 +3,7 @@ injury cap 45: Javonte Williams (18.5), Tony Pollard (15.6), Cam Skattebo (15.2)
 stack allocation: NYJ cannot be stacked again; 4 lineup(s) reallocated
 stack allocation: TB cannot be stacked again; 4 lineup(s) reallocated
 stack allocation: ARI cannot be stacked again; 1 lineup(s) reallocated
-salary floor $59,000: 0 lineup(s) used cap relief (up to 107), 3 solve(s) without the floor
+salary floor $59,500: 0 lineup(s) used cap relief (up to 107), 3 solve(s) without the floor
 Empty DataFrame
 Columns: [Player, Lineups, Review]
 Index: []
@@ -28,10 +28,10 @@ PHI     1
               Player  Lineups
       James Cook III      105
        D'Andre Swift      105
-   Amon-Ra St. Brown       67
-Los Angeles Chargers       54
+   Amon-Ra St. Brown       65
+Los Angeles Chargers       52
       Denver Broncos       49
-        Travis Kelce       46
+        Travis Kelce       47
         Tony Pollard       45
     Javonte Williams       45
 
