@@ -1,0 +1,61 @@
+median-70 shadow: objective = median sim score, cap 105, overlap 7; -> median70
+injury cap 45: Javonte Williams (18.5), Tony Pollard (15.6), Cam Skattebo (15.2), Emmett Johnson (13.4), Jonah Coleman (12.8), Saquon Barkley (10.6), Ollie Gordon II (10.1), Tyler Allgeier (8.9), Chimere Dike (4.5), Dawson Knox (4.4), Tez Johnson (4.0)
+stack allocation: NYJ cannot be stacked again; 4 lineup(s) reallocated
+stack allocation: TB cannot be stacked again; 4 lineup(s) reallocated
+stack allocation: ARI cannot be stacked again; 1 lineup(s) reallocated
+salary floor $59,000: 0 lineup(s) used cap relief (up to 107), 3 solve(s) without the floor
+Empty DataFrame
+Columns: [Player, Lineups, Review]
+Index: []
+Stack
+DAL    21
+BUF    18
+CHI    17
+KC     16
+JAC    12
+DET    11
+DEN    10
+TEN     8
+CAR     8
+LAC     7
+PIT     6
+BAL     5
+NYG     5
+NO      3
+MIA     1
+LV      1
+PHI     1
+              Player  Lineups
+      James Cook III      105
+       D'Andre Swift      105
+   Amon-Ra St. Brown       67
+Los Angeles Chargers       54
+      Denver Broncos       49
+        Travis Kelce       46
+        Tony Pollard       45
+    Javonte Williams       45
+
+Stacks vs field (CHALK = QB projected >= 10% owned; Leverage < 1 = we are chalkier than the field):
+Team  Our_share_pct  Field_QB_own                              Top_receivers  Receiver_own Chalk  Leverage
+ BUF           10.7         18.34              DJ Moore 6%, Khalil Shakir 4%          10.2 CHALK      0.58
+ DAL           11.8         15.24        CeeDee Lamb 25%, George Pickens 16%          40.7 CHALK      0.77
+  KC            9.2          9.57            Travis Kelce 9%, Rashee Rice 6%          14.9            0.96
+ CHI           10.3          8.67 Luther Burden III 12%, Colston Loveland 7%          18.5            1.19
+ JAC            7.7          8.11  Parker Washington 12%, Brenton Strange 4%          16.6            0.95
+ DET            7.4          7.70 Amon-Ra St. Brown 22%, Jameson Williams 8%          29.8            0.96
+ CAR            5.5          4.71      Tetairoa McMillan 11%, Jalen Coker 6%          16.7            1.17
+ DEN            7.0          3.78         Courtland Sutton 3%, Pat Bryant 3%           5.9            1.85
+  NO            1.8          3.63          Chris Olave 11%, Devaughn Vele 3%          14.2            0.50
+ BAL            3.3          3.09           Zay Flowers 10%, Mark Andrews 2%          12.1            1.07
+ PIT            4.1          2.92           DK Metcalf 6%, Pat Freiermuth 3%           9.4            1.40
+ PHI            0.7          2.64        DeVonta Smith 9%, Dallas Goedert 3%          12.1            0.27
+ TEN            5.5          2.29           Elic Ayomanor 3%, Gunnar Helm 2%           4.3            2.40
+ LAC            4.8          2.24        Quentin Johnston 3%, Tre' Harris 2%           5.0            2.14
+ NYG            3.3          1.31        Isaiah Likely 10%, Malik Nabers 10%          20.5            2.52
+  LV            0.4          1.02            Tre Tucker 3%, Michael Mayer 2%           5.0            0.39
+ MIA            0.4          0.70       Malik Washington 2%, Greg Dulcich 1%           3.3            0.57
+  TB            3.0           NaN       Emeka Egbuka 5%, Chris Godwin Jr. 2%           6.3             NaN
+ NYJ            2.6           NaN      Garrett Wilson 8%, Adonai Mitchell 3%          11.4             NaN
+ ARI            0.4           NaN          Trey McBride 7%, Reggie Virgil 1%           8.5             NaN
+
+Mean lineup projected ownership: 104%
