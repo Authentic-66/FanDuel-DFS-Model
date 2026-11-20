@@ -37,6 +37,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 GAMES = 'https://github.com/nflverse/nfldata/raw/master/data/games.csv'
 IR_MIN_VOL = 3.0
 ENTRY_N, ENTRY_FROM, ENTRY_DIR = 20, 'flex_shadow', 'entry_20'
+RB_PIECE_SETS = {'flex_shadow', 'median70_v1'}   # rb_stack_pieces builds: [optimizer] no_qb_own_rb = "rb_pieces" applies
 SETS = [   # (folder, optimize.py args) -- frozen through week 12 (Doug, Nov 16)
     ('model_cap45', ['--subdir', 'model_cap45', '--cap', '45']),
     ('flex_shadow', ['--flex-shadow']),
@@ -132,9 +133,18 @@ def check_sets(week, cfg, folders):
         bad = check(rows, header, fd, cfg)
         if f == 'median70_v3':
             bad = [b for b in bad if 'duplicate lineup' not in b]
-        sal = fd.set_index('Id').Salary
-        low = sum(sal[list(r)].sum() < 59000 for r in rows)
-        print(f'  {f or "model"}: {len(rows)} lineups, {len(bad)} problems' + (f', {low} under $59,000' if low else ''))
+        info = fd.set_index('Id')
+        floor = cfg['optimizer'].get('min_salary', 0)
+        low = sum(info.Salary[list(r)].sum() < floor for r in rows)
+        # QB + own RB ban (Doug, Nov 20): the builds with every RB as a stack piece
+        mode = cfg['optimizer'].get('no_qb_own_rb', 'off')
+        if mode == 'all' or (mode == 'rb_pieces' and f in RB_PIECE_SETS):
+            for k, r in enumerate(rows, 1):
+                q = [i for i in r if info.Position[i] == 'QB'][0]
+                own = [info.Nickname[i] for i in r if info.Position[i] == 'RB' and info.Team[i] == info.Team[q]]
+                if own:
+                    bad.append(f'lineup {k}: QB {info.Nickname[q]} with his own RB {own}')
+        print(f'  {f or "model"}: {len(rows)} lineups, {len(bad)} problems' + (f', {low} under ${floor:,}' if low else ''))
         if bad:
             probs[f] = bad[:5]
     return probs

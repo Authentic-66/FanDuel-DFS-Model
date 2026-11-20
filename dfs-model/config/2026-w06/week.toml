@@ -111,6 +111,7 @@ questionable_routing = false     # as entered: questionable routing became the d
 questionable_inactive_prob = 0.25 # as entered (0.45 from week 8)
 
 [optimizer]
+no_qb_own_rb = "off"                # as entered: the QB + own-RB ban starts in week 11 (Doug, Nov 20)
 stack_allocation = "proportional"   # stack counts follow the weights exactly instead of random draws
 min_salary = 0                      # as entered: the salary floor became the default in week 7
 

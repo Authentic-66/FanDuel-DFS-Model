@@ -56,5 +56,28 @@ class RbStackPiecesTest(unittest.TestCase):
         self.assertNotIn('extra_receivers', cfg['stacks'])    # the config itself is not changed
 
 
+class NoQbOwnRbTest(unittest.TestCase):
+    """[optimizer] no_qb_own_rb (Doug, Nov 20; docs/top1_features.md)."""
+    def test_rb_pieces_bans_the_stacked_qbs_own_rb(self):
+        df = slate()
+        obj = np.where((df.Pos == 'RB') & (df.Team == 'CCC'), 100.0, 1.0)   # the optimizer wants CCC's RBs
+        own = lambda lp: int(((df.Pos[lp] == 'RB') & (df.Team[lp] == 'CCC')).sum())
+        run = lambda o: optimize.solve_lineup(df, obj, 'CCC', optimize.stack_rule('CCC', {'rules': {}}, o),
+                                              {i: 25 for i in df.index}, {i: 0 for i in df.index}, [], [], ROSTER, o)
+        self.assertGreater(own(run(OPT)), 0)                                         # key missing = off
+        self.assertGreater(own(run(dict(OPT, no_qb_own_rb='rb_pieces'))), 0)          # no rb_stack_pieces: unchanged
+        self.assertEqual(own(run(dict(OPT, no_qb_own_rb='rb_pieces', rb_stack_pieces=True))), 0)
+        self.assertEqual(own(run(dict(OPT, no_qb_own_rb='all'))), 0)
+        with self.assertRaises(ValueError):
+            run(dict(OPT, no_qb_own_rb='yes'))
+
+    def test_defaults_and_pins(self):
+        from dfs import config
+        o = lambda w: config.load_config(config.current_week(w))['optimizer']
+        self.assertEqual((o('2026-w11')['no_qb_own_rb'], o('2026-w11')['min_salary']), ('rb_pieces', 59500))
+        for w in ['2026-w07', '2026-w08', '2026-w09', '2026-w10']:
+            self.assertEqual((o(w)['no_qb_own_rb'], o(w)['min_salary']), ('off', 59000), w)
+
+
 if __name__ == '__main__':
     unittest.main()

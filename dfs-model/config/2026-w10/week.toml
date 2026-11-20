@@ -133,6 +133,8 @@ within_position = "depth_rank"
 depth_rank_positions = ["WR"]
 
 [optimizer]
+min_salary = 59000                  # as entered: the floor became 59500 in week 11 (Doug, Nov 20)
+no_qb_own_rb = "off"                # as entered: the QB + own-RB ban starts in week 11 (Doug, Nov 20)
 stack_allocation = "proportional"   # stack counts follow the weights exactly instead of random draws
 
 [prefs]

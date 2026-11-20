@@ -130,6 +130,17 @@ def receivers(df, stacks):
     return df.Pos.isin(['WR', 'TE']) | (named & (df.Pos == 'RB'))
 
 
+def no_qb_own_rb(opt):
+    """[optimizer] no_qb_own_rb: ban an RB from the stacked QB's own team. "off"; "rb_pieces" = only in builds with
+    rb_stack_pieces (flex shadow = the weeks 11-12 entry, median-70 v1); "all" = every build. Freeze exception (Doug,
+    Nov 20): field weeks 5-10, QB + own RB lineups reached the top 1% at 0.56x the rate of the rest, lower in all 6
+    weeks (docs/top1_features.md). Missing key = "off"; defaults.toml sets "rb_pieces", weeks 4-10 pin "off"."""
+    mode = opt.get('no_qb_own_rb', 'off')
+    if mode not in ('off', 'rb_pieces', 'all'):
+        raise ValueError(f'[optimizer] no_qb_own_rb must be "off", "rb_pieces" or "all", not {mode!r}')
+    return mode == 'all' or (mode == 'rb_pieces' and bool(opt.get('rb_stack_pieces')))
+
+
 def solve_lineup(df, obj, team, rule, cap, use, forced, prior_lineups, roster, opt, outside=None, te_flex=True):
     """One lineup (df indices) or None if infeasible. outside = (indices, max) for pool mode: at most max players
     from those indices (the non-pool fillers). te_flex = False: no TE in the FLEX (exactly the TE slot's count).
@@ -158,6 +169,8 @@ def solve_lineup(df, obj, team, rule, cap, use, forced, prior_lineups, roster, o
     for name in rule['require']:
         P += pulp.lpSum(x[i] for i in idx if df.Name[i] == name) == 1
     P += pulp.lpSum(x[i] for i in idx if df.Team[i] == opp and df.Pos[i] != 'D') >= rule['bring_back']
+    if no_qb_own_rb(opt):   # no RB from the QB's own team (Doug, Nov 20; docs/top1_features.md)
+        P += pulp.lpSum(x[i] for i in pos('RB') if df.Team[i] == team) == 0
     if 'FlexTE' in df:      # at most the TE slot's count of TEs outside the top-N by salary
         P += pulp.lpSum(x[i] for i in pos('TE') if not df.FlexTE[i]) <= counts['TE']
     for d in pos('D'):   # no DST facing our own offensive players

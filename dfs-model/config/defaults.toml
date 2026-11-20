@@ -269,8 +269,15 @@ drop_force_after = 12
 stack_allocation = "random"  # "random": one weighted team draw per lineup; "proportional": stack counts fixed from the
                              # weights (largest-remainder rounding), so counts match the weights
 reserve_required = false     # true: other stacks leave room on a player a green QB's stack rule requires (see week 5)
-min_salary = 59000           # salary floor (Doug, week 7; docs/week6_review.md 8.1). 0 = off. Lineups that cannot reach
-                             # it get cap relief below; if that fails too, the lineup is built without the floor
+min_salary = 59500           # salary floor (Doug, week 7; docs/week6_review.md 8.1). 0 = off. Lineups that cannot reach
+                             # it get cap relief below; if that fails too, the lineup is built without the floor.
+                             # 59000 weeks 7-10 (pinned); 59500 from week 11 (Doug, Nov 20, freeze exception: field
+                             # lineups leaving $600+ reached the top 1% at 0.77x / 0.55x ($600-1,000 / $1,100-2,000),
+                             # up in 1 / 0 of 6 weeks; docs/top1_features.md)
+no_qb_own_rb = "rb_pieces"   # "off" | "rb_pieces" | "all": no RB from the stacked QB's team. "rb_pieces" = only builds
+                             # with rb_stack_pieces (flex shadow = the weeks 11-12 entry, median-70 v1). Doug, Nov 20,
+                             # freeze exception: QB + own RB top-1% lift 0.56, up in 0 of 6 weeks (docs/top1_features.md).
+                             # Weeks 4-10 pin "off"
 floor_cap_overflow = 2       # cap relief for floor lineups only: players at exposure_cap may go to cap + 2.
                              # Not yellow/player_cap. Week 7 used +3 (21 players above cap 27, 12 at 30). Doug, Oct 26:
                              # +2 from week 8 (+1 cost week 4 -2.2 a lineup and stalled week 7 at 147; docs/week8_prep.md 4)

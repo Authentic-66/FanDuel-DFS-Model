@@ -43,6 +43,7 @@ CHI = "Tyson Bagent"           # Caleb Williams inactive (Doug, Oct 11)
 [overrides]
 
 [optimizer]
+no_qb_own_rb = "off"                # as entered: the QB + own-RB ban starts in week 11 (Doug, Nov 20)
 mean_weight = 0.4              # as entered: the default became 0.6 in week 6 (keeps the review's re-runs faithful)
 min_salary = 0                 # as entered: the salary floor became the default in week 7
 stack_allocation = "proportional"   # stack counts follow the weights exactly instead of random draws

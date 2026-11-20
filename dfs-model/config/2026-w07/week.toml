@@ -78,6 +78,8 @@ questionable_routing = false     # as entered: questionable routing became the d
 questionable_inactive_prob = 0.25 # as entered (0.45 from week 8)
 
 [optimizer]
+min_salary = 59000                  # as entered: the floor became 59500 in week 11 (Doug, Nov 20)
+no_qb_own_rb = "off"                # as entered: the QB + own-RB ban starts in week 11 (Doug, Nov 20)
 stack_allocation = "proportional"   # stack counts follow the weights exactly instead of random draws
 floor_cap_overflow = 3              # as entered: salary-floor cap relief +3 (the default became +1 on Oct 26)
 # PRELIMINARY, pending Doug (Claude, Oct 22): with Doug's Oct 22 reds / yellows the model stalls at 147 lineups at cap 25

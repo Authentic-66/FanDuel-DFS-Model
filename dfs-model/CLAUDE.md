@@ -6,7 +6,8 @@ guaranteed overlay). Goal: maximize chance of top finishes, not average score. B
 (Phase 1); this repo is where Phase 2 happens. Doug also runs a Benter-style horse racing model (separate repo, Authentic-66)
 and thinks in those terms: fundamentals model + market/public overlay, calibration, backtesting.
 **Current state (Nov 19): weeks 11-12 frozen, 20-lineup entry, Doug runs Friday / Sunday himself: see the section
-'WEEKS 11-12' below and docs/commands.md. Week 11 Friday stage DONE after a trade-code fix (section 'Week 11 Friday run').**
+'WEEKS 11-12' below and docs/commands.md. Week 11 Friday stage DONE after a trade-code fix (section 'Week 11 Friday run'). Nov 20: two FREEZE EXCEPTIONS (no QB + own RB in the
+flex shadow / median-70 v1; floor $59,500) and the Friday stage rerun: section 'Freeze exceptions (Nov 20)'.**
 
 ## Contest scoring (FanDuel, verified from contest rules screenshot)
 - Pass yd 0.04, pass TD 4, INT -1; rush/rec yd 0.1; rush/rec/return TD 6; reception 0.5 (half PPR); fumble lost -2; 2-pt 2.
@@ -905,6 +906,23 @@ until `[status.starting_qb]`); **Kendre Miller on DAL per FanDuel, stats with NO
 keeps NO volume); role drops Singletary, Lambert-Smith, Hurst, Legette, Ridley (Holani in the earlier pass).
 Week-11 outputs (`config/2026-w11/auto.toml`, `data/2026-w11/`, `weeks/2026-w11/`, `weeks/2026-w10/ownership_train.csv`)
 NOT committed. **Next: Doug's Sunday stage (docs/commands.md).**
+
+## Freeze exceptions (Fri Nov 20) — see docs/top1_features.md
+Top-1% features study (weeks 5-10, every field lineup; 2021-2025 RB1 / WR1-out history). Doug's decisions:
+1. **`[optimizer] no_qb_own_rb = "rb_pieces"`** (defaults.toml; "off" | "rb_pieces" | "all"; `optimize.no_qb_own_rb`):
+   no RB from the stacked QB's team in builds with `rb_stack_pieces` (flex shadow = the entry, median-70 v1). Evidence:
+   QB + own RB top-1% lift 0.56, up in 0 of 6 weeks (also 0 of 6 at a fixed QB + 2 stack). Named `[stacks]
+   extra_receivers` RBs in the normal model are not affected. weekly.py's rule check flags any QB + own RB there.
+2. **`[optimizer] min_salary = 59500`** for all sets (was 59,000). Evidence: $600-1,000 left lift 0.77 (1 of 6 weeks
+   up), $1,100-2,000 0.55 (0 of 6). Weeks 4-10 week.toml pin `no_qb_own_rb = "off"`, weeks 7-10 `min_salary = 59000`.
+   Tests: tests/test_flex_shadow.py NoQbOwnRbTest; 149 OK.
+3. Week-11 Friday stage rerun (Nov 20, `--keep-lines --no-fetch`: same inputs as Nov 19, proj.csv unchanged): all nine
+   sets 150, 0 problems. **Entry 20: QB + own RB 14 -> 0, $600+ left 2 -> 0, projection 121.7-127.3 (avg 123.6) ->
+   120.5-126.5 (122.9)**; FLEX RB 20 -> 15; NYJ / TB / ARI no longer stackable in the flex shadow (9 reallocated).
+   Sunday's stage refreshes lines + stats as usual.
+4. **Queued for after week 12 (with the paper summary):** cap of 2 players projected under 5% owned (lineup test);
+   WR1-out bump fix (next WR gains 21% of WR1's targets, model hands 7%: depth rank 20% x bump_scale 0.45; history +
+   lineup test). RB1 out is right on average (0.57 vs 0.51; 2025 0.65 vs 0.48, watch).
 
 ## Week 10 (2026-w10) result — see docs/week10_review.md (Mon Nov 16)
 150 entries = edited 149 + free entry (all matched by entry Id). Won $3.53 (all on the 149; free entry 141.3, $0).
