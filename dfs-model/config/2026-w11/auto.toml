@@ -1,19 +1,27 @@
-# WRITTEN BY src/weekly.py --stage friday (2026-11-20 10:21); do not edit: it is
+# WRITTEN BY src/weekly.py --stage friday (2026-11-20 19:23); do not edit: it is
 # rewritten every run. Your own calls go in week.toml (they add to / override this file).
 [status]
 out = [
+  "Kenneth Walker III",  # FanDuel O
   "Jaxson Dart",  # FanDuel IR, 11.0 targets + carries a game
   "Tyler Huntley",  # FanDuel IR, 4.7 targets + carries a game
   "Malik Willis",  # FanDuel IR, 4.8 targets + carries a game
   "Lamar Jackson",  # FanDuel IR, 4.8 targets + carries a game
   "Jalen Hurts",  # FanDuel IR, 4.6 targets + carries a game
+  "Omar Cooper Jr.",  # FanDuel O
+  "Dalton Kincaid",  # FanDuel D
+  "Dontayvion Wicks",  # FanDuel O
   "Wan'Dale Robinson",  # FanDuel IR, 6.1 targets + carries a game
   "Jonathon Brooks",  # FanDuel IR, 6.0 targets + carries a game
+  "Isaiah Williams",  # FanDuel O
   "Jake Ferguson",  # FanDuel O
   "Tank Bigsby",  # FanDuel IR, 8.0 targets + carries a game
+  "Jared Wayne",  # FanDuel O
+  "Jonathan Mingo",  # FanDuel O
   "Tyquan Thornton",  # FanDuel IR, 3.8 targets + carries a game
   "Tyrone Tracy Jr.",  # FanDuel IR, 3.7 targets + carries a game
   "Tyler Goodson",  # FanDuel IR, 8.0 targets + carries a game
+  "Brenen Thompson",  # FanDuel D
   "Kendrick Bourne",  # FanDuel IR, 5.4 targets + carries a game
   "Michael Wilson",  # FanDuel IR, 10.1 targets + carries a game
   "De'Von Achane",  # FanDuel IR, 15.3 targets + carries a game
@@ -24,53 +32,35 @@ out = [
   "Will Shipley",  # FanDuel IR, 5.6 targets + carries a game
 ]
 questionable = [
-  "Kenneth Walker III",
   "Brock Bowers",
   "Baker Mayfield",
-  "Bhayshul Tuten",
-  "Geno Smith",
   "Carson Beck",
   "Ladd McConkey",
-  "Jaylen Waddle",
-  "Jordyn Tyson",
-  "Omar Cooper Jr.",
   "Carnell Tate",
-  "Jakobi Meyers",
-  "Dalton Kincaid",
-  "Dontayvion Wicks",
-  "Caleb Douglas",
   "Darren Waller",
-  "Chris Rodriguez Jr.",
-  "Isaiah Williams",
   "Tyjae Spears",
   "Sione Vaki",
-  "Ray Davis",
   "Luke Schoonmaker",
-  "Chris Bell",
   "Tommy Tremble",
   "Charlie Kolar",
+  "Zavion Thomas",
   "Jackson Hawes",
-  "Jared Wayne",
-  "Jonathan Mingo",
-  "Britain Covey",
-  "LeQuint Allen Jr.",
-  "Brenen Thompson",
 ]
 
 [stacks.weights]
-DAL = 32
+DAL = 31
 BUF = 29
 CHI = 28
 KC = 25
 JAC = 21
-DET = 20
+DET = 19
 DEN = 19
 CAR = 15
-TEN = 15
+TEN = 14
 LAC = 13
-PIT = 11
 BAL = 9
 NYG = 9
+PIT = 9
 TB = 8
 NYJ = 7
 NO = 5

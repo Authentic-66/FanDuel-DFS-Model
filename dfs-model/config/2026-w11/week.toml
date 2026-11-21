@@ -53,7 +53,9 @@ starters_only = true
 red_teams = []
 red = [
   # >>> SHEET (written by src/review_sheet.py apply; or type names here by hand)
-  # <<< SHEET
+  "Tyler Allgeier",  # reduced role
+  "Kendre Miller",  # practice squad
+# <<< SHEET
 ]
 
 [prefs.yellow]                 # empty: yellow is shadow-only (Doug, Oct 26)
